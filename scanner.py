@@ -417,7 +417,7 @@ def run():
     token = get_token(os.environ["EBAY_CLIENT_ID"], os.environ["EBAY_CLIENT_SECRET"])
     now = datetime.now(timezone.utc)
     end_by = (now + timedelta(hours=s["auction_window_hours"])).strftime("%Y-%m-%dT%H:%M:%SZ")
-    do_auctions = now.minute < 30 or os.environ.get("FORCE_AUCTIONS") == "1"  # hourly
+    do_auctions = (now.minute < 30 and now.hour % 2 == 0) or os.environ.get("FORCE_AUCTIONS") == "1"  # every 2 hours
 
     seen = load_json(SEEN_PATH, {})
     market = load_json(MARKET_PATH, {})
