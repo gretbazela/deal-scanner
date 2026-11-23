@@ -13,7 +13,7 @@ settings:
   unknown_ship_in: 12.00    # assumed shipping to you when a listing shows calculated shipping
   min_seller_feedback: 25
   min_seller_percent: 97
-  max_listing_age_hours: 24 # only Buy It Now listings newer than this
+  max_listing_age_hours: 72 # only Buy It Now listings newer than this
   auction_window_hours: 3   # auctions ending within this many hours
   category_id: "1059"       # eBay Men's Clothing
   max_lot_size: 40
