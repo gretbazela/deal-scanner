@@ -167,6 +167,216 @@
   "price": 16.99,
   "samples": 197
  },
+ "v2|barbour waxed jacket men|any": {
+  "at": 1795401324.547901,
+  "median_ask": 249.99,
+  "price": 157.25,
+  "samples": 126
+ },
+ "v2|billabong board shorts|any": {
+  "at": 1795401324.547901,
+  "median_ask": 25.0,
+  "price": 17.3,
+  "samples": 189
+ },
+ "v2|birdwell board shorts|any": {
+  "at": 1795401324.547901,
+  "median_ask": 55.0,
+  "price": 38.21,
+  "samples": 184
+ },
+ "v2|carhartt active jacket hooded|any": {
+  "at": 1795401324.547901,
+  "median_ask": 106.24,
+  "price": 69.82,
+  "samples": 143
+ },
+ "v2|carhartt detroit jacket|any": {
+  "at": 1795401324.547901,
+  "median_ask": 249.99,
+  "price": 152.74,
+  "samples": 180
+ },
+ "v2|carhartt double knee pants|any": {
+  "at": 1795401324.547901,
+  "median_ask": 75.0,
+  "price": 50.99,
+  "samples": 176
+ },
+ "v2|deadstock board shorts|any": {
+  "at": 1795401324.547901,
+  "median_ask": 39.97,
+  "price": 23.8,
+  "samples": 42
+ },
+ "v2|filson mackinaw|any": {
+  "at": 1795401324.547901,
+  "median_ask": 332.1,
+  "price": 212.5,
+  "samples": 161
+ },
+ "v2|greyson clothiers|any": {
+  "at": 1795401324.547901,
+  "median_ask": 38.0,
+  "price": 26.01,
+  "samples": 122
+ },
+ "v2|hurley phantom board shorts|any": {
+  "at": 1795401324.547901,
+  "median_ask": 21.97,
+  "price": 13.61,
+  "samples": 188
+ },
+ "v2|johnnie o|any": {
+  "at": 1795401324.547901,
+  "median_ask": 46.99,
+  "price": 29.74,
+  "samples": 197
+ },
+ "v2|lululemon abc pants men|any": {
+  "at": 1795401324.547901,
+  "median_ask": 33.0,
+  "price": 25.4,
+  "samples": 131
+ },
+ "v2|lululemon metal vent tech|any": {
+  "at": 1795401324.547901,
+  "median_ask": 27.5,
+  "price": 21.18,
+  "samples": 192
+ },
+ "v2|lululemon shorts men|any": {
+  "at": 1795401324.547901,
+  "median_ask": 25.75,
+  "price": 20.15,
+  "samples": 170
+ },
+ "v2|oneill board shorts|any": {
+  "at": 1795401324.547901,
+  "median_ask": 18.48,
+  "price": 11.9,
+  "samples": 186
+ },
+ "v2|patagonia baggies shorts|any": {
+  "at": 1795401324.547901,
+  "median_ask": 29.95,
+  "price": 21.24,
+  "samples": 186
+ },
+ "v2|patagonia better sweater men|any": {
+  "at": 1795401324.547901,
+  "median_ask": 45.0,
+  "price": 31.28,
+  "samples": 197
+ },
+ "v2|patagonia retro x men|any": {
+  "at": 1795401324.547901,
+  "median_ask": 129.99,
+  "price": 84.99,
+  "samples": 189
+ },
+ "v2|patagonia synchilla snap t|any": {
+  "at": 1795401324.547901,
+  "median_ask": 95.26,
+  "price": 63.75,
+  "samples": 186
+ },
+ "v2|peter millar quarter zip|any": {
+  "at": 1795401324.547901,
+  "median_ask": 49.99,
+  "price": 32.3,
+  "samples": 110
+ },
+ "v2|peter millar shorts|any": {
+  "at": 1795401324.547901,
+  "median_ask": 25.59,
+  "price": 19.06,
+  "samples": 190
+ },
+ "v2|quiksilver board shorts|any": {
+  "at": 1795401324.547901,
+  "median_ask": 20.99,
+  "price": 14.35,
+  "samples": 175
+ },
+ "v2|reyn spooner shirt|any": {
+  "at": 1795401324.547901,
+  "median_ask": 35.0,
+  "price": 24.58,
+  "samples": 186
+ },
+ "v2|rhoback|any": {
+  "at": 1795401324.547901,
+  "median_ask": 54.99,
+  "price": 36.28,
+  "samples": 195
+ },
+ "v2|rhone mens|any": {
+  "at": 1795401324.547901,
+  "median_ask": 30.0,
+  "price": 21.25,
+  "samples": 193
+ },
+ "v2|rip curl mirage board shorts|any": {
+  "at": 1795401324.547901,
+  "median_ask": 20.55,
+  "price": 14.24,
+  "samples": 194
+ },
+ "v2|tommy bahama silk shirt|any": {
+  "at": 1795401324.547901,
+  "median_ask": 24.99,
+  "price": 18.66,
+  "samples": 172
+ },
+ "v2|travis mathew|any": {
+  "at": 1795401324.547901,
+  "median_ask": 25.25,
+  "price": 17.0,
+  "samples": 197
+ },
+ "v2|vintage board shorts mens|any": {
+  "at": 1795401324.547901,
+  "median_ask": 29.45,
+  "price": 18.7,
+  "samples": 194
+ },
+ "v2|vintage harley davidson t shirt single stitch|any": {
+  "at": 1795401324.547901,
+  "median_ask": 45.0,
+  "price": 29.06,
+  "samples": 125
+ },
+ "v2|vintage levis 501 made in usa|any": {
+  "at": 1795401324.547901,
+  "median_ask": 77.97,
+  "price": 56.57,
+  "samples": 136
+ },
+ "v2|vintage pendleton wool shirt|any": {
+  "at": 1795401324.547901,
+  "median_ask": 59.99,
+  "price": 37.25,
+  "samples": 116
+ },
+ "v2|volcom board shorts|any": {
+  "at": 1795401324.547901,
+  "median_ask": 20.0,
+  "price": 14.27,
+  "samples": 194
+ },
+ "v2|vuori kore short|any": {
+  "at": 1795401324.547901,
+  "median_ask": 34.99,
+  "price": 25.49,
+  "samples": 195
+ },
+ "v2|vuori mens|any": {
+  "at": 1795401324.547901,
+  "median_ask": 39.99,
+  "price": 29.73,
+  "samples": 192
+ },
  "vintage board shorts mens|any": {
   "at": 1795400918.830956,
   "median_ask": 29.92,
