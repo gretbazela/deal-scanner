@@ -225,6 +225,74 @@ def market_price(token, w, cfg, market, now):
     return price
 
 
+# ---------- ShopGoodwill (lots only) ----------
+
+SGW_URL = "https://buyerapi.shopgoodwill.com/api/Search/ItemListing"
+
+
+def search_sgw(text):
+    body = {"isAdvancedSearch": False, "isWeddingCatagory": "false", "isMultipleCategoryIds": False,
+            "isFromHeaderMenuTab": False, "layout": "grid", "searchText": text, "selectedGroup": "",
+            "selectedCategoryIds": "", "selectedSellerIds": "", "lowPrice": "0", "highPrice": "999999",
+            "searchBuyNowOnly": "", "searchPickupOnly": "false", "searchNoPickupOnly": "false",
+            "searchOneCentShippingOnly": "false", "searchDescriptions": "false",
+            "searchClosedAuctions": "false", "closedAuctionEndingDate": "", "closedAuctionDaysBack": "7",
+            "searchCanadaShipping": "false", "searchInternationalShippingOnly": "false",
+            "sortColumn": "1", "page": "1", "pageSize": "40", "sortDescending": "false",
+            "savedSearchId": 0, "useBuyerPrefs": "true", "searchUSOnlyShipping": "false",
+            "categoryLevelNo": "1", "partNumber": "", "catIds": ""}
+    try:
+        r = requests.post(SGW_URL, json=body, timeout=30, headers={
+            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
+                          "(KHTML, like Gecko) Chrome/130.0 Safari/537.36",
+            "Origin": "https://shopgoodwill.com", "Referer": "https://shopgoodwill.com/"})
+        if r.status_code != 200:
+            print(f"  ShopGoodwill search failed ({r.status_code}) for '{text}'")
+            return []
+        return (r.json().get("searchResults") or {}).get("items") or []
+    except Exception as e:
+        print(f"  ShopGoodwill error for '{text}': {e}")
+        return []
+
+
+def evaluate_sgw(item, w, single_value, cfg, now):
+    s = cfg["settings"]
+    title = item.get("title") or ""
+    tn = norm(title)
+    if not title_ok(tn, w, cfg) or not is_lot(tn):
+        return None
+    if any_word(tn, ["for parts", "as is", "damaged", "stain", "stained", "holes"]):
+        return None
+    n = lot_count(title, s["max_lot_size"])
+    if not n:
+        return None
+    try:
+        end = datetime.fromisoformat(item["endTime"]).replace(tzinfo=timezone(timedelta(hours=-8)))
+    except Exception:
+        return None
+    hours_left = (end - now).total_seconds() / 3600
+    if hours_left < 0 or hours_left > s.get("sgw_hours_left", 6):
+        return None
+    price = float(item.get("currentPrice") or 0)
+    if price <= 0:
+        return None
+    ship_in = s.get("sgw_shipping", 15.0)
+    cost = price + ship_in
+    per_piece = round(single_value * s["lot_piece_factor"], 2)
+    resale = per_piece * n
+    rate = s["fee_rate"] + s["promo_rate"]
+    fees = (resale + s["buyer_shipping"] * n) * rate + s["fee_fixed"] * n
+    profit = round(resale - fees - cost, 2)
+    if profit < s["min_profit"] or cost / n > single_value * s["max_cost_ratio"]:
+        return None
+    iid = f"sgw|{item.get('itemId')}"
+    return {"id": iid, "title": title, "url": f"https://shopgoodwill.com/item/{item.get('itemId')}",
+            "search": "ShopGoodwill: " + w["name"], "mode": "sgw", "price": price, "ship_in": ship_in,
+            "ship_guess": True, "count": n, "per_piece": per_piece, "resale": round(resale, 2),
+            "profit": profit, "condition": None, "ends": end.astimezone(timezone.utc).isoformat(),
+            "hours_left": round(hours_left, 1), "bids": item.get("numBids", 0)}
+
+
 # ---------- deals ----------
 
 def ship_cost(item, s):
@@ -309,7 +377,9 @@ def message_for(d):
     head = f"${d['profit']:.0f} profit: {d['search']}"
     lines = []
     what = f"Lot of {d['count']}" if d["count"] > 1 else "Single item"
-    if d["mode"] == "auction":
+    if d["mode"] == "sgw":
+        lines.append(f"{what}, ShopGoodwill auction, current bid ${d['price']:.2f}, {d['bids']} bids, {d['hours_left']}h left")
+    elif d["mode"] == "auction":
         lines.append(f"{what}, auction, current bid ${d['price']:.2f}, ends {d['ends'][11:16] if d['ends'] else 'soon'} UTC")
     else:
         lines.append(f"{what}, Buy It Now ${d['price']:.2f}")
@@ -373,6 +443,19 @@ def run():
                     d = evaluate(item, w, value, cfg, now, mode)
                     if d:
                         deals[iid] = d
+
+    # ShopGoodwill lots: same searches, valued with the same eBay prices
+    if s.get("shopgoodwill", True):
+        for w in cfg["watch"]:
+            if not w.get("lot_only"):
+                continue
+            value = market_price(token, w, cfg, market, now)
+            if not value:
+                continue
+            for item in search_sgw(w["query"]):
+                d = evaluate_sgw(item, w, value, cfg, now)
+                if d and d["id"] not in seen and d["id"] not in deals:
+                    deals[d["id"]] = d
 
     ranked = sorted(deals.values(), key=lambda d: d["profit"], reverse=True)[: s["max_alerts_per_run"]]
     print(f"{CALLS['n']} eBay calls. {len(ranked)} new deals.")
