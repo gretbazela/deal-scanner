@@ -1,0 +1,26 @@
+name: Key check
+on: workflow_dispatch
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check eBay keys
+        env:
+          ID: ${{ secrets.EBAY_CLIENT_ID }}
+          SECRET: ${{ secrets.EBAY_CLIENT_SECRET }}
+        run: |
+          python3 - <<'EOF'
+          import os, base64, urllib.request, urllib.parse, urllib.error
+          for name in ("ID", "SECRET"):
+              v = os.environ.get(name, "")
+              print(name, "length", len(v), "starts", repr(v[:4]), "ends", repr(v[-4:]), "extra spaces or line breaks:", any(c.isspace() for c in v))
+          for label, i, s in (("as saved", os.environ["ID"], os.environ["SECRET"]), ("trimmed", "".join(os.environ["ID"].split()), "".join(os.environ["SECRET"].split()))):
+              auth = base64.b64encode(f"{i}:{s}".encode()).decode()
+              data = urllib.parse.urlencode({"grant_type": "client_credentials", "scope": "https://api.ebay.com/oauth/api_scope"}).encode()
+              req = urllib.request.Request("https://api.ebay.com/identity/v1/oauth2/token", data=data, headers={"Authorization": "Basic " + auth, "Content-Type": "application/x-www-form-urlencoded"})
+              try:
+                  urllib.request.urlopen(req, timeout=20)
+                  print(label, "eBay login OK")
+              except urllib.error.HTTPError as e:
+                  print(label, "eBay login failed", e.code, e.read()[:200])
+          EOF
