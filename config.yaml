@@ -23,6 +23,9 @@ settings:
   market_min_samples: 15
   market_refresh_hours: 24
   max_alerts_per_run: 20
+  shopgoodwill: true        # also check ShopGoodwill auctions for lots
+  sgw_hours_left: 6         # only ShopGoodwill auctions ending within this many hours
+  sgw_shipping: 15.00       # ShopGoodwill shipping is added at checkout, so assume this
 
 # Skip any listing with these words in the title
 exclude_words: [women, womens, ladies, girls, kids, youth, boys, toddler, baby, infant,
@@ -62,6 +65,20 @@ watch:
   - {name: Deadstock surf shorts, query: deadstock surf shorts, condition: any}
   - {name: Corduroy shorts, query: corduroy shorts mens, condition: any, must: [[vintage, vtg, 80s, 90s, ocean pacific, op, quiksilver, patagonia]]}
 
+  # TOP SELLERS FROM EBAY SOLD DATA (used men's shorts, $40 to $150)
+  - {name: Carhartt carpenter or double knee shorts, query: carhartt shorts, condition: any,
+     must: [[carpenter, double knee, painter, duck, canvas, b25, b79, workwear]], skip: [cornerstone, dickies]}
+  - {name: Vintage Levi's denim shorts, query: levis denim shorts, condition: any, must: [[vintage, vtg, 80s, 90s, usa, orange tab, silver tab, 501, 505, 550, 560, jorts, baggy]]}
+  - {name: Baggy jorts, query: baggy jorts, condition: any, must: [[levis, silvertab, silver tab, jnco, girbaud, polo, tommy, carhartt, fubu, southpole, ecko, enyce, rocawear, stussy]]}
+  - {name: Girbaud shorts, query: girbaud shorts, condition: any}
+  - {name: Polo Ralph Lauren shorts, query: polo ralph lauren shorts, condition: any, skip: [chino]}
+  - {name: Vintage military shorts, query: vintage military shorts, condition: any, must: [[paratrooper, cargo, utility, army, usmc, ripstop, bdu]]}
+  - {name: Eric Emanuel shorts, query: eric emanuel shorts, condition: any}
+  - {name: Stussy shorts, query: stussy shorts, condition: any}
+  - {name: Arc'teryx shorts, query: arcteryx shorts, condition: any}
+  - {name: Kuhl shorts, query: kuhl shorts, condition: any}
+  - {name: Abercrombie vintage shorts, query: abercrombie shorts, condition: any, must: [[vintage, vtg, 90s, y2k, carpenter, cargo, utility]]}
+
   # GOLF AND CHINO SHORTS
   - {name: Peter Millar shorts, query: peter millar shorts, condition: any}
   - {name: Johnnie O shorts, query: johnnie o shorts, condition: any}
@@ -99,4 +116,8 @@ watch:
      must: [[polo, ralph lauren, j crew, vineyard vines, patagonia, bonobos, southern tide, faherty]]}
   - {name: Lululemon shorts lot, query: lululemon shorts lot, value_query: lululemon shorts men, condition: any, lot_only: true}
   - {name: Vuori shorts lot, query: vuori shorts lot, value_query: vuori shorts, condition: any, lot_only: true}
+  - {name: Carhartt shorts lot, query: carhartt shorts lot, value_query: carhartt shorts, condition: any, lot_only: true}
+  - {name: Denim shorts lot, query: denim shorts lot, value_query: levis denim shorts, condition: any, lot_only: true,
+     must: [[levis, polo, girbaud, tommy, carhartt]]}
+  - {name: Polo Ralph Lauren shorts lot, query: polo ralph lauren shorts lot, value_query: polo ralph lauren shorts, condition: any, lot_only: true}
   - {name: Patagonia shorts lot, query: patagonia shorts lot, value_query: patagonia shorts, condition: any, lot_only: true}
