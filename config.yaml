@@ -1,0 +1,234 @@
+# Spyhopper deal scanner settings
+# Menswear focus: shorts, lots, vintage, deadstock and lower profile brands.
+
+settings:
+  min_profit: 20
+  fee_rate: 0.136
+  fee_fixed: 0.40
+  promo_rate: 0.05
+  buyer_shipping: 8.00
+  unknown_ship_in: 12.00
+  min_seller_feedback: 50
+  min_seller_percent: 98
+  max_listing_age_hours: 24
+  auction_window_hours: 3
+  category_id: "11450"
+
+brands:
+  carhartt: {ok: [carhartt], typo: [carhart, carharrt, carhatt, charhartt, carhardt]}
+  patagonia: {ok: [patagonia], typo: [patagonai, patagnia, pategonia, patigonia, patagona, patagoina, patogonia, pattagonia]}
+  rrl: {ok: [rrl, double rl], typo: [double r l]}
+  the north face: {ok: [the north face, north face, tnf], typo: [norht face, north fase, nort face]}
+  harley davidson: {ok: [harley davidson], typo: [harly davidson, harley davidsen, harley davison]}
+  filson: {ok: [filson], typo: [fillson, filsen]}
+  barbour: {ok: [barbour], typo: [barbor, barber waxed]}
+  schott: {ok: [schott], typo: [shott, schot]}
+  levis: {ok: ["levi's", levis, levi], typo: [levies, leviss]}
+  engineered garments: {ok: [engineered garments], typo: [engineered garmemts, engineered garmets, engineer garments]}
+  birdwell: {ok: [birdwell], typo: [birdwel, bird well, birdwells]}
+  champion: {ok: [champion], typo: [champian, champio, champoin]}
+  starter: {ok: [starter], typo: [stater jacket]}
+  hurley: {ok: [hurley], typo: [hurly, hurely, hurlee]}
+  quiksilver: {ok: [quiksilver], typo: [quicksilver, quiksliver, quiksilvr, quicksliver]}
+  billabong: {ok: [billabong], typo: [billibong, billabog, bilabong, billbong]}
+  rip curl: {ok: [rip curl, ripcurl], typo: [rip curll, ripcurll]}
+  pendleton: {ok: [pendleton], typo: [pendelton, pendlton, pendletin]}
+  woolrich: {ok: [woolrich], typo: [woolritch, wool rich, woolrch]}
+  ll bean: {ok: [ll bean, l l bean, llbean], typo: [ll been, l l been]}
+  eddie bauer: {ok: [eddie bauer], typo: [eddie bower, eddy bauer, eddie baur]}
+  reyn spooner: {ok: [reyn spooner], typo: [rein spooner, reyn spoonor, ryan spooner]}
+  columbia: {ok: [columbia], typo: [columbai, colombia sportswear]}
+  nautica: {ok: [nautica], typo: [nautika, natuica]}
+
+# Price book. Lots come first so a lot is never valued as one item.
+items:
+
+  # LOTS
+  - name: Deadstock or NWT menswear lot
+    brand: any
+    all: [[deadstock, new old stock, nwt, new with tags], [lot, bundle, wholesale]]
+    none: [women, womens, ladies, girls, kids, youth, boys, toddler, baby, hat, cap, beanie, scarf, gloves, socks, bag, belt, wallet, jewelry, replica, inspired, mystery, reseller box]
+    per_piece: 15
+
+  - name: Patagonia Baggies shorts lot
+    brand: patagonia
+    all: [[baggies], [lot, bundle]]
+    none: [women, womens, ladies, girls, kids, youth, boys, toddler]
+    per_piece: 30
+
+  - name: Board shorts lot (Hurley, Quiksilver, Billabong, Rip Curl and more)
+    brand: any
+    all: [[board shorts, boardshorts, board short, swim trunks, boardies], [lot, bundle]]
+    none: [women, womens, ladies, girls, kids, youth, boys, toddler, baby, damaged, stained]
+    per_piece: 20
+
+  - name: Vintage shorts lot
+    brand: any
+    all: [[shorts, trunks], [lot, bundle], [vintage, vtg, 70s, 80s, 90s, deadstock]]
+    none: [women, womens, ladies, girls, kids, youth, boys, toddler, baby, damaged, stained, mystery]
+    per_piece: 18
+
+  - name: Men's shorts lot (chino, seersucker, cargo, golf)
+    brand: any
+    all: [[shorts], [lot, bundle], [mens, men's, men]]
+    none: [women, womens, ladies, girls, kids, youth, boys, toddler, baby, damaged, stained, mystery, athletic, gym, basketball, compression]
+    per_piece: 12
+
+  # SHORTS
+  - name: Deadstock vintage shorts
+    brand: any
+    all: [[deadstock, new old stock, nwt, new with tags], [shorts, trunks, board shorts, boardshorts], [vintage, vtg, 70s, 80s, 90s]]
+    none: [women, womens, ladies, girls, kids, youth, boys, toddler, baby, lot, bundle, inspired, style]
+    resale: 45
+
+  - name: Vintage surf shorts (80s and 90s brands)
+    brand: any
+    all: [[quiksilver, quicksilver, billabong, gotcha, ocean pacific, body glove, hang ten, lightning bolt, town and country, maui and sons, catchit], [shorts, trunks, board shorts, boardshorts, walkshorts], [vintage, vtg, 70s, 80s, 90s]]
+    none: [women, womens, ladies, girls, kids, youth, boys, toddler, baby, lot, bundle, inspired, style, reissue, damaged, stained]
+    resale: 45
+
+  - name: Patagonia Baggies shorts
+    brand: patagonia
+    all: [[baggies]]
+    none: [women, womens, ladies, girls, kids, youth, boys, toddler, lot, bundle, pants, jacket]
+    resale: 38
+
+  - name: Birdwell board shorts
+    brand: birdwell
+    all: [[shorts, trunks, britches, boardshorts, board shorts]]
+    none: [women, womens, ladies, girls, kids, youth, boys, lot, bundle]
+    resale: 50
+
+  # MENSWEAR
+  - name: Vintage Carhartt Detroit jacket
+    brand: carhartt
+    all: [[detroit], [jacket, coat], [vintage, vtg, usa, union made, blanket lined]]
+    none: [women, womens, ladies, kids, youth, toddler, reworked, hat, cap, beanie, lot, bundle]
+    resale: 120
+
+  - name: Vintage Carhartt hooded active jacket (J131, J140, J03)
+    brand: carhartt
+    all: [[j131, j140, j03, active jacket], [vintage, vtg, usa, union made]]
+    none: [women, womens, ladies, kids, youth, hat, cap, beanie, lot, bundle]
+    resale: 75
+
+  - name: RRL jacket
+    brand: rrl
+    all: [[jacket, coat, chore, vest]]
+    none: [women, womens, ladies, hat, cap, bag, belt, wallet, style, inspired]
+    resale: 150
+
+  - name: RRL shirt
+    brand: rrl
+    all: [[shirt, flannel, chambray]]
+    none: [women, womens, ladies, style, inspired, tee, t shirt]
+    resale: 75
+
+  - name: Vintage Patagonia Snap T fleece
+    brand: patagonia
+    all: [[snap t, snapt, synchilla], [vintage, vtg, usa]]
+    none: [women, womens, ladies, kids, baby, toddler, youth, hat, cap, beanie, gloves]
+    resale: 80
+
+  - name: Patagonia Retro X jacket (men)
+    brand: patagonia
+    all: [[retro x, retrox, retro pile]]
+    none: [women, womens, ladies, kids, girls, boys, vest, hat, cap, beanie]
+    resale: 90
+
+  - name: Vintage North Face Steep Tech jacket
+    brand: the north face
+    all: [[steep tech], [jacket, shell, parka]]
+    none: [fleece, vest, kids, youth, women, womens, ladies, hat, cap, beanie, bag]
+    resale: 130
+
+  - name: Vintage Harley Davidson Holoubek tee
+    brand: harley davidson
+    all: [[holoubek, 3d emblem]]
+    none: [kids, youth, women, womens, ladies, reprint, hat, cap, patch]
+    resale: 60
+
+  - name: Filson Mackinaw or Tin Cloth jacket
+    brand: filson
+    all: [[mackinaw, tin cloth, cruiser], [jacket, coat, cruiser]]
+    none: [women, womens, ladies, kids, hat, cap, beanie, bag, vest, gloves]
+    resale: 140
+
+  - name: Barbour waxed jacket
+    brand: barbour
+    all: [[jacket, coat, bedale, beaufort, border, international], [wax, waxed]]
+    none: [women, womens, ladies, kids, vest, gilet, quilted, hat, cap, flat cap, beanie, scarf, bag, gloves, tin, rewax]
+    resale: 120
+
+  - name: Schott leather motorcycle jacket
+    brand: schott
+    all: [[perfecto, 618, 613, motorcycle], [jacket, coat]]
+    none: [women, womens, ladies, kids, nylon, wool, hat, cap, bag, belt]
+    resale: 200
+
+  - name: Vintage Levi's Big E jacket
+    brand: levis
+    all: [[big e], [jacket, trucker, type]]
+    none: [premium, lvc, reproduction, repro, women, womens, ladies, kids, black label, hat, cap]
+    resale: 150
+
+  - name: Engineered Garments jacket
+    brand: engineered garments
+    all: [[jacket, coat, bedford, andover]]
+    none: [women, womens, ladies, kids, hat, cap, bag]
+    resale: 120
+
+  - name: Vintage Champion Reverse Weave (USA)
+    brand: champion
+    all: [[reverse weave], [usa, vintage, vtg, 80s, 90s]]
+    none: [kids, youth, women, womens, ladies, reissue, hat, cap, beanie, shorts, lot, bundle]
+    resale: 55
+
+  - name: Vintage Starter NFL or NBA pullover jacket
+    brand: starter
+    all: [[pullover, half zip, 1/2 zip, windbreaker, puffer, satin], [vintage, vtg, 90s, nfl, nba]]
+    none: [kids, youth, women, womens, ladies, reissue, hat, cap, beanie, snapback]
+    resale: 55
+
+  # LOWER PROFILE MENSWEAR
+  - name: Vintage Pendleton wool shirt
+    brand: pendleton
+    all: [[shirt, board shirt, flannel], [vintage, vtg, usa, 60s, 70s, 80s, 90s]]
+    none: [women, womens, ladies, kids, youth, blanket, hat, cap, scarf, bag, damaged, holes, moth]
+    resale: 45
+
+  - name: Vintage Woolrich wool shirt or jacket
+    brand: woolrich
+    all: [[shirt, jacket, coat, mackinaw, buffalo, chamois], [vintage, vtg, usa, 70s, 80s, 90s]]
+    none: [women, womens, ladies, kids, youth, blanket, hat, cap, scarf, bag, damaged, holes, moth]
+    resale: 50
+
+  - name: Vintage LL Bean chamois or flannel shirt
+    brand: ll bean
+    all: [[chamois, flannel, shirt jac, shirt jacket], [vintage, vtg, usa, 80s, 90s]]
+    none: [women, womens, ladies, kids, youth, hat, cap, bag, boots, tote, damaged, holes]
+    resale: 40
+
+  - name: Vintage Eddie Bauer down or parka
+    brand: eddie bauer
+    all: [[down, goose down, parka, puffer, skyliner, karakoram], [vintage, vtg, usa, 70s, 80s, 90s]]
+    none: [women, womens, ladies, kids, youth, hat, cap, bag, vest, damaged, holes]
+    resale: 60
+
+  - name: Reyn Spooner Hawaiian shirt
+    brand: reyn spooner
+    all: [[shirt, aloha, hawaiian]]
+    none: [women, womens, ladies, kids, youth, boys, dress]
+    resale: 40
+
+  - name: Vintage Columbia ski or Bugaboo jacket
+    brand: columbia
+    all: [[jacket, parka, bugaboo, radial sleeve, windbreaker], [vintage, vtg, 80s, 90s]]
+    none: [women, womens, ladies, kids, youth, boys, girls, hat, cap, vest, gloves]
+    resale: 45
+
+  - name: Vintage Nautica sailing jacket
+    brand: nautica
+    all: [[jacket, windbreaker, anorak, pullover, challenge, competition], [vintage, vtg, 80s, 90s]]
+    none: [women, womens, ladies, kids, youth, boys, girls, hat, cap, swim]
+    resale: 50
