@@ -153,8 +153,29 @@ def condition_filter(cond):
     return {"new": ["conditions:{NEW}"], "used": ["conditions:{USED}"]}.get(cond, [])
 
 
+STOP = {"men", "mens", "man", "in", "made", "the", "and", "of", "for", "a"}
+
+
+def query_words_ok(title_n, query):
+    """Every real word of the search must be in the title.
+    eBay's search is loose and returns lots of near matches, so we check
+    the title ourselves. 'boardshorts' counts for 'board shorts'."""
+    squashed = title_n.replace(" ", "")
+    for word in norm(query).split():
+        if word in STOP:
+            continue
+        if f" {word} " in title_n:
+            continue
+        if len(word) > 3 and word in squashed:
+            continue
+        return False
+    return True
+
+
 def title_ok(title_n, w, cfg):
     if any_word(title_n, cfg["exclude_words"]) or any_word(title_n, w["skip"]):
+        return False
+    if not query_words_ok(title_n, w["query"]):
         return False
     return all(any_word(title_n, group) for group in w["must"])
 
@@ -172,7 +193,7 @@ def percentile(values, p):
 
 def market_price(token, w, cfg, market, now):
     s = cfg["settings"]
-    key = f"{w['query']}|{w['condition']}"
+    key = "v2|" + w["query"] + "|" + w["condition"]
     cached = market.get(key)
     if cached and now.timestamp() - cached["at"] < s["market_refresh_hours"] * 3600:
         return cached.get("price")
