@@ -173,6 +173,24 @@
   "price": 18.76,
   "samples": 108
  },
+ "v2|abercrombie shorts|any": {
+  "at": 1795407998.696225,
+  "median_ask": 29.39,
+  "price": 19.1,
+  "samples": 86
+ },
+ "v2|arcteryx shorts|any": {
+  "at": 1795407998.696225,
+  "median_ask": 40.0,
+  "price": 29.74,
+  "samples": 99
+ },
+ "v2|baggy jorts|any": {
+  "at": 1795407998.696225,
+  "median_ask": 33.0,
+  "price": 22.01,
+  "samples": 72
+ },
  "v2|barbour waxed jacket men|any": {
   "at": 1795401324.547901,
   "median_ask": 249.99,
@@ -233,6 +251,12 @@
   "price": 50.99,
   "samples": 176
  },
+ "v2|carhartt shorts|any": {
+  "at": 1795407998.696225,
+  "median_ask": 22.49,
+  "price": 16.54,
+  "samples": 127
+ },
  "v2|corduroy shorts mens|any": {
   "at": 1795407383.328251,
   "median_ask": 35.0,
@@ -257,6 +281,12 @@
   "price": 26.13,
   "samples": 56
  },
+ "v2|eric emanuel shorts|any": {
+  "at": 1795407998.696225,
+  "median_ask": 50.0,
+  "price": 33.99,
+  "samples": 160
+ },
  "v2|faherty shorts|any": {
   "at": 1795407383.328251,
   "median_ask": 24.99,
@@ -274,6 +304,12 @@
   "median_ask": 35.96,
   "price": 25.5,
   "samples": 182
+ },
+ "v2|girbaud shorts|any": {
+  "at": 1795407998.696225,
+  "median_ask": 49.99,
+  "price": 33.99,
+  "samples": 181
  },
  "v2|golf shorts|any": {
   "at": 1795407383.328251,
@@ -316,6 +352,18 @@
   "median_ask": 46.99,
   "price": 29.74,
   "samples": 197
+ },
+ "v2|kuhl shorts|any": {
+  "at": 1795407998.696225,
+  "median_ask": 25.0,
+  "price": 18.7,
+  "samples": 180
+ },
+ "v2|levis denim shorts|any": {
+  "at": 1795407998.696225,
+  "median_ask": 20.0,
+  "price": 15.25,
+  "samples": 104
  },
  "v2|linksoul shorts|any": {
   "at": 1795407383.328251,
@@ -425,6 +473,12 @@
   "price": 16.99,
   "samples": 169
  },
+ "v2|polo ralph lauren shorts|any": {
+  "at": 1795407998.696225,
+  "median_ask": 31.5,
+  "price": 21.24,
+  "samples": 98
+ },
  "v2|quiksilver board shorts|any": {
   "at": 1795401324.547901,
   "median_ask": 20.99,
@@ -491,6 +545,12 @@
   "price": 13.28,
   "samples": 182
  },
+ "v2|stussy shorts|any": {
+  "at": 1795407998.696225,
+  "median_ask": 39.99,
+  "price": 25.5,
+  "samples": 130
+ },
  "v2|tommy bahama silk shirt|any": {
   "at": 1795401324.547901,
   "median_ask": 24.99,
@@ -538,6 +598,12 @@
   "median_ask": 77.97,
   "price": 56.57,
   "samples": 136
+ },
+ "v2|vintage military shorts|any": {
+  "at": 1795407998.696225,
+  "median_ask": 29.95,
+  "price": 19.09,
+  "samples": 120
  },
  "v2|vintage nos shorts|any": {
   "at": 1795407383.328251,
