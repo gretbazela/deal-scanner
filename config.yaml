@@ -31,7 +31,8 @@ settings:
 exclude_words: [women, womens, ladies, girls, kids, youth, boys, toddler, baby, infant,
   replica, inspired, custom, reworked, mystery, reseller box, hat, cap, beanie, socks,
   polo bear, coogi, style, styled, dupe, similar to, look alike, lookalike, alternative,
-  not carhartt, not patagonia, not lululemon, unbranded, no brand]
+  not carhartt, not patagonia, not lululemon, unbranded, no brand,
+  short sleeve, short sleeved, shortsleeve, tee, tees, t shirt, t shirts, tshirt, polo shirt, polo shirts]
 
 # What to watch. condition: used, new, or any.
 # must: every inner list needs one of its words in the title (optional)
