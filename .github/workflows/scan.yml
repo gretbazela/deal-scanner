@@ -3,9 +3,9 @@ name: Deal scan
 on:
   schedule:
     # Daytime, 6 AM to midnight Pacific: every 30 minutes (times are UTC)
-    - cron: "*/30 0-7,14-23 * * *"
+    - cron: "7,37 0-7,14-23 * * *"
     # Overnight, midnight to 6 AM Pacific: every hour
-    - cron: "0 8-13 * * *"
+    - cron: "17 8-13 * * *"
   workflow_dispatch: {}
 
 permissions:
