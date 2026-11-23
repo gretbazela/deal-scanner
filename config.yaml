@@ -3,7 +3,8 @@
 # To add a search, copy a block under "watch" and change the words.
 
 settings:
-  min_profit: 25            # only alert at or above this profit
+  min_profit: 25            # lots: only alert at or above this profit
+  min_profit_single: 15     # single items: only alert at or above this profit
   max_cost_ratio: 0.5       # your cost per piece must be at most 50% of the going price
   fee_rate: 0.136           # eBay final value fee
   promo_rate: 0.05          # promoted listing fee
@@ -26,53 +27,76 @@ settings:
 # Skip any listing with these words in the title
 exclude_words: [women, womens, ladies, girls, kids, youth, boys, toddler, baby, infant,
   replica, inspired, custom, reworked, mystery, reseller box, hat, cap, beanie, socks,
-  polo bear, coogi]
+  polo bear, coogi, style, styled, dupe, similar to, look alike, lookalike, alternative,
+  not carhartt, not patagonia, not lululemon, unbranded, no brand]
 
 # What to watch. condition: used, new, or any.
 # must: every inner list needs one of its words in the title (optional)
 # skip: extra words to skip for this search (optional)
 watch:
-  # BOARD SHORTS
+  # BOARD SHORTS, BY BRAND AND MODEL
   - {name: Hurley Phantom board shorts, query: hurley phantom board shorts, condition: any}
-  - {name: Rip Curl board shorts, query: rip curl mirage board shorts, condition: any}
+  - {name: Hurley board shorts, query: hurley board shorts, condition: any, skip: [phantom]}
+  - {name: Rip Curl Mirage board shorts, query: rip curl mirage, condition: any, must: [[shorts, boardshorts, trunks]]}
+  - {name: Rip Curl board shorts, query: rip curl board shorts, condition: any, skip: [mirage]}
   - {name: Quiksilver board shorts, query: quiksilver board shorts, condition: any}
-  - {name: Billabong board shorts, query: billabong board shorts, condition: any}
+  - {name: Billabong Platinum board shorts, query: billabong platinum board shorts, condition: any}
+  - {name: Billabong board shorts, query: billabong board shorts, condition: any, skip: [platinum]}
   - {name: O'Neill board shorts, query: oneill board shorts, condition: any}
   - {name: Volcom board shorts, query: volcom board shorts, condition: any}
-  - {name: Birdwell board shorts, query: birdwell board shorts, condition: any}
-  - {name: Patagonia Baggies, query: patagonia baggies shorts, condition: any, must: [[baggies]]}
-  - {name: Vintage board shorts, query: vintage board shorts mens, condition: any, must: [[vintage, vtg, 80s, 90s]]}
-  - {name: Deadstock board shorts, query: deadstock board shorts, condition: any, must: [[deadstock, nwt, new with tags, new old stock]]}
+  - {name: RVCA board shorts, query: rvca board shorts, condition: any}
+  - {name: Vissla board shorts, query: vissla board shorts, condition: any}
+  - {name: Birdwell board shorts, query: birdwell, condition: any, must: [[shorts, britches, boardshorts, trunks]]}
+  - {name: Patagonia Baggies, query: patagonia baggies, condition: any, must: [[shorts]], skip: [pants, jacket]}
+  - {name: Patagonia board shorts, query: patagonia board shorts, condition: any}
+  - {name: Vintage board shorts, query: vintage board shorts, condition: any, must: [[vintage, vtg, 70s, 80s, 90s]]}
+  - {name: Vintage surf shorts 80s, query: vintage surf shorts, condition: any,
+     must: [[quiksilver, gotcha, ocean pacific, op, body glove, hang ten, lightning bolt, town and country, maui and sons, catchit, instinct, jimmy z]]}
+  - {name: Y2K board shorts, query: y2k board shorts, condition: any,
+     must: [[hurley, quiksilver, billabong, volcom, rip curl, oneill, rusty, split, ezekiel, dc, fox, no fear, oakley, von zipper, element, globe, reef]]}
+  - {name: Y2K surf shorts, query: y2k surf shorts, condition: any}
+  - {name: Early 2000s board shorts, query: 2000s board shorts, condition: any, must: [[vintage, vtg, y2k, 2000s, early]]}
+  - {name: Deadstock board shorts, query: deadstock board shorts, condition: any}
+  - {name: Vintage NOS shorts, query: vintage nos shorts, condition: any}
+  - {name: Vintage shorts new with tags, query: vintage shorts new with tags, condition: any}
+  - {name: Deadstock surf shorts, query: deadstock surf shorts, condition: any}
+  - {name: Corduroy shorts, query: corduroy shorts mens, condition: any, must: [[vintage, vtg, 80s, 90s, ocean pacific, op, quiksilver, patagonia]]}
 
-  # GOLF
+  # GOLF AND CHINO SHORTS
   - {name: Peter Millar shorts, query: peter millar shorts, condition: any}
-  - {name: Peter Millar quarter zip, query: peter millar quarter zip, condition: any}
-  - {name: Johnnie O shorts or polos, query: johnnie o, condition: any}
-  - {name: Travis Mathew, query: travis mathew, condition: any}
-  - {name: Greyson, query: greyson clothiers, condition: any}
-  - {name: Rhoback, query: rhoback, condition: any}
+  - {name: Johnnie O shorts, query: johnnie o shorts, condition: any}
+  - {name: Travis Mathew shorts, query: travis mathew shorts, condition: any}
+  - {name: Rhoback shorts, query: rhoback shorts, condition: any}
+  - {name: Greyson shorts, query: greyson shorts, condition: any}
+  - {name: G/Fore shorts, query: g fore shorts, condition: any}
+  - {name: Linksoul shorts, query: linksoul shorts, condition: any}
+  - {name: Redvanly shorts, query: redvanly shorts, condition: any}
+  - {name: Polo Ralph Lauren chino shorts, query: polo ralph lauren chino shorts, condition: any}
+  - {name: Vineyard Vines shorts, query: vineyard vines shorts, condition: any}
+  - {name: Faherty shorts, query: faherty shorts, condition: any}
 
-  # ATHLEISURE
-  - {name: Lululemon ABC pants, query: lululemon abc pants men, condition: any, must: [[abc]]}
+  # ATHLETIC SHORTS
   - {name: Lululemon men's shorts, query: lululemon shorts men, condition: any}
-  - {name: Lululemon Metal Vent, query: lululemon metal vent tech, condition: any}
   - {name: Vuori Kore shorts, query: vuori kore short, condition: any}
-  - {name: Vuori men's, query: vuori mens, condition: any}
-  - {name: Rhone men's, query: rhone mens, condition: any}
+  - {name: Vuori shorts, query: vuori shorts, condition: any, skip: [kore]}
+  - {name: Rhone shorts, query: rhone shorts, condition: any}
 
-  # OUTDOOR AND WORKWEAR
-  - {name: Patagonia Better Sweater, query: patagonia better sweater men, condition: any}
-  - {name: Patagonia Snap T, query: patagonia synchilla snap t, condition: any}
-  - {name: Patagonia Retro X, query: patagonia retro x men, condition: any}
-  - {name: Carhartt Detroit jacket, query: carhartt detroit jacket, condition: any, skip: [reworked]}
-  - {name: Carhartt Active jacket, query: carhartt active jacket hooded, condition: any}
-  - {name: Carhartt double knee, query: carhartt double knee pants, condition: any}
-  - {name: Barbour waxed jacket, query: barbour waxed jacket men, condition: any, skip: [flat cap, vest, gilet]}
-  - {name: Filson, query: filson mackinaw, condition: any}
-
-  # VINTAGE AND SHIRTS
-  - {name: Pendleton board shirt, query: vintage pendleton wool shirt, condition: any}
-  - {name: Reyn Spooner, query: reyn spooner shirt, condition: any}
-  - {name: Tommy Bahama silk shirt, query: tommy bahama silk shirt, condition: any, must: [[silk]]}
-  - {name: Levi's 501 USA, query: vintage levis 501 made in usa, condition: any}
-  - {name: Harley Davidson vintage tee, query: vintage harley davidson t shirt single stitch, condition: any}
+  # SHORTS LOTS. Valued from single shorts of the same kind.
+  - {name: Brand board shorts lot, query: board shorts lot, value_query: board shorts, condition: any, lot_only: true,
+     must: [[hurley, quiksilver, billabong, rip curl, oneill, volcom, patagonia, birdwell, rvca, vissla]]}
+  - {name: Board shorts lot, query: mens board shorts lot, value_query: mens board shorts, condition: any, lot_only: true}
+  - {name: Vintage shorts lot, query: vintage shorts lot, value_query: vintage shorts mens, condition: any, lot_only: true}
+  - {name: Y2K board shorts lot, query: y2k board shorts lot, value_query: y2k board shorts, condition: any, lot_only: true}
+  - {name: Vintage surf shorts lot, query: vintage surf shorts lot, value_query: vintage surf shorts, condition: any, lot_only: true}
+  - {name: Deadstock shorts lot, query: deadstock shorts lot, value_query: deadstock shorts, condition: any, lot_only: true}
+  - {name: NWT board shorts lot, query: nwt board shorts lot, value_query: board shorts, condition: new, lot_only: true,
+     must: [[hurley, quiksilver, billabong, rip curl, oneill, volcom, patagonia, rvca, vissla]]}
+  - {name: New with tags shorts lot, query: new with tags mens shorts lot, value_query: mens shorts, condition: new, lot_only: true,
+     must: [[hurley, quiksilver, billabong, rip curl, oneill, volcom, patagonia, rvca, vissla, peter millar, travis mathew, vuori, lululemon, polo]]}
+  - {name: Golf shorts lot, query: golf shorts lot, value_query: golf shorts, condition: any, lot_only: true,
+     must: [[peter millar, johnnie, travis mathew, travismathew, greyson, rhoback, g fore, gfore, holderness, linksoul, b draddy, zero restriction, redvanly]]}
+  - {name: Chino shorts lot, query: mens chino shorts lot, value_query: mens chino shorts, condition: any, lot_only: true,
+     must: [[polo, ralph lauren, j crew, vineyard vines, patagonia, bonobos, southern tide, faherty]]}
+  - {name: Lululemon shorts lot, query: lululemon shorts lot, value_query: lululemon shorts men, condition: any, lot_only: true}
+  - {name: Vuori shorts lot, query: vuori shorts lot, value_query: vuori shorts, condition: any, lot_only: true}
+  - {name: Patagonia shorts lot, query: patagonia shorts lot, value_query: patagonia shorts, condition: any, lot_only: true}
