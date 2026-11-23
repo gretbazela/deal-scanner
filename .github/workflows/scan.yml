@@ -2,7 +2,10 @@ name: Deal scan
 
 on:
   schedule:
-    - cron: "*/20 0-7,14-23 * * *"
+    # Daytime, 6 AM to midnight Pacific: every 30 minutes (times are UTC)
+    - cron: "*/30 0-7,14-23 * * *"
+    # Overnight, midnight to 6 AM Pacific: every hour
+    - cron: "0 8-13 * * *"
   workflow_dispatch: {}
 
 permissions:
@@ -15,7 +18,7 @@ concurrency:
 jobs:
   scan:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -29,11 +32,12 @@ jobs:
           EBAY_CLIENT_SECRET: ${{ secrets.EBAY_CLIENT_SECRET }}
           NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
         run: python scanner.py
-      - name: Save the list of deals already sent
+      - name: Save deals already sent and market prices
+        if: always()
         run: |
           git config user.name "deal-scanner"
           git config user.email "deal-scanner@users.noreply.github.com"
-          git add seen.json
-          git diff --cached --quiet || git commit -m "Update seen deals"
+          git add seen.json market.json 2>/dev/null || true
+          git diff --cached --quiet || git commit -m "Update seen deals and market prices"
+          git pull --rebase --quiet || true
           git push
-
