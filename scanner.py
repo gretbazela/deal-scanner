@@ -1,22 +1,22 @@
-"""Spyhopper deal scanner.
+"""Spyhopper deal scanner, version 2.
 
-Searches eBay (official Browse API) for new Buy It Now listings and auctions
-ending soon, values each listing with the price book in config.yaml, and sends
-anything with enough profit to the ntfy app on your phone.
+How it works
+  1. For every search in config.yaml it learns the going price on eBay from
+     current Buy It Now listings (cached for a day in market.json).
+  2. It then checks new Buy It Now listings and auctions ending soon for the
+     same search, including lots.
+  3. Anything priced well under the going price that still clears your
+     minimum profit after fees and shipping is sent to ntfy on your phone.
 
-Environment variables (set as GitHub secrets):
-  EBAY_CLIENT_ID      eBay App ID (Client ID), Production keyset
-  EBAY_CLIENT_SECRET  eBay Cert ID (Client Secret), Production keyset
-  NTFY_TOPIC          ntfy topic your phone subscribes to
-Optional:
-  DRY_RUN=1           print deals instead of sending alerts
-  FORCE_AUCTIONS=1    check auctions on this run even if not on the hour
+Secrets (GitHub repo settings): EBAY_CLIENT_ID, EBAY_CLIENT_SECRET, NTFY_TOPIC
+Optional: DRY_RUN=1 prints deals instead of sending them.
 """
 
 import base64
 import json
 import os
 import re
+import statistics
 import sys
 import time
 from datetime import datetime, timedelta, timezone
@@ -28,16 +28,17 @@ import yaml
 HERE = Path(__file__).parent
 CONFIG_PATH = HERE / "config.yaml"
 SEEN_PATH = HERE / "seen.json"
+MARKET_PATH = HERE / "market.json"
 TOKEN_URL = "https://api.ebay.com/identity/v1/oauth2/token"
 SEARCH_URL = "https://api.ebay.com/buy/browse/v1/item_summary/search"
 NTFY_URL = "https://ntfy.sh/"
+LOT_WORDS = ["lot", "bundle", "wholesale", "bulk"]
 
 
-# ---------- text matching ----------
+# ---------- helpers ----------
 
 def norm(text):
-    """Lowercase, drop apostrophes, turn other punctuation into spaces."""
-    text = text.lower().replace("'", "").replace("’", "")
+    text = (text or "").lower().replace("'", "").replace("’", "")
     text = re.sub(r"[^a-z0-9]+", " ", text)
     return " " + " ".join(text.split()) + " "
 
@@ -46,288 +47,263 @@ def has(title_n, term):
     return norm(term) in title_n
 
 
-def load_config(path=CONFIG_PATH):
-    """Read config.yaml and make sure every word list holds text."""
-    cfg = yaml.safe_load(Path(path).read_text())
-    for spec in cfg["brands"].values():
-        for k in ("ok", "typo"):
-            spec[k] = [str(t) for t in spec.get(k, []) or []]
-    for rule in cfg["items"]:
-        rule["brand"] = str(rule["brand"])
-        rule["all"] = [[str(t) for t in g] for g in rule.get("all", []) or []]
-        rule["none"] = [str(t) for t in rule.get("none", []) or []]
-    return cfg
+def any_word(title_n, words):
+    return any(has(title_n, w) for w in words or [])
 
 
-def build_brands(cfg):
-    brands = {}
-    for key, spec in cfg["brands"].items():
-        brands[key] = {
-            "ok": [t for t in spec.get("ok", [])],
-            "typo": [t for t in spec.get("typo", [])],
-        }
-    return brands
-
-
-def brand_hit(title_n, brand):
-    """Return 'ok', 'typo', or None."""
-    if any(has(title_n, t) for t in brand["ok"]):
-        return "ok"
-    if any(has(title_n, t) for t in brand["typo"]):
-        return "typo"
-    return None
+def money(obj):
+    try:
+        return float(obj["value"])
+    except (TypeError, KeyError, ValueError):
+        return None
 
 
 LOT_PATTERNS = [
     r"\blot of (\d{1,3})\b",
-    r"\b(\d{1,3}) ?(?:pairs?|pcs?|pieces?|items?)\b",
+    r"\b(\d{1,3}) ?(?:pairs?|pcs?|pieces?|items?|shorts|shirts|pants)\b",
     r"\blot (?:of )?\(?(\d{1,3})\)?\b",
     r"\b(\d{1,3}) ?x\b",
+    r"\bx ?(\d{1,3})\b",
+    r"\bset of (\d{1,3})\b",
 ]
 
 
-def lot_count(title):
+def lot_count(title, max_lot):
     t = title.lower()
     for pat in LOT_PATTERNS:
         m = re.search(pat, t)
         if m:
             n = int(m.group(1))
-            if 2 <= n <= 200:
+            if 2 <= n <= max_lot:
                 return n
     return None
 
 
-def value_listing(title, cfg, brands):
-    """Find the price book rule for a title. Returns dict or None."""
-    title_n = norm(title)
-    best = None
-    for rule in cfg["items"]:
-        status = "ok"
-        if rule["brand"] != "any":
-            status = brand_hit(title_n, brands[rule["brand"]])
-            if not status:
-                continue
-        if any(has(title_n, w) for w in rule.get("none", [])):
-            continue
-        if not all(any(has(title_n, w) for w in group) for group in rule.get("all", [])):
-            continue
-        if "per_piece" in rule:
-            n = lot_count(title)
-            if not n:
-                continue
-            resale, pieces = rule["per_piece"] * n, n
-        else:
-            resale, pieces = rule["resale"], 1
-        cand = {"rule": rule["name"], "resale": resale, "pieces": pieces,
-                "misspelled": status == "typo",
-                "specificity": len(rule.get("all", []))}
-        # prefer the most specific rule; on ties, the lower (safer) value
-        if (best is None or cand["specificity"] > best["specificity"]
-                or (cand["specificity"] == best["specificity"] and cand["resale"] < best["resale"])):
-            best = cand
-    return best
+def is_lot(title_n):
+    return any_word(title_n, LOT_WORDS)
 
 
-# ---------- profit ----------
-
-def profit(resale, cost, ship_in, s):
-    fees = s["fee_rate"] * (resale + s["buyer_shipping"]) + s["fee_fixed"]
-    promo = s["promo_rate"] * resale
-    return round(resale - cost - ship_in - fees - promo, 2)
-
-
-def ship_cost(item, s):
-    for opt in item.get("shippingOptions", []) or []:
-        cost = (opt.get("shippingCost") or {}).get("value")
-        if cost is not None:
-            return float(cost), False
-    return s["unknown_ship_in"], True
+def load_json(path, default):
+    try:
+        return json.loads(path.read_text())
+    except Exception:
+        return default
 
 
-# ---------- eBay API ----------
+def load_config(path=CONFIG_PATH):
+    cfg = yaml.safe_load(Path(path).read_text())
+    cfg.setdefault("exclude_words", [])
+    cfg["exclude_words"] = [str(w) for w in cfg["exclude_words"] or []]
+    for w in cfg["watch"]:
+        w["query"] = str(w["query"])
+        w.setdefault("name", w["query"])
+        w.setdefault("condition", "used")
+        w["must"] = [[str(t) for t in (g if isinstance(g, list) else [g])] for g in (w.get("must") or [])]
+        w["skip"] = [str(t) for t in (w.get("skip") or [])]
+    return cfg
 
-def get_token(client_id, secret):
-    auth = base64.b64encode(f"{client_id}:{secret}".encode()).decode()
+
+# ---------- eBay ----------
+
+def get_token(client_id, client_secret):
+    client_id = "".join(client_id.split())
+    client_secret = "".join(client_secret.split())
+    auth = base64.b64encode(f"{client_id}:{client_secret}".encode()).decode()
     r = requests.post(
         TOKEN_URL,
-        headers={"Authorization": f"Basic {auth}",
+        headers={"Authorization": "Basic " + auth,
                  "Content-Type": "application/x-www-form-urlencoded"},
         data={"grant_type": "client_credentials",
               "scope": "https://api.ebay.com/oauth/api_scope"},
         timeout=30,
     )
-    r.raise_for_status()
+    if r.status_code != 200:
+        print(f"eBay login failed {r.status_code}: {r.text[:300]}")
+        sys.exit(1)
     return r.json()["access_token"]
 
 
+CALLS = {"n": 0}
+
+
 def search(token, q, filters, sort, category, limit=100):
-    params = {"q": q, "filter": ",".join(filters), "limit": str(limit),
-              "category_ids": category}
+    params = {"q": q, "limit": str(limit), "filter": ",".join(filters)}
+    if category:
+        params["category_ids"] = category
     if sort:
         params["sort"] = sort
-    r = requests.get(
-        SEARCH_URL,
-        headers={"Authorization": f"Bearer {token}",
-                 "X-EBAY-C-MARKETPLACE-ID": "EBAY_US"},
-        params=params,
-        timeout=30,
-    )
-    if r.status_code != 200:
-        print(f"  search failed ({r.status_code}) for {q!r}: {r.text[:200]}")
+    for attempt in range(3):
+        CALLS["n"] += 1
+        r = requests.get(
+            SEARCH_URL, params=params, timeout=30,
+            headers={"Authorization": "Bearer " + token,
+                     "X-EBAY-C-MARKETPLACE-ID": "EBAY_US"},
+        )
+        if r.status_code == 200:
+            return r.json().get("itemSummaries", []) or []
+        if r.status_code in (429, 500, 502, 503):
+            time.sleep(2 + attempt * 3)
+            continue
+        print(f"  search failed ({r.status_code}) for '{q}': {r.text[:200]}")
         return []
-    return r.json().get("itemSummaries", []) or []
+    return []
 
 
-def or_group(terms, cap=6):
-    terms = list(dict.fromkeys(terms))[:cap]
-    return terms[0] if len(terms) == 1 else "(" + ", ".join(terms) + ")"
+def condition_filter(cond):
+    return {"new": ["conditions:{NEW}"], "used": ["conditions:{USED}"]}.get(cond, [])
 
 
-def build_queries(cfg, brands):
-    """One query per price book rule, plus one misspelling sweep per brand."""
+def title_ok(title_n, w, cfg):
+    if any_word(title_n, cfg["exclude_words"]) or any_word(title_n, w["skip"]):
+        return False
+    return all(any_word(title_n, group) for group in w["must"])
+
+
+# ---------- market price ----------
+
+def percentile(values, p):
+    values = sorted(values)
+    if not values:
+        return None
+    k = (len(values) - 1) * p
+    lo, hi = int(k), min(int(k) + 1, len(values) - 1)
+    return values[lo] + (values[hi] - values[lo]) * (k - lo)
+
+
+def market_price(token, w, cfg, market, now):
     s = cfg["settings"]
-    queries = []
-    for rule in cfg["items"]:
-        parts = []
-        if rule["brand"] != "any":
-            parts.append(brands[rule["brand"]]["ok"][0])
-        groups = rule.get("all", [])
-        if groups:
-            parts.append(or_group(groups[0]))
-        if "per_piece" in rule:
-            cap = None
-        else:
-            cap = max(rule["resale"] - s["min_profit"], 5)
-        queries.append({"q": " ".join(parts), "max_price": cap, "label": rule["name"]})
-    for key, b in brands.items():
-        if b["typo"]:
-            queries.append({"q": or_group(b["typo"], cap=10), "max_price": 400,
-                            "label": f"{key} misspellings"})
-    return queries
+    key = f"{w['query']}|{w['condition']}"
+    cached = market.get(key)
+    if cached and now.timestamp() - cached["at"] < s["market_refresh_hours"] * 3600:
+        return cached.get("price")
+    items = search(token, w["query"], ["buyingOptions:{FIXED_PRICE}", "priceCurrency:USD",
+                                       "itemLocationCountry:US"] + condition_filter(w["condition"]),
+                   None, s["category_id"], limit=200)
+    prices = []
+    for it in items:
+        tn = norm(it.get("title"))
+        if is_lot(tn) or not title_ok(tn, w, cfg):
+            continue
+        p = money(it.get("price"))
+        if p and p >= 5:
+            prices.append(p)
+    price = None
+    if len(prices) >= s["market_min_samples"]:
+        # Asking prices run above sold prices, so use a low percentile
+        # and then a safety discount.
+        price = round(percentile(prices, s["market_percentile"]) * s["market_discount"], 2)
+    market[key] = {"at": now.timestamp(), "price": price, "samples": len(prices),
+                   "median_ask": round(statistics.median(prices), 2) if prices else None}
+    return price
 
 
-# ---------- seen list ----------
+# ---------- deals ----------
 
-def load_seen():
-    if SEEN_PATH.exists():
-        try:
-            return json.loads(SEEN_PATH.read_text())
-        except json.JSONDecodeError:
-            return {}
-    return {}
-
-
-def save_seen(seen):
-    cutoff = time.time() - 45 * 86400
-    seen = {k: v for k, v in seen.items() if v >= cutoff}
-    SEEN_PATH.write_text(json.dumps(seen, indent=0, sort_keys=True))
+def ship_cost(item, s):
+    opts = item.get("shippingOptions") or []
+    for o in opts:
+        c = money(o.get("shippingCost"))
+        if c is not None:
+            return c, False
+    return s["unknown_ship_in"], True
 
 
-# ---------- evaluation ----------
-
-def parse_time(ts):
-    if not ts:
-        return None
-    try:
-        return datetime.fromisoformat(ts.replace("Z", "+00:00"))
-    except ValueError:
-        return None
-
-
-def evaluate(item, cfg, brands, now, mode):
+def evaluate(item, w, single_value, cfg, now, mode):
     s = cfg["settings"]
     title = item.get("title", "")
+    tn = norm(title)
+    if not title_ok(tn, w, cfg):
+        return None
+    if any_word(tn, ["for parts", "as is", "read description", "damaged", "stain", "stained", "holes"]):
+        return None
     seller = item.get("seller") or {}
     try:
         if int(seller.get("feedbackScore", 0)) < s["min_seller_feedback"]:
             return None
-        if float(seller.get("feedbackPercentage", 100)) < s["min_seller_percent"]:
+        if float(seller.get("feedbackPercentage", 0)) < s["min_seller_percent"]:
             return None
     except (TypeError, ValueError):
-        pass
+        return None
 
-    if mode == "bin":
-        created = parse_time(item.get("itemCreationDate"))
-        if created and now - created > timedelta(hours=s["max_listing_age_hours"]):
-            return None
-        price = float((item.get("price") or {}).get("value", 0) or 0)
+    if mode == "auction":
+        price = money(item.get("currentBidPrice")) or money(item.get("price"))
     else:
-        bid = item.get("currentBidPrice") or item.get("price") or {}
-        price = float(bid.get("value", 0) or 0)
-    if price <= 0:
+        price = money(item.get("price"))
+        created = item.get("itemCreationDate")
+        if created:
+            try:
+                dt = datetime.fromisoformat(created.replace("Z", "+00:00"))
+                if now - dt > timedelta(hours=s["max_listing_age_hours"]):
+                    return None
+            except ValueError:
+                pass
+    if not price:
         return None
 
-    val = value_listing(title, cfg, brands)
-    if not val:
-        return None
+    n = 1
+    if is_lot(tn):
+        n = lot_count(title, s["max_lot_size"])
+        if not n:
+            return None
     ship_in, ship_guess = ship_cost(item, s)
-    p = profit(val["resale"], price, ship_in, s)
-    if p < s["min_profit"]:
+    cost = price + ship_in
+    unit_cost = cost / n
+
+    if n == 1:
+        resale = single_value
+        per_piece = single_value
+    else:
+        per_piece = round(single_value * s["lot_piece_factor"], 2)
+        resale = per_piece * n
+
+    rate = s["fee_rate"] + s["promo_rate"]
+    fees = (resale + s["buyer_shipping"] * n) * rate + s["fee_fixed"] * n
+    profit = round(resale - fees - cost, 2)
+    if profit < s["min_profit"]:
         return None
+    if unit_cost > single_value * s["max_cost_ratio"]:
+        return None
+
     return {
-        "id": item.get("itemId"),
-        "title": title,
-        "url": item.get("itemWebUrl"),
-        "mode": mode,
-        "price": price,
-        "ship_in": ship_in,
-        "ship_guess": ship_guess,
-        "resale": val["resale"],
-        "rule": val["rule"],
-        "pieces": val["pieces"],
-        "misspelled": val["misspelled"],
-        "profit": p,
-        "bids": item.get("bidCount"),
-        "ends": item.get("itemEndDate"),
+        "id": item.get("itemId"), "title": title, "url": item.get("itemWebUrl"),
+        "search": w["name"], "mode": mode, "price": price, "ship_in": ship_in,
+        "ship_guess": ship_guess, "count": n, "per_piece": per_piece,
+        "resale": round(resale, 2), "profit": profit,
         "condition": item.get("condition"),
+        "ends": item.get("itemEndDate"),
     }
 
 
-def pacific(ts):
-    dt = parse_time(ts)
-    if not dt:
-        return ""
-    # Pacific time without extra libraries: PST is UTC-8, PDT is UTC-7
-    year = dt.year
-    mar = datetime(year, 3, 8, 10, tzinfo=timezone.utc)
-    dst_start = mar + timedelta(days=(6 - mar.weekday()) % 7)
-    nov = datetime(year, 11, 1, 9, tzinfo=timezone.utc)
-    dst_end = nov + timedelta(days=(6 - nov.weekday()) % 7)
-    offset = 7 if dst_start <= dt < dst_end else 8
-    local = dt - timedelta(hours=offset)
-    return local.strftime("%a %-I:%M %p")
-
-
 def message_for(d):
+    head = f"${d['profit']:.0f} profit: {d['search']}"
     lines = []
-    head = f"${d['profit']:.0f} profit: {d['rule']}"
-    if d["pieces"] > 1:
-        head += f" ({d['pieces']} pieces)"
+    what = f"Lot of {d['count']}" if d["count"] > 1 else "Single item"
     if d["mode"] == "auction":
-        lines.append(f"Auction, current bid ${d['price']:.2f} ({d['bids'] or 0} bids), ends {pacific(d['ends'])}")
-        lines.append("Profit shown is at the current bid, so set your max accordingly.")
+        lines.append(f"{what}, auction, current bid ${d['price']:.2f}, ends {d['ends'][11:16] if d['ends'] else 'soon'} UTC")
     else:
-        lines.append(f"Buy It Now ${d['price']:.2f}")
-    ship = f"${d['ship_in']:.2f}" + (" (guess, calculated shipping)" if d["ship_guess"] else "")
-    lines.append(f"Shipping to you {ship}")
-    lines.append(f"Typical eBay resale ${d['resale']:.0f}")
-    if d["misspelled"]:
-        lines.append("Misspelled brand in title, so most buyers miss it")
+        lines.append(f"{what}, Buy It Now ${d['price']:.2f}")
+    lines.append(f"Shipping to you ${d['ship_in']:.2f}" + (" (guess)" if d["ship_guess"] else ""))
+    if d["count"] > 1:
+        lines.append(f"Est. resale ${d['per_piece']:.0f} each, ${d['resale']:.0f} total")
+    else:
+        lines.append(f"Est. resale ${d['resale']:.0f}")
     if d.get("condition"):
         lines.append(f"Condition: {d['condition']}")
-    lines.append(f"Title: {d['title']}")
-    lines.append("Check photos, tags and seller before buying.")
+    lines.append(d["title"])
+    lines.append("Estimate is from current eBay asking prices. Check sold comps before buying.")
     return head, "\n".join(lines)
 
 
 def notify(topic, d):
     title, body = message_for(d)
-    payload = {"topic": topic, "title": title, "message": body,
-               "click": d["url"], "tags": ["moneybag"],
-               "priority": 4 if d["profit"] >= 50 else 3}
-    r = requests.post(NTFY_URL, json=payload, timeout=20)
-    if r.status_code >= 300:
-        print(f"  ntfy failed ({r.status_code}): {r.text[:200]}")
+    payload = {"topic": topic, "title": title, "message": body, "click": d["url"],
+               "tags": ["moneybag"], "priority": 4 if d["profit"] >= 50 else 3}
+    try:
+        r = requests.post(NTFY_URL, json=payload, timeout=20)
+        if r.status_code >= 300:
+            print(f"  ntfy failed ({r.status_code}): {r.text[:200]}")
+    except requests.RequestException as e:
+        print(f"  ntfy error: {e}")
 
 
 # ---------- main ----------
@@ -335,39 +311,40 @@ def notify(topic, d):
 def run():
     cfg = load_config()
     s = cfg["settings"]
-    brands = build_brands(cfg)
     dry = os.environ.get("DRY_RUN") == "1"
-    topic = os.environ.get("NTFY_TOPIC", "")
+    topic = os.environ.get("NTFY_TOPIC", "").strip()
     token = get_token(os.environ["EBAY_CLIENT_ID"], os.environ["EBAY_CLIENT_SECRET"])
-
     now = datetime.now(timezone.utc)
-    do_auctions = now.minute < 20 or os.environ.get("FORCE_AUCTIONS") == "1"
     end_by = (now + timedelta(hours=s["auction_window_hours"])).strftime("%Y-%m-%dT%H:%M:%SZ")
+    do_auctions = now.minute < 30 or os.environ.get("FORCE_AUCTIONS") == "1"  # hourly
 
-    seen = load_seen()
+    seen = load_json(SEEN_PATH, {})
+    market = load_json(MARKET_PATH, {})
     deals = {}
-    queries = build_queries(cfg, brands)
-    print(f"Running {len(queries)} searches (auctions: {'yes' if do_auctions else 'no'})")
+    no_price = []
 
-    for qd in queries:
-        base = ["itemLocationCountry:US", "deliveryCountry:US"]
-        if qd["max_price"]:
-            base.append(f"price:[..{qd['max_price']}]")
-            base.append("priceCurrency:USD")
+    for w in cfg["watch"]:
+        value = market_price(token, w, cfg, market, now)
+        if not value:
+            no_price.append(w["name"])
+            continue
+        base = ["itemLocationCountry:US", "priceCurrency:USD"] + condition_filter(w["condition"])
+        # The main search already includes lots, so one search per mode keeps
+        # us well under eBay's daily limit.
         modes = [("bin", base + ["buyingOptions:{FIXED_PRICE}"], "newlyListed")]
         if do_auctions:
             modes.append(("auction", base + ["buyingOptions:{AUCTION}", f"itemEndDate:[..{end_by}]"], "endingSoonest"))
         for mode, filters, sort in modes:
-            for item in search(token, qd["q"], filters, sort, s["category_id"]):
-                iid = item.get("itemId")
-                if not iid or iid in seen or iid in deals:
-                    continue
-                d = evaluate(item, cfg, brands, now, mode)
-                if d:
-                    deals[iid] = d
+                for item in search(token, w["query"], filters, sort, s["category_id"], limit=100):
+                    iid = item.get("itemId")
+                    if not iid or iid in seen or iid in deals:
+                        continue
+                    d = evaluate(item, w, value, cfg, now, mode)
+                    if d:
+                        deals[iid] = d
 
-    ranked = sorted(deals.values(), key=lambda d: d["profit"], reverse=True)
-    print(f"Found {len(ranked)} new deals")
+    ranked = sorted(deals.values(), key=lambda d: d["profit"], reverse=True)[: s["max_alerts_per_run"]]
+    print(f"{CALLS['n']} eBay calls. {len(ranked)} new deals.")
     summary = ["## Deals this run", ""]
     for d in ranked:
         title, body = message_for(d)
@@ -375,22 +352,22 @@ def run():
         summary.append(f"- **{title}** [{d['title']}]({d['url']})")
         if not dry and topic:
             notify(topic, d)
-        seen[d["id"]] = time.time()
+        seen[d["id"]] = now.timestamp()
     if not ranked:
         summary.append("No new deals.")
+    if no_price:
+        summary += ["", "Searches without enough listings to price: " + ", ".join(no_price)]
 
-    step_summary = os.environ.get("GITHUB_STEP_SUMMARY")
-    if step_summary:
-        with open(step_summary, "a") as f:
+    cutoff = now.timestamp() - 14 * 86400
+    seen = {k: v for k, v in seen.items() if v > cutoff}
+    SEEN_PATH.write_text(json.dumps(seen, indent=0))
+    MARKET_PATH.write_text(json.dumps(market, indent=1, sort_keys=True))
+    out = os.environ.get("GITHUB_STEP_SUMMARY")
+    if out:
+        with open(out, "a") as f:
             f.write("\n".join(summary) + "\n")
-    if not dry:
-        save_seen(seen)
     return ranked
 
 
 if __name__ == "__main__":
-    try:
-        run()
-    except requests.HTTPError as e:
-        print(f"eBay request failed: {e}")
-        sys.exit(1)
+    run()
