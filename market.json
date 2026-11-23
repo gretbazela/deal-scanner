@@ -677,6 +677,360 @@
   "price": 19.35,
   "samples": 160
  },
+ "v3|2000s board shorts|any": {
+  "at": 1795409072.325705,
+  "median_ask": 27.99,
+  "price": 25.19,
+  "samples": 107
+ },
+ "v3|abercrombie shorts|any": {
+  "at": 1795409072.325705,
+  "median_ask": 29.88,
+  "price": 26.89,
+  "samples": 90
+ },
+ "v3|arcteryx shorts|any": {
+  "at": 1795409072.325705,
+  "median_ask": 40.0,
+  "price": 36.0,
+  "samples": 99
+ },
+ "v3|baggy jorts|any": {
+  "at": 1795409072.325705,
+  "median_ask": 33.0,
+  "price": 29.7,
+  "samples": 72
+ },
+ "v3|billabong board shorts|any": {
+  "at": 1795409072.325705,
+  "median_ask": 25.0,
+  "price": 22.5,
+  "samples": 174
+ },
+ "v3|billabong platinum board shorts|any": {
+  "at": 1795409072.325705,
+  "median_ask": 18.0,
+  "price": 16.2,
+  "samples": 193
+ },
+ "v3|birdwell|any": {
+  "at": 1795409072.325705,
+  "median_ask": 49.99,
+  "price": 44.99,
+  "samples": 188
+ },
+ "v3|board shorts|any": {
+  "at": 1795409072.325705,
+  "median_ask": 17.37,
+  "price": 15.63,
+  "samples": 100
+ },
+ "v3|board shorts|new": {
+  "at": 1795409072.325705,
+  "median_ask": 20.99,
+  "price": 18.89,
+  "samples": 82
+ },
+ "v3|carhartt shorts|any": {
+  "at": 1795409072.325705,
+  "median_ask": 22.49,
+  "price": 20.24,
+  "samples": 130
+ },
+ "v3|corduroy shorts mens|any": {
+  "at": 1795409072.325705,
+  "median_ask": 35.0,
+  "price": 31.5,
+  "samples": 65
+ },
+ "v3|deadstock board shorts|any": {
+  "at": 1795409072.325705,
+  "median_ask": 37.48,
+  "price": 33.73,
+  "samples": 52
+ },
+ "v3|deadstock shorts|any": {
+  "at": 1795409072.325705,
+  "median_ask": 29.97,
+  "price": 26.97,
+  "samples": 188
+ },
+ "v3|deadstock surf shorts|any": {
+  "at": 1795409072.325705,
+  "median_ask": 40.0,
+  "price": 36.0,
+  "samples": 56
+ },
+ "v3|eric emanuel shorts|any": {
+  "at": 1795409072.325705,
+  "median_ask": 50.0,
+  "price": 45.0,
+  "samples": 160
+ },
+ "v3|faherty shorts|any": {
+  "at": 1795409072.325705,
+  "median_ask": 24.99,
+  "price": 22.49,
+  "samples": 181
+ },
+ "v3|g fore shorts|any": {
+  "at": 1795409072.325705,
+  "median_ask": 35.96,
+  "price": 32.36,
+  "samples": 182
+ },
+ "v3|girbaud shorts|any": {
+  "at": 1795409072.325705,
+  "median_ask": 49.99,
+  "price": 44.99,
+  "samples": 180
+ },
+ "v3|golf shorts|any": {
+  "at": 1795409072.325705,
+  "median_ask": 28.99,
+  "price": 26.09,
+  "samples": 35
+ },
+ "v3|greyson shorts|any": {
+  "at": 1795409072.325705,
+  "median_ask": 33.0,
+  "price": 29.7,
+  "samples": 148
+ },
+ "v3|hurley board shorts|any": {
+  "at": 1795409072.325705,
+  "median_ask": 14.99,
+  "price": 13.49,
+  "samples": 127
+ },
+ "v3|hurley phantom board shorts|any": {
+  "at": 1795409072.325705,
+  "median_ask": 21.97,
+  "price": 19.77,
+  "samples": 189
+ },
+ "v3|johnnie o shorts|any": {
+  "at": 1795409072.325705,
+  "median_ask": 28.25,
+  "price": 25.43,
+  "samples": 186
+ },
+ "v3|kuhl shorts|any": {
+  "at": 1795409072.325705,
+  "median_ask": 24.99,
+  "price": 22.49,
+  "samples": 179
+ },
+ "v3|levis denim shorts|any": {
+  "at": 1795409072.325705,
+  "median_ask": 20.5,
+  "price": 18.45,
+  "samples": 108
+ },
+ "v3|linksoul shorts|any": {
+  "at": 1795409072.325705,
+  "median_ask": 19.95,
+  "price": 17.95,
+  "samples": 194
+ },
+ "v3|lululemon shorts men|any": {
+  "at": 1795409072.325705,
+  "median_ask": 25.29,
+  "price": 22.76,
+  "samples": 170
+ },
+ "v3|mens board shorts|any": {
+  "at": 1795409072.325705,
+  "median_ask": 17.91,
+  "price": 16.11,
+  "samples": 186
+ },
+ "v3|mens chino shorts|any": {
+  "at": 1795409072.325705,
+  "median_ask": 21.99,
+  "price": 19.8,
+  "samples": 56
+ },
+ "v3|mens shorts|new": {
+  "at": 1795409072.325705,
+  "median_ask": 39.99,
+  "price": null,
+  "samples": 5
+ },
+ "v3|oneill board shorts|any": {
+  "at": 1795409072.325705,
+  "median_ask": 18.78,
+  "price": 16.9,
+  "samples": 184
+ },
+ "v3|patagonia baggies|any": {
+  "at": 1795409072.325705,
+  "median_ask": 29.95,
+  "price": 26.95,
+  "samples": 178
+ },
+ "v3|patagonia board shorts|any": {
+  "at": 1795409072.325705,
+  "median_ask": 21.99,
+  "price": 19.79,
+  "samples": 195
+ },
+ "v3|patagonia shorts|any": {
+  "at": 1795409072.325705,
+  "median_ask": 25.0,
+  "price": 22.5,
+  "samples": 185
+ },
+ "v3|peter millar shorts|any": {
+  "at": 1795409072.325705,
+  "median_ask": 26.0,
+  "price": 23.4,
+  "samples": 191
+ },
+ "v3|polo ralph lauren chino shorts|any": {
+  "at": 1795409072.325705,
+  "median_ask": 22.5,
+  "price": 20.25,
+  "samples": 162
+ },
+ "v3|polo ralph lauren shorts|any": {
+  "at": 1795409072.325705,
+  "median_ask": 31.0,
+  "price": 27.9,
+  "samples": 103
+ },
+ "v3|quiksilver board shorts|any": {
+  "at": 1795409072.325705,
+  "median_ask": 20.99,
+  "price": 18.89,
+  "samples": 176
+ },
+ "v3|redvanly shorts|any": {
+  "at": 1795409072.325705,
+  "median_ask": 44.97,
+  "price": 40.47,
+  "samples": 78
+ },
+ "v3|rhoback shorts|any": {
+  "at": 1795409072.325705,
+  "median_ask": 44.99,
+  "price": 40.49,
+  "samples": 111
+ },
+ "v3|rhone shorts|any": {
+  "at": 1795409072.325705,
+  "median_ask": 24.99,
+  "price": 22.49,
+  "samples": 175
+ },
+ "v3|rip curl board shorts|any": {
+  "at": 1795409072.325705,
+  "median_ask": 16.1,
+  "price": 14.49,
+  "samples": 124
+ },
+ "v3|rip curl mirage|any": {
+  "at": 1795409072.325705,
+  "median_ask": 21.88,
+  "price": 19.69,
+  "samples": 181
+ },
+ "v3|rvca board shorts|any": {
+  "at": 1795409072.325705,
+  "median_ask": 19.77,
+  "price": 17.8,
+  "samples": 184
+ },
+ "v3|stussy shorts|any": {
+  "at": 1795409072.325705,
+  "median_ask": 39.99,
+  "price": 35.99,
+  "samples": 126
+ },
+ "v3|travis mathew shorts|any": {
+  "at": 1795409072.325705,
+  "median_ask": 22.99,
+  "price": 20.69,
+  "samples": 187
+ },
+ "v3|vineyard vines shorts|any": {
+  "at": 1795409072.325705,
+  "median_ask": 21.66,
+  "price": 19.49,
+  "samples": 189
+ },
+ "v3|vintage board shorts|any": {
+  "at": 1795409072.325705,
+  "median_ask": 29.99,
+  "price": 26.99,
+  "samples": 163
+ },
+ "v3|vintage military shorts|any": {
+  "at": 1795409072.325705,
+  "median_ask": 29.95,
+  "price": 26.95,
+  "samples": 117
+ },
+ "v3|vintage nos shorts|any": {
+  "at": 1795409072.325705,
+  "median_ask": 29.92,
+  "price": 26.93,
+  "samples": 148
+ },
+ "v3|vintage shorts mens|any": {
+  "at": 1795409072.325705,
+  "median_ask": 24.97,
+  "price": 22.47,
+  "samples": 175
+ },
+ "v3|vintage shorts new with tags|any": {
+  "at": 1795409072.325705,
+  "median_ask": 30.0,
+  "price": 27.0,
+  "samples": 92
+ },
+ "v3|vintage surf shorts|any": {
+  "at": 1795409072.325705,
+  "median_ask": 28.36,
+  "price": 25.53,
+  "samples": 32
+ },
+ "v3|vissla board shorts|any": {
+  "at": 1795409072.325705,
+  "median_ask": 22.99,
+  "price": 20.69,
+  "samples": 195
+ },
+ "v3|volcom board shorts|any": {
+  "at": 1795409072.325705,
+  "median_ask": 20.0,
+  "price": 18.0,
+  "samples": 192
+ },
+ "v3|vuori kore short|any": {
+  "at": 1795409072.325705,
+  "median_ask": 34.99,
+  "price": 31.49,
+  "samples": 194
+ },
+ "v3|vuori shorts|any": {
+  "at": 1795409072.325705,
+  "median_ask": 29.99,
+  "price": 26.99,
+  "samples": 109
+ },
+ "v3|y2k board shorts|any": {
+  "at": 1795409072.325705,
+  "median_ask": 31.94,
+  "price": 28.75,
+  "samples": 135
+ },
+ "v3|y2k surf shorts|any": {
+  "at": 1795409072.325705,
+  "median_ask": 28.0,
+  "price": 25.2,
+  "samples": 165
+ },
  "vintage board shorts mens|any": {
   "at": 1795400918.830956,
   "median_ask": 29.92,
