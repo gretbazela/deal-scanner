@@ -172,10 +172,16 @@ def query_words_ok(title_n, query):
     return True
 
 
-def title_ok(title_n, w, cfg):
+LOOKALIKE = re.compile(r" like (?!new )| vibes? | aesthetic | esque | type (?![0-9ivx]+ )| comparable | similar ")
+
+
+def title_ok(title_n, w, cfg, query=None):
     if any_word(title_n, cfg["exclude_words"]) or any_word(title_n, w["skip"]):
         return False
-    if not query_words_ok(title_n, w["query"]):
+    # "RRL like", "like OP", "Patagonia vibes" and similar mean it is not that brand
+    if LOOKALIKE.search(title_n):
+        return False
+    if not query_words_ok(title_n, query or w["query"]):
         return False
     return all(any_word(title_n, group) for group in w["must"])
 
@@ -193,17 +199,18 @@ def percentile(values, p):
 
 def market_price(token, w, cfg, market, now):
     s = cfg["settings"]
-    key = "v2|" + w["query"] + "|" + w["condition"]
+    vq = w.get("value_query") or w["query"]
+    key = "v2|" + vq + "|" + w["condition"]
     cached = market.get(key)
     if cached and now.timestamp() - cached["at"] < s["market_refresh_hours"] * 3600:
         return cached.get("price")
-    items = search(token, w["query"], ["buyingOptions:{FIXED_PRICE}", "priceCurrency:USD",
+    items = search(token, vq, ["buyingOptions:{FIXED_PRICE}", "priceCurrency:USD",
                                        "itemLocationCountry:US"] + condition_filter(w["condition"]),
                    None, s["category_id"], limit=200)
     prices = []
     for it in items:
         tn = norm(it.get("title"))
-        if is_lot(tn) or not title_ok(tn, w, cfg):
+        if is_lot(tn) or not title_ok(tn, w, cfg, vq):
             continue
         p = money(it.get("price"))
         if p and p >= 5:
@@ -262,6 +269,8 @@ def evaluate(item, w, single_value, cfg, now, mode):
         return None
 
     n = 1
+    if w.get("lot_only") and not is_lot(tn):
+        return None
     if is_lot(tn):
         n = lot_count(title, s["max_lot_size"])
         if not n:
@@ -280,7 +289,8 @@ def evaluate(item, w, single_value, cfg, now, mode):
     rate = s["fee_rate"] + s["promo_rate"]
     fees = (resale + s["buyer_shipping"] * n) * rate + s["fee_fixed"] * n
     profit = round(resale - fees - cost, 2)
-    if profit < s["min_profit"]:
+    floor = s["min_profit"] if n > 1 else s.get("min_profit_single", s["min_profit"])
+    if profit < floor:
         return None
     if unit_cost > single_value * s["max_cost_ratio"]:
         return None
