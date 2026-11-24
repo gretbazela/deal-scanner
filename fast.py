@@ -10,6 +10,7 @@ Environment: EBAY_CLIENT_ID, EBAY_CLIENT_SECRET, NTFY_TOPIC
 Optional: DRY_RUN=1 (print instead of send), FAST_ONCE=1 (one pass, then stop)
 """
 
+import copy
 import json
 import os
 import time
@@ -32,7 +33,17 @@ FEEDS = [
     ("jorts", 300),
     ("trunks", 300),
 ]
-STATS = {"scanned": 0, "matched": 0}
+STATS = {"scanned": 0, "matched": 0, "money_blocked": 0, "other_blocked": 0, "near_miss_best": -9999.0}
+RELAXED = {}
+
+
+def relaxed_cfg(cfg):
+    """Same settings with the money rules switched off, to see what blocked a listing."""
+    if "cfg" not in RELAXED:
+        c = copy.deepcopy(cfg)
+        c["settings"].update({"min_profit": -9999, "min_profit_single": -9999, "max_cost_ratio": 999})
+        RELAXED["cfg"] = c
+    return RELAXED["cfg"]
 SGW_EVERY = 300
 AUCTION_EVERY = 300
 NIGHT_SLOWDOWN = 5  # midnight to 5 AM Pacific, everything runs this many times slower
@@ -73,6 +84,7 @@ def evaluate_items(items, watches, cfg, now, processed, seen):
         tn = sc.norm(item.get("title"))
         best = None
         hit = False
+        money = []
         for w, value in watches:
             if not cond_ok(item, w):
                 continue
@@ -80,10 +92,20 @@ def evaluate_items(items, watches, cfg, now, processed, seen):
                 continue
             hit = True
             d = sc.evaluate(item, w, value, cfg, now, mode)
+            if d is None:
+                d2 = sc.evaluate(item, w, value, relaxed_cfg(cfg), now, mode)
+                if d2:
+                    money.append(d2["profit"])
             if d and (best is None or d["profit"] > best["profit"]):
                 best = d
         if hit:
             STATS["matched"] += 1
+            if best is None:
+                if money:
+                    STATS["money_blocked"] += 1
+                    STATS["near_miss_best"] = max(STATS["near_miss_best"], max(money))
+                else:
+                    STATS["other_blocked"] += 1
         if best:
             found[iid] = best
     return found
@@ -180,7 +202,7 @@ def main():
             processed.clear()
         if cycles % 30 == 0:
             seen = save(seen, market)
-            print(f"{cycles} passes, {alerts} alerts, {sc.CALLS['n']} eBay calls, {STATS['scanned']} listings checked, {STATS['matched']} matched a watch", flush=True)
+            print(f"{cycles} passes, {alerts} alerts, {sc.CALLS['n']} eBay calls, {STATS['scanned']} listings checked, {STATS['matched']} matched a watch, {STATS['money_blocked']} blocked by profit rules, {STATS['other_blocked']} blocked by other rules, best blocked profit ${STATS['near_miss_best']:.0f}", flush=True)
         if once:
             break
         time.sleep(15)
