@@ -5,7 +5,7 @@
 settings:
   min_profit: 20            # lots: only alert at or above this profit
   min_profit_single: 10     # single items: only alert at or above this profit
-  max_cost_ratio: 0.6       # your cost per piece must be at most 60% of the going price
+  max_cost_ratio: 0.7       # your cost per piece must be at most 70% of the going price
   fee_rate: 0.136           # eBay final value fee
   promo_rate: 0.05          # promoted listing fee
   fee_fixed: 0.40           # per order fee
@@ -14,18 +14,20 @@ settings:
   min_seller_feedback: 25
   min_seller_percent: 97
   max_listing_age_hours: 72 # only Buy It Now listings newer than this
-  auction_window_hours: 3   # auctions ending within this many hours
+  auction_window_hours: 6   # auctions ending within this many hours
   category_id: "1059"       # eBay Men's Clothing
   max_lot_size: 40
   lot_piece_factor: 0.85    # lot pieces valued at 85% of a single (some are weaker)
   market_percentile: 0.5    # use the middle of current asking prices...
   market_discount: 0.9      # ...minus 10%, since asking prices run above sold prices
-  market_min_samples: 15
+  market_min_samples: 10
   market_refresh_hours: 24
   max_alerts_per_run: 20
   shopgoodwill: true        # also check ShopGoodwill auctions for lots
-  sgw_hours_left: 6         # only ShopGoodwill auctions ending within this many hours
+  sgw_hours_left: 12         # only ShopGoodwill auctions ending within this many hours
   sgw_shipping: 15.00       # ShopGoodwill shipping is added at checkout, so assume this
+  sgw_ship_per_piece: 1.50  # plus this for each piece in the lot
+  auction_close_ratio: 0.35 # auctions usually close near this share of resale, so profit uses that, not the opening bid
 
 # Skip any listing with these words in the title
 exclude_words: [women, womens, ladies, girls, kids, youth, boys, toddler, baby, infant,
