@@ -465,8 +465,9 @@ def run():
     summary = ["## Deals this run", ""]
     for d in ranked:
         title, body = message_for(d)
-        print(f"\n{title}\n{body}\n{d['url']}")
-        summary.append(f"- **{title}** [{d['title']}]({d['url']})")
+        if dry:
+            print(f"\n{title}\n{body}\n{d['url']}")
+        summary.append("- 1 deal sent")
         if not dry and topic:
             notify(topic, d)
         seen[d["id"]] = now.timestamp()
