@@ -3,9 +3,9 @@
 # To add a search, copy a block under "watch" and change the words.
 
 settings:
-  min_profit: 20            # lots: only alert at or above this profit
-  min_profit_single: 10     # single items: only alert at or above this profit
-  max_cost_ratio: 0.7       # your cost per piece must be at most 70% of the going price
+  min_profit: 15            # lots: only alert at or above this profit
+  min_profit_single: 8      # single items: only alert at or above this profit
+  max_cost_ratio: 0.8       # your cost per piece must be at most 80% of the going price
   fee_rate: 0.136           # eBay final value fee
   promo_rate: 0.05          # promoted listing fee
   fee_fixed: 0.40           # per order fee
