@@ -13,6 +13,7 @@ Optional: DRY_RUN=1 (print instead of send), FAST_ONCE=1 (one pass, then stop)
 import copy
 import json
 import os
+import re
 import time
 from datetime import datetime, timezone
 from zoneinfo import ZoneInfo
@@ -45,6 +46,51 @@ def relaxed_cfg(cfg):
         RELAXED["cfg"] = c
     return RELAXED["cfg"]
 SGW_EVERY = 300
+
+# Common misspellings of your brands. Sellers who misspell a brand get fewer
+# views, so these listings sit longer and are often cheap.
+TYPOS = {
+    "hurly": "hurley", "hurlley": "hurley", "hurely": "hurley", "hurly phantom": "hurley phantom",
+    "quicksilver": "quiksilver", "quiksliver": "quiksilver", "quicksliver": "quiksilver", "quiksilvr": "quiksilver",
+    "billabon": "billabong", "bilabong": "billabong", "billibong": "billabong", "billabang": "billabong",
+    "patagoina": "patagonia", "patagonai": "patagonia", "patogonia": "patagonia", "pategonia": "patagonia", "patagonia's": "patagonia",
+    "carhart": "carhartt", "carharrt": "carhartt", "carhartts": "carhartt", "carhatt": "carhartt",
+    "oneil": "oneill", "o neil": "oneill", "o neill": "oneill",
+    "volcome": "volcom", "volcomb": "volcom",
+    "stusy": "stussy", "stussi": "stussy", "stuessy": "stussy",
+    "lulu lemon": "lululemon", "lululmon": "lululemon", "lulelemon": "lululemon", "lulemon": "lululemon",
+    "arc teryx": "arcteryx", "arcterx": "arcteryx",
+    "vouri": "vuori", "vuoori": "vuori",
+    "peter miller": "peter millar", "peter millars": "peter millar",
+    "travis matthew": "travis mathew", "travismathew": "travis mathew",
+    "vinyard vines": "vineyard vines", "vineyards vines": "vineyard vines",
+    "johnny o": "johnnie o",
+    "birdwel": "birdwell", "bird well": "birdwell",
+    "visla": "vissla", "vissala": "vissla",
+    "ripcurl": "rip curl", "rip curls": "rip curl",
+    "bordshorts": "board shorts", "boardshort": "board shorts", "boardshorts": "board shorts", "board short": "board shorts",
+}
+TYPO_RES = [(re.compile(r"\b" + re.escape(w) + r"\b", re.I), r) for w, r in TYPOS.items()]
+
+
+def fix_title(title):
+    for rx, right in TYPO_RES:
+        title = rx.sub(right, title)
+    return title
+
+
+def try_offer(item, w, value, cfg, now):
+    """For Best Offer listings: would it be a deal if the seller took a lower offer?"""
+    price = sc.money(item.get("price"))
+    if not price:
+        return None
+    ratio = cfg["settings"].get("offer_ratio", 0.75)
+    offer = round(price * ratio, 2)
+    cheaper = dict(item, price={"value": str(offer), "currency": "USD"})
+    d = sc.evaluate(cheaper, w, value, cfg, now, "bin")
+    if d:
+        d["offer_from"] = price
+    return d
 AUCTION_EVERY = 300
 NIGHT_SLOWDOWN = 5  # midnight to 5 AM Pacific, everything runs this many times slower
 
@@ -81,7 +127,11 @@ def evaluate_items(items, watches, cfg, now, processed, seen):
             continue
         processed.add(key)
         STATS["scanned"] += 1
-        tn = sc.norm(item.get("title"))
+        title = item.get("title") or ""
+        fixed = fix_title(title)
+        typo = fixed != title
+        view = dict(item, title=fixed) if typo else item
+        tn = sc.norm(fixed)
         best = None
         hit = False
         money = []
@@ -91,9 +141,11 @@ def evaluate_items(items, watches, cfg, now, processed, seen):
             if not sc.title_ok(tn, w, cfg):
                 continue
             hit = True
-            d = sc.evaluate(item, w, value, cfg, now, mode)
+            d = sc.evaluate(view, w, value, cfg, now, mode)
+            if d is None and mode == "bin" and "BEST_OFFER" in (item.get("buyingOptions") or []):
+                d = try_offer(view, w, value, cfg, now)
             if d is None:
-                d2 = sc.evaluate(item, w, value, relaxed_cfg(cfg), now, mode)
+                d2 = sc.evaluate(view, w, value, relaxed_cfg(cfg), now, mode)
                 if d2:
                     money.append(d2["profit"])
             if d and (best is None or d["profit"] > best["profit"]):
@@ -107,6 +159,8 @@ def evaluate_items(items, watches, cfg, now, processed, seen):
                 else:
                     STATS["other_blocked"] += 1
         if best:
+            if typo:
+                best["title"] = title + " [misspelled title]"
             found[iid] = best
     return found
 
