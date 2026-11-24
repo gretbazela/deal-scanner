@@ -36,6 +36,9 @@ FEEDS = [
 ]
 STATS = {"scanned": 0, "matched": 0, "money_blocked": 0, "other_blocked": 0, "near_miss_best": -9999.0}
 RELAXED = {}
+WATCHLIST = {}  # near misses to re-check for price drops: id -> dict
+WATCH_MAX = 60
+GONE = {"n": 0, "fast": 0}  # listings that vanished, and how many within 6 hours
 
 
 def relaxed_cfg(cfg):
@@ -122,7 +125,7 @@ def evaluate_items(items, watches, cfg, now, processed, seen):
         if not iid or iid in seen:
             continue
         mode = "auction" if "AUCTION" in (item.get("buyingOptions") or []) else "bin"
-        key = (iid, mode, item.get("currentBidPrice", {}).get("value") if mode == "auction" else None)
+        key = (iid, mode, (item.get("currentBidPrice") or {}).get("value") if mode == "auction" else (item.get("price") or {}).get("value"))
         if key in processed:
             continue
         processed.add(key)
@@ -135,6 +138,7 @@ def evaluate_items(items, watches, cfg, now, processed, seen):
         best = None
         hit = False
         money = []
+        near = None
         for w, value in watches:
             if not cond_ok(item, w):
                 continue
@@ -148,11 +152,16 @@ def evaluate_items(items, watches, cfg, now, processed, seen):
                 d2 = sc.evaluate(view, w, value, relaxed_cfg(cfg), now, mode)
                 if d2:
                     money.append(d2["profit"])
+                    if mode == "bin" and d2["profit"] > -10 and (near is None or d2["profit"] > near[0]):
+                        near = (d2["profit"], view, w, value)
             if d and (best is None or d["profit"] > best["profit"]):
                 best = d
         if hit:
             STATS["matched"] += 1
             if best is None:
+                if near and len(WATCHLIST) < WATCH_MAX:
+                    WATCHLIST[iid] = {"item": near[1], "w": near[2], "value": near[3],
+                                      "price": sc.money(near[1].get("price")), "at": time.time(), "typo": typo}
                 if money:
                     STATS["money_blocked"] += 1
                     STATS["near_miss_best"] = max(STATS["near_miss_best"], max(money))
@@ -162,6 +171,39 @@ def evaluate_items(items, watches, cfg, now, processed, seen):
             if typo:
                 best["title"] = title + " [misspelled title]"
             found[iid] = best
+    return found
+
+
+def recheck_watchlist(token, cfg, now, seen):
+    """Look again at near misses. If the seller dropped the price into deal range, alert."""
+    found = {}
+    for iid in list(WATCHLIST)[:12]:
+        e = WATCHLIST[iid]
+        if time.time() - e["at"] > 48 * 3600:
+            del WATCHLIST[iid]
+            continue
+        cur = sc.get_item(token, iid)
+        if cur == "error":
+            continue
+        if cur is None:
+            GONE["n"] += 1
+            if time.time() - e["at"] < 6 * 3600:
+                GONE["fast"] += 1
+            del WATCHLIST[iid]
+            continue
+        price = sc.money(cur.get("price"))
+        if not price or not e["price"] or price >= e["price"]:
+            continue
+        item = dict(e["item"], price=cur.get("price"))
+        d = sc.evaluate(item, e["w"], e["value"], cfg, now, "bin")
+        if d is None and "BEST_OFFER" in (item.get("buyingOptions") or []):
+            d = try_offer(item, e["w"], e["value"], cfg, now)
+        if d and iid not in seen:
+            d["title"] = d["title"] + f" [price dropped from ${e['price']:.2f}]"
+            found[iid] = d
+            del WATCHLIST[iid]
+        else:
+            e["price"] = price
     return found
 
 
@@ -244,6 +286,11 @@ def main():
                     if d and d["id"] not in seen and d["id"] not in found:
                         found[d["id"]] = d
 
+        k = ("recheck",)
+        if once or time.time() >= due.get(k, 0):
+            due[k] = time.time() + 600 * slow
+            found.update(recheck_watchlist(token, cfg, now, seen))
+
         ranked = sorted(found.values(), key=lambda d: d["profit"], reverse=True)[:10]
         for d in ranked:
             if d["id"] in seen:
@@ -256,7 +303,7 @@ def main():
             processed.clear()
         if cycles % 30 == 0:
             seen = save(seen, market)
-            print(f"{cycles} passes, {alerts} alerts, {sc.CALLS['n']} eBay calls, {STATS['scanned']} listings checked, {STATS['matched']} matched a watch, {STATS['money_blocked']} blocked by profit rules, {STATS['other_blocked']} blocked by other rules, best blocked profit ${STATS['near_miss_best']:.0f}", flush=True)
+            print(f"{cycles} passes, {alerts} alerts, {sc.CALLS['n']} eBay calls, {STATS['scanned']} listings checked, {STATS['matched']} matched a watch, {STATS['money_blocked']} blocked by profit rules, {STATS['other_blocked']} blocked by other rules, best blocked profit ${STATS['near_miss_best']:.0f}, {len(WATCHLIST)} near misses watched, {GONE['n']} gone ({GONE['fast']} within 6h)", flush=True)
         if once:
             break
         time.sleep(15)
