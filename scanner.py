@@ -207,7 +207,7 @@ def percentile(values, p):
 def market_price(token, w, cfg, market, now):
     s = cfg["settings"]
     vq = w.get("value_query") or w["query"]
-    key = "v3|" + vq + "|" + w["condition"]
+    key = "v4|" + vq + "|" + w["condition"]
     cached = market.get(key)
     if cached and now.timestamp() - cached["at"] < s["market_refresh_hours"] * 3600:
         return cached.get("price")
