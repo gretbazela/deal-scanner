@@ -393,6 +393,8 @@ def message_for(d):
         lines.append(f"{what}, ShopGoodwill auction, current bid ${d['price']:.2f}, {d['bids']} bids, {d['hours_left']}h left")
     elif d["mode"] == "auction":
         lines.append(f"{what}, auction, current bid ${d['price']:.2f}, ends {d['ends'][11:16] if d['ends'] else 'soon'} UTC")
+    elif d.get("offer_from"):
+        lines.append(f"{what}, Best Offer: asking ${d['offer_from']:.2f}, try offering ${d['price']:.2f}")
     else:
         lines.append(f"{what}, Buy It Now ${d['price']:.2f}")
     if d["mode"] in ("sgw", "auction"):
