@@ -70,12 +70,15 @@ LOT_PATTERNS = [
 
 def lot_count(title, max_lot):
     t = title.lower()
+    found = set()
     for pat in LOT_PATTERNS:
-        m = re.search(pat, t)
-        if m:
+        for m in re.finditer(pat, t):
             n = int(m.group(1))
             if 2 <= n <= max_lot:
-                return n
+                found.add(n)
+    # Conflicting counts, like "38 Item 4 Item Lot", mean the title is unreliable
+    if len(found) == 1:
+        return found.pop()
     return None
 
 
