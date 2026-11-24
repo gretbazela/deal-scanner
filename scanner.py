@@ -70,6 +70,10 @@ LOT_PATTERNS = [
 
 def lot_count(title, max_lot):
     t = title.lower()
+    # drop sizes and measurements so they are not read as piece counts
+    t = re.sub(r"\bsizes?:? ?\d{1,2}(?: ?(?:&|and|/|,) ?\d{1,2})*\b", " ", t)
+    t = re.sub(r"\b\d{2} ?x ?\d{2}\b", " ", t)
+    t = re.sub(r"\b[wl]\d{2}\b", " ", t)
     found = set()
     for pat in LOT_PATTERNS:
         for m in re.finditer(pat, t):
@@ -279,10 +283,12 @@ def evaluate_sgw(item, w, single_value, cfg, now):
     price = float(item.get("currentPrice") or 0)
     if price <= 0:
         return None
-    ship_in = s.get("sgw_shipping", 15.0)
+    ship_in = s.get("sgw_shipping", 15.0) + s.get("sgw_ship_per_piece", 1.5) * n
     cost = price + ship_in
     per_piece = round(single_value * s["lot_piece_factor"], 2)
     resale = per_piece * n
+    proj = max(price, resale * s.get("auction_close_ratio", 0.35))
+    cost = proj + ship_in
     rate = s["fee_rate"] + s["promo_rate"]
     fees = (resale + s["buyer_shipping"] * n) * rate + s["fee_fixed"] * n
     profit = round(resale - fees - cost, 2)
@@ -290,7 +296,7 @@ def evaluate_sgw(item, w, single_value, cfg, now):
         return None
     iid = f"sgw|{item.get('itemId')}"
     return {"id": iid, "title": title, "url": f"https://shopgoodwill.com/item/{item.get('itemId')}",
-            "search": "ShopGoodwill: " + w["name"], "mode": "sgw", "price": price, "ship_in": ship_in,
+            "search": "ShopGoodwill: " + w["name"], "mode": "sgw", "price": price, "proj": proj, "ship_in": ship_in,
             "ship_guess": True, "count": n, "per_piece": per_piece, "resale": round(resale, 2),
             "profit": profit, "condition": None, "ends": end.astimezone(timezone.utc).isoformat(),
             "hours_left": round(hours_left, 1), "bids": item.get("numBids", 0)}
@@ -357,6 +363,9 @@ def evaluate(item, w, single_value, cfg, now, mode):
         per_piece = round(single_value * s["lot_piece_factor"], 2)
         resale = per_piece * n
 
+    proj = max(price, resale * s.get("auction_close_ratio", 0.35)) if mode == "auction" else price
+    cost = proj + ship_in
+    unit_cost = cost / n
     rate = s["fee_rate"] + s["promo_rate"]
     fees = (resale + s["buyer_shipping"] * n) * rate + s["fee_fixed"] * n
     profit = round(resale - fees - cost, 2)
@@ -368,7 +377,7 @@ def evaluate(item, w, single_value, cfg, now, mode):
 
     return {
         "id": item.get("itemId"), "title": title, "url": item.get("itemWebUrl"),
-        "search": w["name"], "mode": mode, "price": price, "ship_in": ship_in,
+        "search": w["name"], "mode": mode, "price": price, "proj": proj, "ship_in": ship_in,
         "ship_guess": ship_guess, "count": n, "per_piece": per_piece,
         "resale": round(resale, 2), "profit": profit,
         "condition": item.get("condition"),
@@ -386,6 +395,8 @@ def message_for(d):
         lines.append(f"{what}, auction, current bid ${d['price']:.2f}, ends {d['ends'][11:16] if d['ends'] else 'soon'} UTC")
     else:
         lines.append(f"{what}, Buy It Now ${d['price']:.2f}")
+    if d["mode"] in ("sgw", "auction"):
+        lines.append(f"Profit assumes it closes near ${d['proj']:.2f}")
     lines.append(f"Shipping to you ${d['ship_in']:.2f}" + (" (guess)" if d["ship_guess"] else ""))
     if d["count"] > 1:
         lines.append(f"Est. resale ${d['per_piece']:.0f} each, ${d['resale']:.0f} total")
