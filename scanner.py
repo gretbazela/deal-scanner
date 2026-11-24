@@ -411,16 +411,43 @@ def message_for(d):
     return head, "\n".join(lines)
 
 
+def comps_url(d):
+    """eBay sold listings search for this item, so you can check real prices in one tap."""
+    from urllib.parse import quote_plus
+    t = re.sub(r"\[.*?\]", " ", d["title"])
+    words = re.findall(r"[A-Za-z0-9']+", t)[:8]
+    return "https://www.ebay.com/sch/i.html?_nkw=" + quote_plus(" ".join(words)) + "&LH_Sold=1&LH_Complete=1"
+
+
 def notify(topic, d):
     title, body = message_for(d)
+    big = d["profit"] >= 60
     payload = {"topic": topic, "title": title, "message": body, "click": d["url"],
-               "tags": ["moneybag"], "priority": 4 if d["profit"] >= 50 else 3}
+               "tags": ["rotating_light" if big else "moneybag"],
+               "priority": 5 if big else (4 if d["profit"] >= 30 else 3),
+               "actions": [{"action": "view", "label": "Sold comps", "url": comps_url(d)}]}
     try:
         r = requests.post(NTFY_URL, json=payload, timeout=20)
         if r.status_code >= 300:
             print(f"  ntfy failed ({r.status_code}): {r.text[:200]}")
     except requests.RequestException as e:
         print(f"  ntfy error: {e}")
+
+
+def get_item(token, item_id):
+    """Fetch one listing again. Returns None if it is gone (sold or ended)."""
+    from urllib.parse import quote
+    CALLS["n"] += 1
+    try:
+        r = requests.get("https://api.ebay.com/buy/browse/v1/item/" + quote(item_id, safe=""), timeout=30,
+                         headers={"Authorization": "Bearer " + token, "X-EBAY-C-MARKETPLACE-ID": "EBAY_US"})
+    except requests.RequestException:
+        return "error"
+    if r.status_code == 200:
+        return r.json()
+    if r.status_code == 404:
+        return None
+    return "error"
 
 
 # ---------- main ----------
