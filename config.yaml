@@ -4,7 +4,7 @@
 
 settings:
   min_profit: 15            # lots: only alert at or above this profit
-  min_profit_single: 8      # single items: only alert at or above this profit
+  min_profit_single: 5      # single items: only alert at or above this profit
   max_cost_ratio: 0.8       # your cost per piece must be at most 80% of the going price
   fee_rate: 0.136           # eBay final value fee
   promo_rate: 0.05          # promoted listing fee
@@ -19,7 +19,7 @@ settings:
   max_lot_size: 40
   lot_piece_factor: 0.85    # lot pieces valued at 85% of a single (some are weaker)
   market_percentile: 0.5    # use the middle of current asking prices...
-  market_discount: 0.9      # ...minus 10%, since asking prices run above sold prices
+  market_discount: 0.95      # ...minus 10%, since asking prices run above sold prices
   market_min_samples: 10
   market_refresh_hours: 24
   max_alerts_per_run: 20
