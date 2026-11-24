@@ -32,6 +32,7 @@ FEEDS = [
     ("jorts", 300),
     ("trunks", 300),
 ]
+STATS = {"scanned": 0, "matched": 0}
 SGW_EVERY = 300
 AUCTION_EVERY = 300
 NIGHT_SLOWDOWN = 5  # midnight to 5 AM Pacific, everything runs this many times slower
@@ -68,16 +69,21 @@ def evaluate_items(items, watches, cfg, now, processed, seen):
         if key in processed:
             continue
         processed.add(key)
+        STATS["scanned"] += 1
         tn = sc.norm(item.get("title"))
         best = None
+        hit = False
         for w, value in watches:
             if not cond_ok(item, w):
                 continue
             if not sc.title_ok(tn, w, cfg):
                 continue
+            hit = True
             d = sc.evaluate(item, w, value, cfg, now, mode)
             if d and (best is None or d["profit"] > best["profit"]):
                 best = d
+        if hit:
+            STATS["matched"] += 1
         if best:
             found[iid] = best
     return found
@@ -174,7 +180,7 @@ def main():
             processed.clear()
         if cycles % 30 == 0:
             seen = save(seen, market)
-            print(f"{cycles} passes, {alerts} alerts, {sc.CALLS['n']} eBay calls", flush=True)
+            print(f"{cycles} passes, {alerts} alerts, {sc.CALLS['n']} eBay calls, {STATS['scanned']} listings checked, {STATS['matched']} matched a watch", flush=True)
         if once:
             break
         time.sleep(15)
