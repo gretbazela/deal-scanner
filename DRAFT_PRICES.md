@@ -57,3 +57,22 @@ Lookups were stopped partway; items not listed here have no Terapeak numbers yet
 | Arc'teryx Atom | $166.48 | 101 | 37.0% | $237.46 | 56 | 53.1% |
 
 Note: the Better Sweater pre-owned search pulled in some other models (Columbia, Snap-T), so that average runs low.
+
+### Terapeak, shorts brands (11/24/2026)
+
+Same method as above, but searched inside eBay's Men's Shorts category (Swimwear for Vilebrequin) so short sleeve shirts are not counted.
+"Sold" is the number of sold listings in Terapeak's condition filter. NWT sides under 20 sold were not looked up further.
+
+| Item | Used avg | Used sold | Used sell through | NWT avg | NWT sold | NWT sell through |
+|---|---|---|---|---|---|---|
+| James Perse shorts | $31.81 | 69 | 32.8% | $66.23 | 13 | 34.2% |
+| Taylor Stitch shorts | $30.06 | 86 | 23.3% | $40.69 | 61 | 34.5% |
+| Faherty shorts | $21.07 | 324 | 9.8% | $38.09 | 123 | 8.1% |
+| Outerknown shorts | $24.59 | 42 | 16.4% | $38.42 | 17 | 27.3% |
+| Vintage Patagonia Baggies | $41.88 | 49 | 14.2% | too few | 3 | n/a |
+| Vintage Stussy shorts | $41.66 | 9 | n/a | too few | 1 | n/a |
+| Vintage Ocean Pacific corduroy shorts | $47.54 | 127 | 30.0% | too few | 11 | n/a |
+| Vintage Quiksilver shorts | $23.49 | 88 | 9.4% | too few | 3 | n/a |
+| Eric Emanuel shorts | $39.73 | 175 | 11.9% | $75.96 | 232 | 9.0% |
+| Birdwell board shorts | $39.36 | 95 | 31.0% | $56.72 | 10 | 22.6% |
+| Vilebrequin swim shorts | $46.32 | 472 | 19.3% | $108.07 | 177 | 29.7% |
