@@ -871,7 +871,7 @@
     }
    },
    "Lululemon ABC pants": {
-    "checked": 449,
+    "checked": 450,
     "why": {
      "auction not ending soon": 4,
      "damage word \"damaged\"": 2,
@@ -880,7 +880,7 @@
      "listed too long ago": 111,
      "lot with no clear count": 9,
      "not a lot": 22,
-     "over your max once shipping and tax are added": 131,
+     "over your max once shipping and tax are added": 132,
      "seller feedback too low": 4,
      "title missing \"abc\"": 88,
      "title missing \"lululemon\"": 3,
@@ -913,7 +913,7 @@
     }
    },
    "North Face Denali": {
-    "checked": 249,
+    "checked": 251,
     "why": {
      "blocked word \"boys\"": 17,
      "blocked word \"girls\"": 11,
@@ -921,9 +921,9 @@
      "blocked word \"kids\"": 2,
      "blocked word \"women\"": 9,
      "blocked word \"womens\"": 108,
-     "blocked word \"youth\"": 9,
+     "blocked word \"youth\"": 10,
      "damage word \"flaws\"": 2,
-     "over your max once shipping and tax are added": 52,
+     "over your max once shipping and tax are added": 53,
      "seller feedback too low": 2,
      "title missing \"denali\"": 5,
      "title missing \"jacket\" or \"fleece\"": 2,
@@ -931,7 +931,7 @@
     }
    },
    "North Face Nuptse": {
-    "checked": 288,
+    "checked": 289,
     "why": {
      "blocked word \"baby\"": 18,
      "blocked word \"girls\"": 6,
@@ -941,7 +941,7 @@
      "blocked word \"youth\"": 8,
      "listed too long ago": 6,
      "over your max once shipping and tax are added": 29,
-     "seller feedback too low": 8,
+     "seller feedback too low": 9,
      "skip word \"vest\"": 87,
      "title missing \"jacket\" or \"puffer\" or \"700\"": 7,
      "title missing \"nuptse\"": 6
@@ -964,7 +964,7 @@
     }
    },
    "Patagonia Better Sweater": {
-    "checked": 345,
+    "checked": 347,
     "why": {
      "auction not ending soon": 2,
      "blocked word \"baby\"": 1,
@@ -978,7 +978,7 @@
      "listed too long ago": 8,
      "lot with no clear count": 8,
      "not a lot": 10,
-     "over your max once shipping and tax are added": 83,
+     "over your max once shipping and tax are added": 85,
      "seller feedback too low": 4,
      "skip word \"vest\"": 26,
      "title missing \"better\"": 6,
@@ -986,7 +986,7 @@
     }
    },
    "Patagonia Down Sweater": {
-    "checked": 222,
+    "checked": 223,
     "why": {
      "blocked word \"baby\"": 11,
      "blocked word \"boys\"": 16,
@@ -994,7 +994,7 @@
      "blocked word \"kids\"": 28,
      "blocked word \"toddler\"": 4,
      "blocked word \"women\"": 2,
-     "blocked word \"womens\"": 68,
+     "blocked word \"womens\"": 69,
      "blocked word \"youth\"": 2,
      "damage word \"flaw\"": 4,
      "damage word \"flaws\"": 2,
@@ -1005,13 +1005,13 @@
     }
    },
    "Patagonia Nano Puff": {
-    "checked": 244,
+    "checked": 245,
     "why": {
      "blocked word \"girls\"": 1,
      "blocked word \"kids\"": 17,
      "blocked word \"toddler\"": 2,
      "blocked word \"women\"": 5,
-     "blocked word \"womens\"": 126,
+     "blocked word \"womens\"": 127,
      "damage word \"flaw\"": 2,
      "damage word \"flaws\"": 6,
      "over your max once shipping and tax are added": 29,
@@ -1059,7 +1059,7 @@
     }
    },
    "Pendleton Board Shirt": {
-    "checked": 263,
+    "checked": 264,
     "why": {
      "blocked word \"women\"": 1,
      "blocked word \"womens\"": 2,
@@ -1070,11 +1070,11 @@
      "over your max once shipping and tax are added": 97,
      "passed every check": 1,
      "title missing \"board\"": 105,
-     "title missing \"pendleton\"": 40
+     "title missing \"pendleton\"": 41
     }
    },
    "Peter Millar quarter zip": {
-    "checked": 320,
+    "checked": 322,
     "why": {
      "blocked word \"womens\"": 4,
      "damage word \"flaw\"": 2,
@@ -1084,7 +1084,7 @@
      "over your max once shipping and tax are added": 98,
      "title missing \"millar\"": 22,
      "title missing \"peter\"": 4,
-     "title missing \"quarter\"": 163,
+     "title missing \"quarter\"": 165,
      "title missing \"zip\"": 3
     }
    },
@@ -1142,13 +1142,13 @@
     }
    },
    "Taylor Stitch pants": {
-    "checked": 202,
+    "checked": 203,
     "why": {
      "blocked word \"women\"": 4,
      "blocked word \"womens\"": 4,
      "damage word \"flaws\"": 4,
      "damage word \"stain\"": 2,
-     "listed too long ago": 151,
+     "listed too long ago": 152,
      "over your max once shipping and tax are added": 3,
      "seller feedback too low": 2,
      "title missing \"pants\"": 22,
@@ -1157,9 +1157,9 @@
     }
    },
    "Taylor Stitch shorts": {
-    "checked": 26,
+    "checked": 27,
     "why": {
-     "damage word \"stain\"": 4,
+     "damage word \"stain\"": 5,
      "listed too long ago": 18,
      "lot with no clear count": 2,
      "title missing \"taylor\"": 2
