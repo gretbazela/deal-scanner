@@ -37,6 +37,8 @@ Terapeak is free in eBay Seller Hub (**Seller Hub → Research**). Do this once 
 
 Prices written on 11/24/2026 used the lower of "average less 10%" and the median of the last 90 days, matching men's items only. Terapeak's New filter means new, not strictly new with tags. Where a used price is too low to ever clear the profit target (Better Sweater, Denali, Peter Millar quarter zip and Lululemon ABC, all used), that side simply never alerts; the new side still can. Everything runs all year; there is no season switch.
 
+Shorts brands: on 11/24/2026 all shorts brands were switched on at their Terapeak average from DRAFT_PRICES.md less 10%, leaving out any side under 20 sold. Several used prices are so low that the most you could pay is near zero or below (James Perse, Taylor Stitch, Outerknown, Quiksilver, Faherty used), so those mostly will not alert until a listing is nearly free. Check `python buylist.py --group shorts` for the exact max buys.
+
 Misspellings: an item's `typos:` list is searched separately, about every 6th round, and a hit is treated as the correct name. On 11/24/2026 I added 12 more (for example nanopuff, nupste, tincloth, eric emmanuel) after checking that real listings use them. Each typo costs one extra search per 6 rounds, and the tool slows its rounds a little to stay under eBay's daily limit. Wrong category listings are already found, because searches never filter by category.
 
 Items without a sold price are switched off. With the default costs, anything selling under about **$38** can never make $20. Shorts use cheaper shipping and a **$10 profit target** (set in the `shorts` group), so check their numbers with `python buylist.py --group shorts`.

@@ -27,14 +27,14 @@ Max buy = most you can pay for the item (before shipping and tax) and still make
 | Peter Millar quarter zip | yes | $20 | $31 | $-5 | $95 | $43 | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=peter+millar+quarter+zip) |
 | Lululemon ABC pants | yes | $20 | $23 | $-11 | $60 | $17 | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=lululemon+abc+pants) |
 | Girbaud jeans | yes | $20 | $40 | $2 | $80 | $32 | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=girbaud) |
-| James Perse shorts | no | $10 | - | - | - | - | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=james+perse+shorts) |
-| Taylor Stitch shorts | no | $10 | - | - | - | - | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=taylor+stitch+shorts) |
-| Faherty shorts | no | $10 | - | - | - | - | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=faherty+shorts) |
-| Outerknown shorts | no | $10 | - | - | - | - | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=outerknown+shorts) |
-| Vintage Patagonia Baggies | no | $10 | - | - | - | - | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=patagonia+baggies) |
-| Vintage Ocean Pacific corduroy shorts | no | $10 | - | - | - | - | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=ocean+pacific+shorts) |
-| Vintage Quiksilver shorts | no | $10 | - | - | - | - | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=quiksilver+shorts) |
+| James Perse shorts | yes | $10 | $28 | $3 | - | - | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=james+perse+shorts) |
+| Taylor Stitch shorts | yes | $10 | $27 | $2 | $36 | $9 | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=taylor+stitch+shorts) |
+| Faherty shorts | yes | $10 | $19 | $-4 | $34 | $7 | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=faherty+shorts) |
+| Outerknown shorts | yes | $10 | $22 | $-2 | - | - | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=outerknown+shorts) |
+| Vintage Patagonia Baggies | yes | $10 | $38 | $10 | - | - | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=patagonia+baggies) |
+| Vintage Ocean Pacific corduroy shorts | yes | $10 | $43 | $14 | - | - | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=ocean+pacific+shorts) |
+| Vintage Quiksilver shorts | yes | $10 | $21 | $-2 | - | - | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=quiksilver+shorts) |
 | Eric Emanuel shorts | yes | $10 | $35 | $8 | $68 | $33 | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=eric+emanuel+shorts) |
-| Birdwell board shorts | no | $10 | - | - | - | - | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=birdwell) |
-| Vilebrequin swim shorts | no | $10 | - | - | - | - | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=vilebrequin) |
-| Mixed brand shorts lots | yes | $10 | $35 | $8 | $68 | $33 | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=mens+shorts) |
+| Birdwell board shorts | yes | $10 | $35 | $8 | - | - | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=birdwell) |
+| Vilebrequin swim shorts | yes | $10 | $42 | $13 | $97 | $55 | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=vilebrequin) |
+| Mixed brand shorts lots | yes | $10 | $43 | $14 | $97 | $55 | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=mens+shorts) |

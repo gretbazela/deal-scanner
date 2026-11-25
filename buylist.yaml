@@ -212,34 +212,34 @@ items:
     typos: [gerbaud]
     sold: {used: 40, new: 80}  # Terapeak 11/24/2026, last 90 days: lower of average less 10% and median
 
-  # ---------- shorts (run all year; brands switch on when you fill in their sold prices) ----------
+  # ---------- shorts (run all year) ----------
   - name: James Perse shorts
     group: shorts
     brand: james perse
     query: james perse shorts
     lots: true
-    sold: {used: , new: }
+    sold: {used: 28, new: }  # Terapeak 11/24/2026: average less 10%, sides under 20 sold left blank
 
   - name: Taylor Stitch shorts
     group: shorts
     brand: taylor stitch
     query: taylor stitch shorts
     lots: true
-    sold: {used: , new: }
+    sold: {used: 27, new: 36}  # Terapeak 11/24/2026: average less 10%, sides under 20 sold left blank
 
   - name: Faherty shorts
     group: shorts
     brand: faherty
     query: faherty shorts
     lots: true
-    sold: {used: , new: }
+    sold: {used: 19, new: 34}  # Terapeak 11/24/2026: average less 10%, sides under 20 sold left blank
 
   - name: Outerknown shorts
     group: shorts
     brand: outerknown
     query: outerknown shorts
     lots: true
-    sold: {used: , new: }
+    sold: {used: 22, new: }  # Terapeak 11/24/2026: average less 10%, sides under 20 sold left blank
 
   - name: Vintage Patagonia Baggies
     group: shorts
@@ -248,7 +248,7 @@ items:
     must: [[vintage, vtg, usa, 80s, 90s]]
     skip: [pants]
     lots: true
-    sold: {used: , new: }
+    sold: {used: 38, new: }  # Terapeak 11/24/2026: average less 10%, sides under 20 sold left blank
 
   - name: Vintage Ocean Pacific corduroy shorts
     group: shorts
@@ -257,7 +257,7 @@ items:
     must: [[corduroy, cord, vintage, vtg, 80s]]
     typos: [op corduroy shorts]
     lots: true
-    sold: {used: , new: }
+    sold: {used: 43, new: }  # Terapeak 11/24/2026: average less 10%, sides under 20 sold left blank
 
   - name: Vintage Quiksilver shorts
     group: shorts
@@ -265,7 +265,7 @@ items:
     query: quiksilver shorts
     must: [[vintage, vtg, usa, 80s, 90s]]
     lots: true
-    sold: {used: , new: }
+    sold: {used: 21, new: }  # Terapeak 11/24/2026: average less 10%, sides under 20 sold left blank
 
   - name: Eric Emanuel shorts
     group: shorts
@@ -281,7 +281,7 @@ items:
     query: birdwell
     must: [[shorts, britches, boardshorts, trunks]]
     lots: true
-    sold: {used: , new: }
+    sold: {used: 35, new: }  # Terapeak 11/24/2026: average less 10%, sides under 20 sold left blank
 
   - name: Vilebrequin swim shorts
     group: shorts
@@ -290,7 +290,7 @@ items:
     must: [[shorts, trunks, swim, boardshorts]]
     typos: [vilebrequim, vilbrequin]
     lots: true
-    sold: {used: , new: }
+    sold: {used: 42, new: 97}  # Terapeak 11/24/2026: average less 10%, sides under 20 sold left blank
 
   # Lots that name several brands, like "lot of 8 men's board shorts Patagonia Birdwell".
   # Each pair is valued at the LOWEST price among the brands named in the title, then at lot_piece_factor.
