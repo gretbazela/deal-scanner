@@ -30,6 +30,7 @@ from urllib.parse import quote
 
 import requests
 import yaml
+from zoneinfo import ZoneInfo
 
 HERE = Path(__file__).parent
 BUYLIST_PATH = HERE / "buylist.yaml"
@@ -141,6 +142,7 @@ def load_buylist(path=BUYLIST_PATH):
     cfg["groups"] = cfg.get("groups") or {}
     cfg["settings"].setdefault("typical_ship_in", 8.0)
     cfg["settings"].setdefault("mixed_lot_factor", 1.0)     # 0.9 = value mixed brand lots 10% lower
+    cfg["settings"].setdefault("quiet_hours", None)         # {start: 23, end: 6, timezone: ...}: hold phone alerts overnight
     cfg["settings"].setdefault("best_offer_discount", 0.0)  # 0.20 = assume sellers take 20% off on Best Offer
     cfg["exclude_words"] = [str(w) for w in cfg.get("exclude_words") or []]
     cfg["damage_words"] = [str(w) for w in cfg.get("damage_words") or []]
@@ -457,7 +459,26 @@ def comps_url(d):
     return "https://www.ebay.com/sch/i.html?_nkw=" + quote(" ".join(words)) + "&LH_Sold=1&LH_Complete=1"
 
 
-def notify(topic, d):
+def quiet_until(now, cfg):
+    """If now falls in the quiet hours, return when they end (a UTC datetime); otherwise None.
+    Hours are local to the timezone in settings, so 23 to 6 means 11 PM to 6 AM."""
+    q = cfg["settings"].get("quiet_hours")
+    if not q:
+        return None
+    tz = ZoneInfo(q.get("timezone", "America/Los_Angeles"))
+    start, end = int(q["start"]), int(q["end"])
+    local = now.astimezone(tz)
+    h_ = local.hour
+    inside = (start <= h_ or h_ < end) if start > end else (start <= h_ < end)
+    if not inside:
+        return None
+    wake = local.replace(hour=end, minute=0, second=0, microsecond=0)
+    if wake <= local:
+        wake += timedelta(days=1)
+    return wake.astimezone(timezone.utc)
+
+
+def notify(topic, d, deliver_at=None):
     title, body = message_for(d)
     fb = NTFY + topic + "-fb"
     payload = {
@@ -470,6 +491,8 @@ def notify(topic, d):
             {"action": "view", "label": "Sold comps", "url": comps_url(d)},
         ],
     }
+    if deliver_at:  # ntfy holds the message and shows it on the phone at this time
+        payload["delay"] = str(int(deliver_at.timestamp()))
     try:
         r = requests.post(NTFY, json=payload, timeout=20)
         if r.status_code >= 300:
@@ -596,11 +619,16 @@ def main():
                     found[iid] = d
         for d in sorted(found.values(), key=lambda x: x["profit"], reverse=True):
             title, body = message_for(d)
+            wake = quiet_until(now, cfg)
+            over = bool(wake and d["auction"] and d["ends"]
+                        and datetime.fromisoformat(d["ends"].replace("Z", "+00:00")) <= wake)
             if dry:
-                print(f"\n{title}\n{body}\n{d['url']}", flush=True)
+                print(f"\n{title}\n{body}\n{d['url']}" + (f"\n[quiet hours: held until {wake:%H:%M} UTC]" if wake else ""), flush=True)
+            elif over:
+                print(f"  quiet hours: skipped auction that ends before you wake: {d['title'][:60]}", flush=True)
             else:
                 if topic:
-                    notify(topic, d)
+                    notify(topic, d, wake)
                 log_alert(d, now)
             seen[d["id"]] = now.timestamp()
             alerts += 1

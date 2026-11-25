@@ -45,6 +45,10 @@ Items without a sold price are switched off. With the default costs, anything se
 
 **Speed vs. coverage:** eBay allows about 5,000 searches a day. With 10 items on, each item is checked about every 5 minutes. With all 25, it's about every 12 minutes. Fewer, better items find deals faster.
 
+## Quiet hours
+
+No alerts reach your phone between 11 PM and 6 AM Pacific. The scanner keeps searching overnight, but each deal it finds is sent to your phone with a delay, so it shows up at 6 AM instead of waking you. Auctions that end before 6 AM are skipped, since they will be over. To change the hours or time zone, edit the `quiet_hours:` line in the settings of `buylist.yaml`. Delete that line to turn quiet hours off. Overnight deals may already be sold by the time you see them.
+
 ## Costs: different shipping and profit targets for different items
 
 The `settings:` block at the top of `buylist.yaml` holds the default costs. A kind of item can have its own by joining a **group**:

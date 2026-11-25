@@ -41,6 +41,7 @@ settings:
   max_lot_size: 20
   daily_call_budget: 4500   # eBay allows 5,000 searches a day; leave headroom
   best_offer_discount: 0.20 # many sellers take up to 20% off a Best Offer; such listings alert if 80% of the price is under your max (0 turns it off)
+  quiet_hours: {start: 23, end: 6, timezone: America/Los_Angeles}  # no phone alerts 11 PM to 6 AM; overnight deals are held and show at 6 AM (remove this line to turn off)
 
 # Skip any listing with these words in the title
 exclude_words: [women, womens, ladies, girls, kids, youth, boys, toddler, baby, infant,
