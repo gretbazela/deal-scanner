@@ -60,6 +60,10 @@
    "price": 38.8,
    "t": 1795586823.246952
   },
+  "v1|860175487415|0": {
+   "price": 7.2,
+   "t": 1795587744.88211
+  },
   "v1|880150305304|0": {
    "price": 15.35,
    "t": 1795586823.246952
@@ -86,6 +90,10 @@
   "bignosee|op ocean pacific vintage camo cargo shorts green faded skater grunge mens 40": {
    "price": 16.0,
    "t": 1795586823.246952
+  },
+  "dabr-7219|op ocean pacific mens 38 swim trunks board shorts drawstring vintage green 82": {
+   "price": 7.2,
+   "t": 1795587744.88211
   },
   "dnns-4|rrl mens blue denim jacket embroidered patch distressed button size s": {
    "price": 75.0,
@@ -258,7 +266,7 @@
     }
    },
    "Levi's vintage trucker jacket": {
-    "checked": 100,
+    "checked": 102,
     "why": {
      "blocked word \"custom\"": 1,
      "blocked word \"womens\"": 1,
@@ -266,7 +274,7 @@
      "title missing \"jacket\"": 3,
      "title missing \"levis\"": 2,
      "title missing \"trucker\"": 23,
-     "title missing \"vintage\" or \"vtg\" or \"usa\" or \"type iii\" or \"type 3\"": 48
+     "title missing \"vintage\" or \"vtg\" or \"usa\" or \"type iii\" or \"type 3\"": 50
     }
    },
    "Lululemon ABC pants": {
@@ -299,14 +307,14 @@
     }
    },
    "North Face Denali": {
-    "checked": 100,
+    "checked": 101,
     "why": {
      "blocked word \"boys\"": 8,
      "blocked word \"girls\"": 3,
      "blocked word \"infant\"": 1,
      "blocked word \"kids\"": 1,
      "blocked word \"women\"": 3,
-     "blocked word \"womens\"": 45,
+     "blocked word \"womens\"": 46,
      "blocked word \"youth\"": 5,
      "damage word \"flaws\"": 1,
      "over your max once shipping and tax are added": 27,
@@ -350,20 +358,20 @@
     }
    },
    "Patagonia Better Sweater": {
-    "checked": 137,
+    "checked": 141,
     "why": {
      "auction not ending soon": 1,
      "blocked word \"boys\"": 1,
      "blocked word \"girls\"": 2,
-     "blocked word \"kids\"": 2,
+     "blocked word \"kids\"": 3,
      "blocked word \"women\"": 6,
-     "blocked word \"womens\"": 63,
+     "blocked word \"womens\"": 64,
      "blocked word \"youth\"": 1,
      "damage word \"stains\"": 1,
      "listed too long ago": 4,
      "lot with no clear count": 4,
      "not a lot": 5,
-     "over your max once shipping and tax are added": 31,
+     "over your max once shipping and tax are added": 33,
      "seller feedback too low": 1,
      "skip word \"vest\"": 12,
      "title missing \"better\"": 2,
@@ -371,14 +379,14 @@
     }
    },
    "Patagonia Down Sweater": {
-    "checked": 101,
+    "checked": 102,
     "why": {
      "blocked word \"baby\"": 5,
      "blocked word \"boys\"": 8,
      "blocked word \"girls\"": 11,
      "blocked word \"kids\"": 13,
      "blocked word \"toddler\"": 1,
-     "blocked word \"womens\"": 30,
+     "blocked word \"womens\"": 31,
      "blocked word \"youth\"": 1,
      "damage word \"flaw\"": 2,
      "damage word \"flaws\"": 1,
@@ -389,9 +397,10 @@
     }
    },
    "Patagonia Nano Puff": {
-    "checked": 109,
+    "checked": 110,
     "why": {
      "blocked word \"kids\"": 10,
+     "blocked word \"toddler\"": 1,
      "blocked word \"women\"": 3,
      "blocked word \"womens\"": 57,
      "damage word \"flaw\"": 1,
@@ -561,7 +570,7 @@
     }
    },
    "Vintage Ocean Pacific corduroy shorts": {
-    "checked": 249,
+    "checked": 251,
     "why": {
      "blocked word \"boys\"": 7,
      "blocked word \"kids\"": 1,
@@ -573,8 +582,8 @@
      "listed too long ago": 54,
      "lookalike wording (like, vibe, similar)": 1,
      "over your max once shipping and tax are added": 5,
-     "passed every check": 3,
-     "title missing \"corduroy\" or \"cord\" or \"vintage\" or \"vtg\" or \"80s\"": 91,
+     "passed every check": 4,
+     "title missing \"corduroy\" or \"cord\" or \"vintage\" or \"vtg\" or \"80s\"": 92,
      "title missing \"ocean\"": 44,
      "title missing \"pacific\"": 1,
      "title missing \"shorts\"": 18
