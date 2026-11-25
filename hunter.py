@@ -42,7 +42,7 @@ NTFY = "https://ntfy.sh/"
 TOKEN_MAX_AGE = 90 * 60  # eBay tokens last 2 hours; refresh well before
 LOT_WORDS = ["lot", "bundle", "wholesale", "bulk"]
 ALERT_FIELDS = ["sent_at", "item", "kind", "listing_id", "url", "title", "condition",
-                "price", "ship_in", "landed", "resale_est", "profit_est", "max_price",
+                "price", "offer_price", "ship_in", "landed", "resale_est", "profit_est", "max_price",
                 "count", "outcome", "outcome_at", "resale_actual", "notes"]
 CALLS = {"n": 0}
 
@@ -101,7 +101,7 @@ def money(obj):
 # Money settings an item or a group may change for itself (see "costs:" in buylist.yaml).
 COST_KEYS = {"target_profit", "fee_rate", "promo_rate", "fee_fixed", "buyer_shipping", "postage_out",
              "buy_tax_rate", "unknown_ship_in", "typical_ship_in", "lot_piece_factor", "max_lot_size",
-             "lot_buyer_shipping", "lot_postage_out"}
+             "lot_buyer_shipping", "lot_postage_out", "mixed_lot_factor", "best_offer_discount"}
 
 
 def costs_for(it, groups, base):
@@ -140,6 +140,8 @@ def load_buylist(path=BUYLIST_PATH):
     cfg = yaml.safe_load(Path(path).read_text())
     cfg["groups"] = cfg.get("groups") or {}
     cfg["settings"].setdefault("typical_ship_in", 8.0)
+    cfg["settings"].setdefault("mixed_lot_factor", 1.0)     # 0.9 = value mixed brand lots 10% lower
+    cfg["settings"].setdefault("best_offer_discount", 0.0)  # 0.20 = assume sellers take 20% off on Best Offer
     cfg["exclude_words"] = [str(w) for w in cfg.get("exclude_words") or []]
     cfg["damage_words"] = [str(w) for w in cfg.get("damage_words") or []]
     items = []
@@ -169,14 +171,18 @@ def net_per_piece(resale, s):
 def net_total(resale, count, s):
     """What a sale of `count` pieces puts in your pocket before you pay for the items.
 
-    Single pieces, and lots when no lot shipping is set, pay shipping and the
-    per order fee on every piece (the cautious default). If lot_buyer_shipping and
-    lot_postage_out are both set, a lot is treated as one parcel: one shipping
-    charge, one label, one per order fee.
+    Single pieces, and lots when no lot shipping is set, pay shipping and the per order fee
+    on every piece (the cautious default). If lot_buyer_shipping and lot_postage_out are both
+    set, a lot is treated as one parcel: one shipping charge, one label, one per order fee.
+    A small lot never costs more to ship than the same pairs sent one by one, so the lot
+    label is the smaller of lot_postage_out and postage_out times the pair count (same for
+    what the buyer pays).
     """
     if count > 1 and s.get("lot_buyer_shipping") is not None and s.get("lot_postage_out") is not None:
-        gross = resale * count + s["lot_buyer_shipping"]
-        return gross - (s["fee_rate"] + s["promo_rate"]) * gross - s["fee_fixed"] - s["lot_postage_out"]
+        label = min(s["lot_postage_out"], s["postage_out"] * count)
+        buyer = min(s["lot_buyer_shipping"], s["buyer_shipping"] * count)
+        gross = resale * count + buyer
+        return gross - (s["fee_rate"] + s["promo_rate"]) * gross - s["fee_fixed"] - label
     return net_per_piece(resale, s) * count
 
 
@@ -262,7 +268,7 @@ def evaluate(listing, it, kind, cfg, now):
         named = [m for m in it["brand_items"] if has(tn, m["brand"])]
         prices = [m["sold"].get(cond) for m in named]
         # every brand named must have a price, or the lot can't be valued safely; then use the lowest
-        resale = min(prices) if named and all(prices) else None
+        resale = round(min(prices) * s["mixed_lot_factor"], 2) if named and all(prices) else None
     if not resale:
         return None
 
@@ -297,6 +303,13 @@ def evaluate(listing, it, kind, cfg, now):
 
     ship_in, ship_guess = ship_in_of(listing, s)
     cap = max_price(resale, ship_in, s, count)
+    list_price = price
+    offer = None
+    if price > cap and not auction and "BEST_OFFER" in (listing.get("buyingOptions") or []):
+        # sellers often take up to best_offer_discount off; alert if that would be cheap enough
+        low = round(price * (1 - s["best_offer_discount"]), 2)
+        if s["best_offer_discount"] > 0 and low <= cap:
+            offer = price = low
     if price > cap:
         return None
     # For auctions the alert is "bid up to cap": profit is what you make at that bid.
@@ -305,7 +318,8 @@ def evaluate(listing, it, kind, cfg, now):
         "id": listing.get("itemId"), "url": listing.get("itemWebUrl"), "title": title,
         "item": it["name"], "kind": ("auction" if auction else "bin") + ("-lot" if count > 1 else "")
         + ("-typo" if kind == "typo" else ""),
-        "condition": listing.get("condition") or cond, "price": round(price, 2),
+        "condition": listing.get("condition") or cond, "price": round(list_price, 2),
+        "offer": offer, "offer_pct": round(s["best_offer_discount"] * 100) if offer else None,
         "ship_in": round(ship_in, 2), "ship_guess": ship_guess,
         "landed": round(landed(price, ship_in, s), 2), "count": count,
         "resale": round(resale * count, 2), "per_piece": resale,
@@ -391,6 +405,8 @@ def filters_for(it, kind, cfg, now):
         cap = max_price(top * s["lot_piece_factor"], 0, s, s["max_lot_size"])
     else:
         cap = max_price(top, 0, s)  # before shipping; evaluate() rechecks with real shipping
+    if kind != "auction" and s["best_offer_discount"] > 0:
+        cap = cap / (1 - s["best_offer_discount"])  # Best Offer listings may be listed above the cap
     f = ["itemLocationCountry:US", "priceCurrency:USD", f"price:[..{max(cap, 1):.2f}]"]
     if len(it["sold"]) == 1:
         f.append("conditions:{NEW}" if "new" in it["sold"] else "conditions:{USED}")
@@ -412,14 +428,19 @@ def round_seconds(searches, cfg):
 # ---------- alerts, feedback, log ----------
 
 def message_for(d):
-    head = f"${d['profit']:.0f} profit: {d['item']}"
+    head = f"${d['profit']:.0f} profit" + (" if offer accepted" if d.get("offer") else "") + f": {d['item']}"
     what = f"Lot of {d['count']}" if d["count"] > 1 else "Single"
     lines = []
     if d["auction"]:
         lines.append(f"{what}, AUCTION, bid now ${d['price']:.2f}, ends {(d['ends'] or '')[11:16]} UTC")
         lines.append(f"Bid up to ${d['max_price']:.2f} to make ${d['profit']:.0f}")
     else:
-        lines.append(f"{what}, Buy It Now ${d['price']:.2f}" + (" (takes offers)" if d["best_offer"] else ""))
+        if d.get("offer"):
+            lines.append(f"{what}, listed ${d['price']:.2f}. MAKE AN OFFER of about ${d['offer']:.2f} "
+                         f"({d['offer_pct']}% off). Your max is ${d['max_price']:.2f}.")
+            lines.append(f"Profit shown is if they accept ${d['offer']:.2f}; at the list price it would not clear your target.")
+        else:
+            lines.append(f"{what}, Buy It Now ${d['price']:.2f}" + (" (takes offers)" if d["best_offer"] else ""))
     lines.append(f"Shipping to you ${d['ship_in']:.2f}" + (" (guess)" if d["ship_guess"] else "")
                  + f", landed with tax ${d['landed']:.2f}")
     lines.append(f"Resale ${d['per_piece']:.0f}" + (f" each, ${d['resale']:.0f} total" if d["count"] > 1 else "")
@@ -475,7 +496,7 @@ def log_alert(d, now):
     rows = read_alerts()
     rows.append({"sent_at": now.strftime("%Y-%m-%d %H:%M"), "item": d["item"], "kind": d["kind"],
                  "listing_id": d["id"], "url": d["url"], "title": d["title"], "condition": d["condition"],
-                 "price": d["price"], "ship_in": d["ship_in"], "landed": d["landed"],
+                 "price": d["price"], "offer_price": d.get("offer") or "", "ship_in": d["ship_in"], "landed": d["landed"],
                  "resale_est": d["resale"], "profit_est": d["profit"], "max_price": d["max_price"],
                  "count": d["count"]})
     write_alerts(rows)

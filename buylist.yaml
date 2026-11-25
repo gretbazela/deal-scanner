@@ -14,7 +14,7 @@
 #   costs:     on a group or a single item. Overrides the settings below for just that item.
 #              Allowed: target_profit, fee_rate, promo_rate, fee_fixed, buyer_shipping,
 #              postage_out, buy_tax_rate, unknown_ship_in, typical_ship_in, lot_piece_factor,
-#              max_lot_size, lot_buyer_shipping, lot_postage_out
+#              max_lot_size, lot_buyer_shipping, lot_postage_out, mixed_lot_factor, best_offer_discount
 #              (an item's own costs beat its group's, which beat settings)
 #
 # Optional per item:
@@ -59,10 +59,15 @@ groups:
       postage_out: 7.00       # your label cost for one pair
       promo_rate: 0.05        # you promote shorts at about 5%
       target_profit: 10       # shorts clear $10 profit (chosen 11/24/2026); everything else stays at $20
-      # Lots ship as one parcel. Add these two once you know the numbers, then lots stop being
-      # charged shipping and the order fee once per pair:
-      # lot_buyer_shipping: 0
-      # lot_postage_out: 0
+      # Lots ship as one parcel in a flat rate box. You said to assume $20 to $25 for the label; I used
+      # the top of that range to stay cautious. A lot of 2 or 3 costs no more than the same pairs shipped
+      # one by one, so small lots use the lower of this and your per pair cost.
+      lot_postage_out: 25
+      # What buyers pay you to ship a lot. Not known yet, so 0 (the most cautious guess) until you tell me.
+      lot_buyer_shipping: 0
+      # Many sellers accept a Best Offer up to 20% under the listed price. A Best Offer listing alerts if
+      # 80% of its price is at or under your max, and the alert tells you to make an offer.
+      best_offer_discount: 0.20
 
 items:
   # ---------- outerwear (Oct to Feb is peak) ----------
@@ -288,3 +293,4 @@ items:
     must: [[short, shorts, trunks, boardshorts, britches]]
     skip: [shirt, shirts, polo, hat, sleeve, sleeves, tee]
     lots: true
+    costs: {mixed_lot_factor: 0.9}  # mixed lots are valued 10% under the lowest named brand price

@@ -192,7 +192,7 @@ def test_mixed_lot_uses_the_lowest_named_brand():
     cfg, mx = mixed_cfg({"Birdwell board shorts": {"used": 35}, "Vintage Patagonia Baggies": {"used": 37}})
     assert mx["sold"] == {"used": 37.0}
     d = h.evaluate(listing("Lot of 8 men's board shorts Patagonia Birdwell", 60, ship=15), mx, "lot", cfg, NOW)
-    assert d and d["count"] == 8 and d["per_piece"] == round(35 * mx["s"]["lot_piece_factor"], 2), d  # the lower of the two
+    assert d and d["count"] == 8 and d["per_piece"] == round(35 * 0.9 * mx["s"]["lot_piece_factor"], 2), d  # lowest of the two, less the 10% mixed lot haircut
 
 
 def test_mixed_lot_needs_every_named_brand_priced():
@@ -201,10 +201,10 @@ def test_mixed_lot_needs_every_named_brand_priced():
     assert h.evaluate(listing("Lot of 8 men's board shorts Patagonia Birdwell", 20, ship=15), mx, "lot", cfg, NOW) is None
     # no brand named at all: not valued either
     assert h.evaluate(listing("Lot of 8 men's board shorts surf", 20, ship=15), mx, "lot", cfg, NOW) is None
-    assert h.evaluate(listing("Lot of 8 men's Birdwell board shorts", 20, ship=15), mx, "lot", cfg, NOW)
+    assert h.evaluate(listing("Lot of 8 men's Birdwell board shorts", 30, ship=15), mx, "lot", cfg, NOW)
     # real titles are messy: "Men" not "Men's", "Short" not "Shorts"
-    assert h.evaluate(listing("Birdwell Short Lot, 3 Pair, Men 36", 20, ship=10), mx, "lot", cfg, NOW)
-    assert h.evaluate(listing("Lot of 3 Mens Birdwell Shorts", 20, ship=10), mx, "lot", cfg, NOW)
+    assert h.evaluate(listing("Birdwell Short Lot, 3 Pair, Men 36", 10, ship=10), mx, "lot", cfg, NOW)
+    assert h.evaluate(listing("Lot of 3 Mens Birdwell Shorts", 10, ship=10), mx, "lot", cfg, NOW)
     assert h.evaluate(listing("Birdwell Short Sleeve Shirt Lot of 3", 20, ship=10), mx, "lot", cfg, NOW) is None
 
 
@@ -217,6 +217,60 @@ def test_mixed_lot_only_searched_as_lots():
 def test_every_shorts_brand_watches_lots():
     shorts = [i for i in CFG["items"] if i.get("group") == "shorts" and not i.get("mixed")]
     assert shorts and all(i.get("lots") and i.get("brand") for i in shorts)
+
+
+def test_best_offer_alerts_when_the_offer_would_work():
+    it = item("Patagonia Retro-X jacket", {"used": 110})
+    it["s"] = dict(it["s"], best_offer_discount=0.20)
+    cap = h.max_price(110, 8, it["s"])
+    listed = round(cap * 1.15, 2)  # over the max, but 20% off gets it under
+    bo = h.evaluate(listing("Patagonia Retro X Fleece Jacket Mens L", listed, opts=("FIXED_PRICE", "BEST_OFFER")), it, "bin", CFG, NOW)
+    assert bo and bo["offer"] == round(listed * 0.8, 2) and bo["price"] == listed and bo["profit"] >= 20, bo
+    title, body = h.message_for(bo)
+    assert "if offer accepted" in title and "MAKE AN OFFER" in body
+    # same price without Best Offer: no alert
+    assert h.evaluate(listing("Patagonia Retro X Fleece Jacket Mens L", listed), it, "bin", CFG, NOW) is None
+    # too expensive even at 20% off
+    assert h.evaluate(listing("Patagonia Retro X Fleece Jacket Mens L", cap * 1.4, opts=("FIXED_PRICE", "BEST_OFFER")), it, "bin", CFG, NOW) is None
+    # under the max already: a normal alert, no offer needed
+    plain = h.evaluate(listing("Patagonia Retro X Fleece Jacket Mens L", cap - 1, opts=("FIXED_PRICE", "BEST_OFFER")), it, "bin", CFG, NOW)
+    assert plain and plain["offer"] is None
+
+
+def test_best_offer_is_off_unless_set():
+    it = item("Patagonia Retro-X jacket", {"used": 110})
+    cap = h.max_price(110, 8, it["s"])
+    assert it["s"]["best_offer_discount"] == 0
+    assert h.evaluate(listing("Patagonia Retro X Fleece Jacket Mens L", cap * 1.15, opts=("FIXED_PRICE", "BEST_OFFER")), it, "bin", CFG, NOW) is None
+
+
+def test_best_offer_widens_the_search_price_cap():
+    it = item("Patagonia Retro-X jacket", {"used": 110})
+    base = [x for x in h.filters_for(it, "bin", CFG, NOW)[0] if x.startswith("price:")][0]
+    it["s"] = dict(it["s"], best_offer_discount=0.20)
+    wide = [x for x in h.filters_for(it, "bin", CFG, NOW)[0] if x.startswith("price:")][0]
+    assert float(wide[9:-1]) > float(base[9:-1])
+
+
+def test_shorts_group_uses_best_offer_and_the_rest_do_not():
+    assert all(i["s"]["best_offer_discount"] == 0.20 for i in CFG["items"] if i.get("group") == "shorts")
+    assert all(i["s"]["best_offer_discount"] == 0 for i in CFG["items"] if i.get("group") != "shorts")
+
+
+def test_mixed_lot_haircut_and_small_lot_labels():
+    cfg, mx = mixed_cfg({"Birdwell board shorts": {"used": 35}})
+    assert mx["s"]["mixed_lot_factor"] == 0.9
+    d = h.evaluate(listing("Lot of 4 Birdwell board shorts mens", 20, ship=15), mx, "lot", cfg, NOW)
+    assert d["per_piece"] == round(round(35 * 0.9, 2) * mx["s"]["lot_piece_factor"], 2)
+    # a lot of 2 pays its two single labels ($14), not the $25 box
+    s = mx["s"]
+    two = h.net_total(30, 2, s)
+    gross = 60.0
+    assert abs(two - (gross - (s["fee_rate"] + s["promo_rate"]) * gross - s["fee_fixed"] - 14)) < 0.01
+    # a lot of 6 pays the $25 box
+    six = h.net_total(30, 6, s)
+    gross = 180.0
+    assert abs(six - (gross - (s["fee_rate"] + s["promo_rate"]) * gross - s["fee_fixed"] - 25)) < 0.01
 
 
 if __name__ == "__main__":
