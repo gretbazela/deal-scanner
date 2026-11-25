@@ -1,0 +1,183 @@
+# Spyhopper buy list
+#
+# Each item below is something that reliably sells on eBay for $50+.
+# An item is OFF until you fill in its sold price from Terapeak:
+#   sold: {used: 85}            -> watches used listings, assumes they resell for $85
+#   sold: {used: 85, new: 140}  -> watches both, new-with-tags valued at $140
+# Leave a value blank (or delete it) to skip that condition.
+# Run `python buylist.py` to see each item's Terapeak link and the most you can pay.
+#
+# Optional per item:
+#   must:  every inner list needs one of its words in the title
+#   skip:  extra words that rule a listing out
+#   typos: misspellings to search for separately (cheap listings hide behind these)
+#   lots:  true also watches lots ("lot of 3") valued at lot_piece_factor of a single
+#   note:  anything you want to remember (not used by the scanner)
+
+settings:
+  target_profit: 20         # only alert when estimated profit is at least this
+  fee_rate: 0.136           # eBay final value fee (applies to item + shipping you charge)
+  promo_rate: 0.05          # promoted listing fee, set 0 if you don't promote
+  fee_fixed: 0.40           # per order fee
+  buyer_shipping: 10.00     # shipping you charge the buyer
+  postage_out: 10.00        # what the label actually costs you
+  buy_tax_rate: 0.08        # sales tax eBay adds when you buy
+  unknown_ship_in: 12.00    # shipping to you when a listing shows calculated shipping
+  min_seller_feedback: 5
+  min_seller_percent: 95
+  max_listing_age_hours: 48 # Buy It Now listings newer than this
+  auction_hours: 3          # auctions ending within this many hours
+  lot_piece_factor: 0.8     # each piece in a lot is worth this share of a single
+  max_lot_size: 20
+  daily_call_budget: 4500   # eBay allows 5,000 searches a day; leave headroom
+
+# Skip any listing with these words in the title
+exclude_words: [women, womens, ladies, girls, kids, youth, boys, toddler, baby, infant,
+  replica, inspired, custom, reworked, mystery, dupe, similar to, look alike, lookalike,
+  unbranded, no brand]
+
+# Skip listings that admit damage
+damage_words: [for parts, as is, damaged, stain, stained, stains, holes, ripped, torn, flawed]
+
+items:
+  # ---------- outerwear (Oct to Feb is peak) ----------
+  - name: Patagonia Retro-X jacket
+    query: patagonia retro x
+    must: [[jacket, fleece]]
+    skip: [vest, pullover]
+    typos: [patagoina retro x, patagonia retrox]
+    lots: false
+    sold: {used: , new: }
+
+  - name: Patagonia Synchilla Snap-T
+    query: patagonia snap t
+    must: [[synchilla, fleece, pullover]]
+    skip: [vest]
+    typos: [patagoina snap t, patagonia snapt]
+    sold: {used: , new: }
+
+  - name: Patagonia Better Sweater
+    query: patagonia better sweater
+    skip: [vest]
+    typos: [patagoina better sweater]
+    lots: true
+    sold: {used: , new: }
+
+  - name: Patagonia Nano Puff
+    query: patagonia nano puff
+    must: [[jacket, hoody, hoodie]]
+    skip: [vest]
+    sold: {used: , new: }
+
+  - name: Patagonia Down Sweater
+    query: patagonia down sweater
+    skip: [vest]
+    sold: {used: , new: }
+
+  - name: Arc'teryx Atom
+    query: arcteryx atom
+    must: [[jacket, hoody, hoodie]]
+    skip: [vest]
+    typos: [arcterx atom, arc teryx atom]
+    sold: {used: , new: }
+
+  - name: Arc'teryx Beta
+    query: arcteryx beta
+    must: [[jacket, shell]]
+    sold: {used: , new: }
+
+  - name: North Face Nuptse
+    query: north face nuptse
+    must: [[jacket, puffer, 700]]
+    skip: [vest]
+    sold: {used: , new: }
+
+  - name: North Face Denali
+    query: north face denali
+    must: [[jacket, fleece]]
+    sold: {used: , new: }
+
+  - name: Carhartt Detroit jacket
+    query: carhartt detroit jacket
+    typos: [carhart detroit jacket]
+    sold: {used: , new: }
+
+  - name: Carhartt Active jacket
+    query: carhartt active jacket
+    typos: [carhart active jacket]
+    sold: {used: , new: }
+
+  - name: Carhartt chore coat
+    query: carhartt chore coat
+    typos: [carhart chore coat]
+    sold: {used: , new: }
+
+  - name: Barbour Bedale
+    query: barbour bedale
+    must: [[jacket, wax, waxed]]
+    sold: {used: , new: }
+
+  - name: Barbour Beaufort
+    query: barbour beaufort
+    must: [[jacket, wax, waxed]]
+    sold: {used: , new: }
+
+  - name: Filson Mackinaw
+    query: filson mackinaw
+    sold: {used: , new: }
+
+  - name: Filson Tin Cloth
+    query: filson tin cloth
+    skip: [hat, cap]
+    sold: {used: , new: }
+
+  - name: Levi's vintage trucker jacket
+    query: levis trucker jacket
+    must: [[vintage, vtg, usa, type iii, type 3]]
+    sold: {used: , new: }
+
+  # ---------- year-round ----------
+  - name: Carhartt double knee pants
+    query: carhartt double knee
+    must: [[pants, jeans, b01, b136]]
+    skip: [shorts]
+    typos: [carhart double knee]
+    lots: true
+    sold: {used: , new: }
+
+  - name: Pendleton Board Shirt
+    query: pendleton board shirt
+    sold: {used: , new: }
+
+  - name: RRL Ralph Lauren
+    query: rrl
+    must: [[ralph lauren, double rl]]
+    skip: [polo shirt]
+    sold: {used: , new: }
+
+  - name: Peter Millar quarter zip
+    query: peter millar quarter zip
+    typos: [peter miller quarter zip]
+    lots: true
+    sold: {used: , new: }
+
+  - name: Lululemon ABC pants
+    query: lululemon abc pants
+    typos: [lulu lemon abc pants]
+    lots: true
+    sold: {used: , new: }
+
+  - name: Girbaud jeans
+    query: girbaud
+    must: [[jeans, pants, shorts]]
+    sold: {used: , new: }
+
+  # ---------- spring and summer (turn back on in March) ----------
+  - name: Eric Emanuel shorts
+    query: eric emanuel shorts
+    sold: {used: , new: }
+
+  - name: Birdwell board shorts
+    query: birdwell
+    must: [[shorts, britches, boardshorts, trunks]]
+    sold: {used: , new: }

@@ -1,9 +1,7 @@
 name: Fast scan
 
 on:
-  schedule:
-    # Backup start in case the run did not restart itself. Extra starts just wait in line.
-    - cron: "11,41 * * * *"
+  # Retired: replaced by hunt.yml (hunter.py). Manual runs only.
   workflow_dispatch: {}
 
 permissions:
@@ -40,8 +38,3 @@ jobs:
           git diff --cached --quiet || git commit -m "Update seen deals and market prices"
           git pull --rebase --quiet || true
           git push || true
-      - name: Start the next run
-        if: success()
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: gh workflow run fast.yml

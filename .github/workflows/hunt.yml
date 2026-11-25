@@ -1,24 +1,23 @@
-name: Deal scan
+name: Hunt
 
 on:
   schedule:
-    # Daytime, 6 AM to midnight Pacific: every 30 minutes (times are UTC)
-    - cron: "*/30 0-7,14-23 * * *"
-    # Overnight, midnight to 6 AM Pacific: every hour
-    - cron: "0 8-13 * * *"
+    # Backup start in case the run did not restart itself. Extra starts just wait in line.
+    - cron: "17 */2 * * *"
   workflow_dispatch: {}
 
 permissions:
   contents: write
+  actions: write
 
 concurrency:
-  group: deal-scan
+  group: hunt
   cancel-in-progress: false
 
 jobs:
-  scan:
+  hunt:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 355
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -26,18 +25,26 @@ jobs:
           python-version: "3.12"
           cache: pip
       - run: pip install -r requirements.txt
-      - name: Scan eBay
+      - name: Hunt eBay
         env:
           EBAY_CLIENT_ID: ${{ secrets.EBAY_CLIENT_ID }}
           EBAY_CLIENT_SECRET: ${{ secrets.EBAY_CLIENT_SECRET }}
           NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
-        run: python scanner.py
-      - name: Save deals already sent and market prices
+        run: python hunter.py
+      - name: Weekly scorecard
+        if: always()
+        run: python report.py >> "$GITHUB_STEP_SUMMARY" || true
+      - name: Save alert log
         if: always()
         run: |
           git config user.name "deal-scanner"
           git config user.email "deal-scanner@users.noreply.github.com"
-          git add seen.json market.json 2>/dev/null || true
-          git diff --cached --quiet || git commit -m "Update seen deals and market prices"
+          git add alerts.csv seen.json state.json 2>/dev/null || true
+          git diff --cached --quiet || git commit -m "Update alert log"
           git pull --rebase --quiet || true
-          git push
+          git push || true
+      - name: Start the next run
+        if: success()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run hunt.yml
