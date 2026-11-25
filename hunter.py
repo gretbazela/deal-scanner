@@ -146,7 +146,7 @@ def load_buylist(path=BUYLIST_PATH):
     cfg["groups"] = cfg.get("groups") or {}
     cfg["settings"].setdefault("typical_ship_in", 8.0)
     cfg["settings"].setdefault("mixed_lot_factor", 1.0)     # 0.9 = value mixed brand lots 10% lower
-    cfg["settings"].setdefault("quiet_hours", None)         # {start: 23, end: 6, timezone: ...}: hold phone alerts overnight
+    cfg["settings"].setdefault("quiet_hours", None)         # {start: 23, end: 7, timezone: ...}: hold phone alerts overnight
     cfg["settings"].setdefault("best_offer_discount", 0.0)  # 0.20 = assume sellers take 20% off on Best Offer
     cfg["exclude_words"] = [str(w) for w in cfg.get("exclude_words") or []]
     cfg["damage_words"] = [str(w) for w in cfg.get("damage_words") or []]
@@ -506,7 +506,7 @@ def comps_url(d):
 
 def quiet_until(now, cfg):
     """If now falls in the quiet hours, return when they end (a UTC datetime); otherwise None.
-    Hours are local to the timezone in settings, so 23 to 6 means 11 PM to 6 AM."""
+    Hours are local to the timezone in settings, so 23 to 7 means 11 PM to 7 AM."""
     q = cfg["settings"].get("quiet_hours")
     if not q:
         return None

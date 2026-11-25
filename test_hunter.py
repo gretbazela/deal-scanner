@@ -278,25 +278,27 @@ def test_mixed_lot_haircut_and_small_lot_labels():
     assert abs(six - (gross - (s["fee_rate"] + s["promo_rate"]) * gross - s["fee_fixed"] - 25)) < 0.01
 
 
-def test_quiet_hours_hold_alerts_until_6am_pacific():
-    cfg = {"settings": {"quiet_hours": {"start": 23, "end": 6, "timezone": "America/Los_Angeles"}}}
+def test_quiet_hours_hold_alerts_until_7am_pacific():
+    cfg = {"settings": {"quiet_hours": {"start": 23, "end": 7, "timezone": "America/Los_Angeles"}}}
     from datetime import datetime, timezone
     # 9:39 PM Pacific on Nov 24 is awake time
     assert h.quiet_until(datetime(2026, 11, 25, 5, 39, tzinfo=timezone.utc), cfg) is None
-    # 11:30 PM Pacific: held until 6 AM Pacific the next morning (14:00 UTC in winter)
+    # 11:30 PM Pacific: held until 7 AM Pacific the next morning (15:00 UTC in winter)
     w = h.quiet_until(datetime(2026, 11, 25, 7, 30, tzinfo=timezone.utc), cfg)
-    assert w == datetime(2026, 11, 25, 14, 0, tzinfo=timezone.utc)
-    # 2 AM Pacific: held until 6 AM the same morning
+    assert w == datetime(2026, 11, 25, 15, 0, tzinfo=timezone.utc)
+    # 2 AM Pacific: held until 7 AM the same morning
     w = h.quiet_until(datetime(2026, 11, 25, 10, 0, tzinfo=timezone.utc), cfg)
-    assert w == datetime(2026, 11, 25, 14, 0, tzinfo=timezone.utc)
-    # 6 AM exactly is awake again
-    assert h.quiet_until(datetime(2026, 11, 25, 14, 0, tzinfo=timezone.utc), cfg) is None
+    assert w == datetime(2026, 11, 25, 15, 0, tzinfo=timezone.utc)
+    # 6:30 AM Pacific is still quiet
+    assert h.quiet_until(datetime(2026, 11, 25, 14, 30, tzinfo=timezone.utc), cfg) == datetime(2026, 11, 25, 15, 0, tzinfo=timezone.utc)
+    # 7 AM exactly is awake again
+    assert h.quiet_until(datetime(2026, 11, 25, 15, 0, tzinfo=timezone.utc), cfg) is None
     # turned off when the setting is missing
     assert h.quiet_until(datetime(2026, 11, 25, 10, 0, tzinfo=timezone.utc), {"settings": {}}) is None
 
 
 def test_quiet_hours_are_set_for_gretchen():
-    assert CFG["settings"]["quiet_hours"] == {"start": 23, "end": 6, "timezone": "America/Los_Angeles"}
+    assert CFG["settings"]["quiet_hours"] == {"start": 23, "end": 7, "timezone": "America/Los_Angeles"}
 
 
 def test_flaw_and_flaws_are_skipped():
