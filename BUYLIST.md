@@ -15,8 +15,6 @@ Max buy = most you can pay for the item (before shipping and tax) and still make
 | North Face Denali | yes | $20 | $30 | $-6 | $100 | $47 | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=north+face+denali) |
 | Barbour Bedale | yes | $20 | $230 | $145 | $325 | $216 | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=barbour+bedale) |
 | Barbour Beaufort | yes | $20 | $200 | $122 | $360 | $243 | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=barbour+beaufort) |
-| Filson Mackinaw | yes | $20 | $185 | $111 | $220 | $137 | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=filson+mackinaw) |
-| Filson Tin Cloth | yes | $20 | $205 | $126 | $275 | $179 | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=filson+tin+cloth) |
 | Levi's vintage trucker jacket | yes | $20 | $45 | $5 | $79 | $31 | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=levis+trucker+jacket) |
 | Pendleton Board Shirt | yes | $20 | $50 | $9 | $95 | $43 | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=pendleton+board+shirt) |
 | RRL jeans | yes | $20 | $120 | $62 | $210 | $130 | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=rrl+jeans) |

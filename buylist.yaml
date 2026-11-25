@@ -142,18 +142,6 @@ items:
     typos: [barbor beaufort]
     sold: {used: 200, new: 360}  # draft: low-end eBay asking price 11/2026, confirm in Terapeak
 
-  - name: Filson Mackinaw
-    query: filson mackinaw
-    skip: [vest]
-    typos: [filsen mackinaw]
-    sold: {used: 185, new: 220}  # draft: low-end eBay asking price 11/2026, confirm in Terapeak
-
-  - name: Filson Tin Cloth
-    query: filson tin cloth
-    skip: [hat, cap]
-    typos: [filson tincloth]
-    sold: {used: 205, new: 275}  # draft: low-end eBay asking price 11/2026, confirm in Terapeak
-
   - name: Levi's vintage trucker jacket
     query: levis trucker jacket
     must: [[vintage, vtg, usa, type iii, type 3]]

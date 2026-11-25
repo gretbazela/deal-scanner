@@ -43,6 +43,8 @@ RRL: the old combined RRL entry was replaced on 11/24/2026 by RRL jeans, RRL jac
 
 Pants: James Perse, Taylor Stitch, Faherty and Outerknown pants were added on 11/24/2026 with your standard costs ($20 profit target, $10 label), not the shorts costs, using Terapeak averages less 10% (or the median if lower). The used sides are so low that the most you could pay is near zero, so mostly the new side will alert.
 
+Filson: both Filson items (Mackinaw, Tin Cloth) were removed on 11/24/2026. To bring one back, add it again under `items:` (the git history has the old entries).
+
 Carhartt: all four Carhartt items (Detroit, Active, chore coat, double knee) were removed on 11/24/2026 because it is not a favorite brand. To bring one back, add it again under `items:` in `buylist.yaml` (the git history has the old entries).
 
 Shorts brands: on 11/24/2026 all shorts brands were switched on at their Terapeak average from DRAFT_PRICES.md less 10%, leaving out any side under 20 sold. Several used prices are so low that the most you could pay is near zero or below (James Perse, Taylor Stitch, Outerknown, Quiksilver, Faherty used), so those mostly will not alert until a listing is nearly free. Check `python buylist.py --group shorts` for the exact max buys.
