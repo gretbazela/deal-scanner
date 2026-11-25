@@ -270,6 +270,27 @@ items:
     lots: true
     sold: {used: 42, new: 97}  # Terapeak 11/24/2026: average less 10%, sides under 20 sold left blank
 
+  # ---------- pants (your standard costs: $20 profit target, $10 label) ----------
+  - name: James Perse pants
+    query: james perse pants
+    skip: [shorts]
+    sold: {used: 32, new: 78}  # Terapeak 11/24/2026: lower of average less 10% and median
+
+  - name: Taylor Stitch pants
+    query: taylor stitch pants
+    skip: [shorts]
+    sold: {used: 39, new: 57}  # Terapeak 11/24/2026: lower of average less 10% and median
+
+  - name: Faherty pants
+    query: faherty pants
+    skip: [shorts]
+    sold: {used: 24, new: 61}  # Terapeak 11/24/2026: lower of average less 10% and median
+
+  - name: Outerknown pants
+    query: outerknown pants
+    skip: [shorts]
+    sold: {used: 22, new: 41}  # Terapeak 11/24/2026: lower of average less 10% and median
+
   # Lots that name several brands, like "lot of 8 men's board shorts Patagonia Birdwell".
   # Each pair is valued at the LOWEST price among the brands named in the title, then at lot_piece_factor.
   # A lot that names no brand with a price is not valued and never alerts. On whenever any shorts brand is on.

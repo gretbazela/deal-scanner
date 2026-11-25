@@ -33,4 +33,8 @@ Max buy = most you can pay for the item (before shipping and tax) and still make
 | Eric Emanuel shorts | yes | $10 | $35 | $8 | $68 | $33 | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=eric+emanuel+shorts) |
 | Birdwell board shorts | yes | $10 | $35 | $8 | - | - | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=birdwell) |
 | Vilebrequin swim shorts | yes | $10 | $42 | $13 | $97 | $55 | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=vilebrequin) |
+| James Perse pants | yes | $20 | $32 | $-4 | $78 | $30 | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=james+perse+pants) |
+| Taylor Stitch pants | yes | $20 | $39 | $1 | $57 | $14 | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=taylor+stitch+pants) |
+| Faherty pants | yes | $20 | $24 | $-11 | $61 | $17 | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=faherty+pants) |
+| Outerknown pants | yes | $20 | $22 | $-12 | $41 | $2 | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=outerknown+pants) |
 | Mixed brand shorts lots | yes | $10 | $43 | $14 | $97 | $55 | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=mens+shorts) |
