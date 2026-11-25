@@ -473,6 +473,10 @@ def main():
     searches = build_searches(cfg)
     if not searches:
         print("No items have a sold price yet. Fill in sold: in buylist.yaml (see README).")
+        out = os.environ.get("GITHUB_OUTPUT")
+        if out:  # don't restart in a loop; the 2-hourly schedule checks again
+            with open(out, "a") as f:
+                f.write("restart=false\n")
         return
     dry = os.environ.get("DRY_RUN") == "1"
     once = os.environ.get("HUNT_ONCE") == "1"

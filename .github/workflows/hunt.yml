@@ -26,6 +26,7 @@ jobs:
           cache: pip
       - run: pip install -r requirements.txt
       - name: Hunt eBay
+        id: hunt
         env:
           EBAY_CLIENT_ID: ${{ secrets.EBAY_CLIENT_ID }}
           EBAY_CLIENT_SECRET: ${{ secrets.EBAY_CLIENT_SECRET }}
@@ -44,7 +45,7 @@ jobs:
           git pull --rebase --quiet || true
           git push || true
       - name: Start the next run
-        if: success()
+        if: success() && steps.hunt.outputs.restart != 'false'
         env:
           GH_TOKEN: ${{ github.token }}
         run: gh workflow run hunt.yml
