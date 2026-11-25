@@ -54,8 +54,7 @@ groups:
       promo_rate: 0.05       # promoted listing rate (0 if you don't promote)
       target_profit: 10      # minimum profit for this group
       lot_postage_out: 25    # one label for a lot
-      lot_buyer_shipping: 0  # what buyers pay for a lot
-      best_offer_discount: 0.20  # assume sellers take 20% off on Best Offer
+      lot_buyer_shipping: 15 # what buyers pay for a lot
 
 items:
   - name: Birdwell board shorts
@@ -64,9 +63,9 @@ items:
 
 An item can also have its own `costs:` block. The order is: the item's own costs, then its group's, then the defaults in `settings:`. Anything you don't list stays at the default. A misspelled cost name stops the scanner with a clear message rather than being ignored.
 
-**Lots:** by default a lot is charged shipping and the per order fee for every piece, which is cautious. If you ship lots as one parcel, add `lot_buyer_shipping` (what you charge for the whole lot) and `lot_postage_out` (the one label) to the group. Then a lot is charged once, not once per pair. A small lot never costs more than its pairs shipped one by one, so a lot of 2 uses two single labels and only bigger lots use the full lot label. The shorts group uses a $25 label and $0 charged to the buyer for now; if buyers pay you for lot shipping, raise `lot_buyer_shipping` and lots get more room.
+**Lots:** by default a lot is charged shipping and the per order fee for every piece, which is cautious. If you ship lots as one parcel, add `lot_buyer_shipping` (what you charge for the whole lot) and `lot_postage_out` (the one label) to the group. Then a lot is charged once, not once per pair. A small lot never costs more than its pairs shipped one by one, so a lot of 2 uses two single labels and only bigger lots use the full lot label. The shorts group uses a $25 label and $15 charged to the buyer for a lot.
 
-**Best Offer:** set `best_offer_discount: 0.20` (on a group or item) if sellers usually accept up to 20% off. A Best Offer listing priced over your max still alerts when 80% of its price is under your max. The alert says **MAKE AN OFFER** with the amount, and the profit it shows is what you make if they accept. Listings without Best Offer are judged at their listed price as before. It is on for shorts only; everything else stays at 0 (off).
+**Best Offer:** `best_offer_discount: 0.20` in `settings:` assumes sellers usually accept up to 20% off. A group or item can set its own, or 0 to turn it off. A Best Offer listing priced over your max still alerts when 80% of its price is under your max. The alert says **MAKE AN OFFER** with the amount, and the profit it shows is what you make if they accept. Listings without Best Offer are judged at their listed price as before. It applies to every item.
 
 ### Lots
 

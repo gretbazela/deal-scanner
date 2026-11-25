@@ -237,24 +237,29 @@ def test_best_offer_alerts_when_the_offer_would_work():
     assert plain and plain["offer"] is None
 
 
-def test_best_offer_is_off_unless_set():
+def test_best_offer_can_be_switched_off():
     it = item("Patagonia Retro-X jacket", {"used": 110})
+    it["s"] = dict(it["s"], best_offer_discount=0)
     cap = h.max_price(110, 8, it["s"])
-    assert it["s"]["best_offer_discount"] == 0
     assert h.evaluate(listing("Patagonia Retro X Fleece Jacket Mens L", cap * 1.15, opts=("FIXED_PRICE", "BEST_OFFER")), it, "bin", CFG, NOW) is None
 
 
 def test_best_offer_widens_the_search_price_cap():
     it = item("Patagonia Retro-X jacket", {"used": 110})
+    it["s"] = dict(it["s"], best_offer_discount=0)
     base = [x for x in h.filters_for(it, "bin", CFG, NOW)[0] if x.startswith("price:")][0]
     it["s"] = dict(it["s"], best_offer_discount=0.20)
     wide = [x for x in h.filters_for(it, "bin", CFG, NOW)[0] if x.startswith("price:")][0]
     assert float(wide[9:-1]) > float(base[9:-1])
 
 
-def test_shorts_group_uses_best_offer_and_the_rest_do_not():
-    assert all(i["s"]["best_offer_discount"] == 0.20 for i in CFG["items"] if i.get("group") == "shorts")
-    assert all(i["s"]["best_offer_discount"] == 0 for i in CFG["items"] if i.get("group") != "shorts")
+def test_best_offer_applies_to_every_item():
+    assert CFG["items"] and all(i["s"]["best_offer_discount"] == 0.20 for i in CFG["items"])
+
+
+def test_shorts_lots_charge_buyers_15():
+    assert all(i["s"]["lot_buyer_shipping"] == 15 and i["s"]["lot_postage_out"] == 25
+               for i in CFG["items"] if i.get("group") == "shorts")
 
 
 def test_mixed_lot_haircut_and_small_lot_labels():
@@ -265,11 +270,11 @@ def test_mixed_lot_haircut_and_small_lot_labels():
     # a lot of 2 pays its two single labels ($14), not the $25 box
     s = mx["s"]
     two = h.net_total(30, 2, s)
-    gross = 60.0
+    gross = 60.0 + 13.0  # the buyer pays two single shipping charges ($13), which is under the $15 lot charge
     assert abs(two - (gross - (s["fee_rate"] + s["promo_rate"]) * gross - s["fee_fixed"] - 14)) < 0.01
     # a lot of 6 pays the $25 box
     six = h.net_total(30, 6, s)
-    gross = 180.0
+    gross = 180.0 + 15.0  # the buyer pays the $15 lot charge
     assert abs(six - (gross - (s["fee_rate"] + s["promo_rate"]) * gross - s["fee_fixed"] - 25)) < 0.01
 
 

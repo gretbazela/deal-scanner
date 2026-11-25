@@ -40,6 +40,7 @@ settings:
   lot_piece_factor: 0.8     # each piece in a lot is worth this share of a single
   max_lot_size: 20
   daily_call_budget: 4500   # eBay allows 5,000 searches a day; leave headroom
+  best_offer_discount: 0.20 # many sellers take up to 20% off a Best Offer; such listings alert if 80% of the price is under your max (0 turns it off)
 
 # Skip any listing with these words in the title
 exclude_words: [women, womens, ladies, girls, kids, youth, boys, toddler, baby, infant,
@@ -63,11 +64,8 @@ groups:
       # the top of that range to stay cautious. A lot of 2 or 3 costs no more than the same pairs shipped
       # one by one, so small lots use the lower of this and your per pair cost.
       lot_postage_out: 25
-      # What buyers pay you to ship a lot. Not known yet, so 0 (the most cautious guess) until you tell me.
-      lot_buyer_shipping: 0
-      # Many sellers accept a Best Offer up to 20% under the listed price. A Best Offer listing alerts if
-      # 80% of its price is at or under your max, and the alert tells you to make an offer.
-      best_offer_discount: 0.20
+      # What buyers are charged to ship a lot (you said assume $15).
+      lot_buyer_shipping: 15
 
 items:
   # ---------- outerwear (Oct to Feb is peak) ----------
