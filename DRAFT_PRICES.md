@@ -39,3 +39,21 @@ Each cell: listings found / 25th percentile / median.
 | Vintage Quiksilver shorts | - | 21 / $19 / $23 | - | 3 (too few) |
 | Eric Emanuel shorts | - | 151 / $35 / $50 | - | 144 / $110 / $164 |
 | Birdwell board shorts | - | 128 / $35 / $45 | - | 106 / $50 / $66 |
+
+## Terapeak
+
+Pulled 11/24/2026 from Seller Hub Research, Sold tab, last 90 days, category Men's Clothing.
+Lots, vests, women's and kids' listings were excluded in the search words.
+Pre-owned combines Excellent, Good and Fair. "Sold" is the count shown in Terapeak's condition filter.
+Lookups were stopped partway; items not listed here have no Terapeak numbers yet.
+
+| Item | Pre-owned avg | Pre-owned sold | Pre-owned sell-through | NWT avg | NWT sold | NWT sell-through |
+|---|---|---|---|---|---|---|
+| Patagonia Retro-X jacket | $112.49 | 627 | 20.3% | $155.62 | 88 | 13.7% |
+| Patagonia Synchilla Snap-T | $75.80 | 3,453 | 44.2% | $101.81 | 259 | 21.0% |
+| Patagonia Better Sweater | $35.85 | 5,213 | 34.5% | $77.09 | 844 | 34.6% |
+| Patagonia Nano Puff | $109.37 | 323 | 22.9% | $192.77 | 173 | 18.0% |
+| Patagonia Down Sweater | $93.55 | 1,114 | 39.7% | $192.78 | 357 | 29.7% |
+| Arc'teryx Atom | $166.48 | 101 | 37.0% | $237.46 | 56 | 53.1% |
+
+Note: the Better Sweater pre-owned search pulled in some other models (Columbia, Snap-T), so that average runs low.

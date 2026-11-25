@@ -1,11 +1,11 @@
 # deal-scanner
 
-Finds eBay listings priced low enough to resell for **$20+ profit**, and sends them to your phone. Goal: 50 a week.
+Finds eBay listings priced low enough to resell for your **target profit** (default $20), and sends them to your phone. Goal: 50 a week.
 
 ## How it works
 
 1. **`buylist.yaml`** lists items that reliably sell for $50 or more. For each one you enter what it actually *sells* for (from Terapeak).
-2. From that, the scanner works out the **most you can pay** and still make $20 after eBay fees, promoted fees, shipping both ways, and sales tax.
+2. From that, the scanner works out the **most you can pay** and still make the target after eBay fees, promoted fees, shipping both ways, and sales tax. Each item can have its own costs (see below).
 3. It asks eBay only for listings at or under that price: new Buy It Now listings, auctions ending in the next 3 hours, misspelled titles, and lots.
 4. Each hit goes to ntfy with three buttons:
    - **Bought**: you bought it
@@ -35,9 +35,35 @@ Terapeak is free in eBay Seller Hub (**Seller Hub → Research**). Do this once 
    Leave a side blank to skip it (for example, `sold: {used: 85, new: }`). Then click **Commit changes**.
 6. The change takes effect on the next run, within about 5.5 hours. To start right away: **Actions → Hunt →** cancel the running job, then **Run workflow**.
 
-Items without a sold price are switched off. Anything selling under about **$38** can never make $20, so don't bother adding it.
+Items without a sold price are switched off. With the default costs, anything selling under about **$38** can never make $20. Shorts use cheaper shipping, so check their numbers with `python buylist.py --group shorts`.
 
 **Speed vs. coverage:** eBay allows about 5,000 searches a day. With 10 items on, each item is checked about every 5 minutes. With all 25, it's about every 12 minutes. Fewer, better items find deals faster.
+
+## Costs: different shipping and profit targets for different items
+
+The `settings:` block at the top of `buylist.yaml` holds the default costs. A kind of item can have its own by joining a **group**:
+
+```yaml
+groups:
+  shorts:
+    costs:
+      typical_ship_in: 7     # what you usually pay to have a pair shipped to you
+      unknown_ship_in: 7     # guess used when a listing shows calculated shipping
+      buyer_shipping: 6.50   # what you charge the buyer
+      postage_out: 7.00      # your label cost
+      promo_rate: 0.05       # promoted listing rate (0 if you don't promote)
+      target_profit: 15      # minimum profit for this group
+
+items:
+  - name: Birdwell board shorts
+    group: shorts            # uses the shorts costs
+```
+
+An item can also have its own `costs:` block. The order is: the item's own costs, then its group's, then the defaults in `settings:`. Anything you don't list stays at the default. A misspelled cost name stops the scanner with a clear message rather than being ignored.
+
+**Lots:** by default a lot is charged shipping and the per order fee for every piece, which is cautious. If you ship lots as one parcel, add `lot_buyer_shipping` (what you charge for the whole lot) and `lot_postage_out` (the one label) to the group. Then a lot is charged once, not once per pair.
+
+To see the most you can pay for each item: `python buylist.py` (add `--group shorts` for one group, or `--targets 20,15,10` to compare profit targets).
 
 ## Adding or changing items
 
@@ -46,6 +72,7 @@ Copy an item block in `buylist.yaml`. You can add:
 - `skip:` words that rule a listing out
 - `typos:` misspellings, since cheap listings hide behind them
 - `lots: true` to also watch lots
+- `group:` and `costs:` for different shipping or profit targets (see above)
 
 Turn shorts back on in spring and outerwear back on in fall.
 
@@ -59,7 +86,7 @@ When something you bought sells, open `alerts.csv` on GitHub and enter the sale 
 |---|---|
 | `hunter.py` | the scanner (runs from `.github/workflows/hunt.yml`, restarts itself every 5.5 hours) |
 | `buylist.yaml` | your items and sold prices |
-| `buylist.py` | rebuilds `BUYLIST.md` (max buy price per item, Terapeak links) |
+| `buylist.py` | shows max buy prices per item and rebuilds `BUYLIST.md` (Terapeak links). Options: `--group`, `--targets` |
 | `report.py` | the weekly scorecard |
 | `alerts.csv` | every alert, with Bought/Wrong taps and resale prices |
 | `test_hunter.py` | offline checks for the profit math and matching |

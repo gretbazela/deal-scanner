@@ -114,6 +114,53 @@ def test_searches_and_pacing():
     assert any(x.startswith("price:[..") for x in f) and "conditions:{USED}" in f
 
 
+def test_group_costs_and_overrides():
+    base = dict(CFG["settings"])
+    groups = {"shorts": {"costs": {"buyer_shipping": 6.5, "postage_out": 7, "target_profit": 15}}}
+    plain = {"name": "x"}
+    assert h.costs_for(plain, groups, base) == base  # no group: unchanged
+    it = {"name": "y", "group": "shorts"}
+    s = h.costs_for(it, groups, base)
+    assert s["buyer_shipping"] == 6.5 and s["target_profit"] == 15 and s["fee_rate"] == base["fee_rate"]
+    it = {"name": "z", "group": "shorts", "costs": {"target_profit": 10}}
+    assert h.costs_for(it, groups, base)["target_profit"] == 10  # the item beats its group
+
+
+def test_bad_cost_names_are_caught():
+    for it, groups in (({"name": "a", "costs": {"postage": 5}}, {}),
+                       ({"name": "b", "group": "nope"}, {})):
+        try:
+            h.costs_for(it, groups, CFG["settings"])
+        except ValueError:
+            continue
+        raise AssertionError("should have refused " + it["name"])
+
+
+def test_cheaper_shipping_raises_the_max_price():
+    s = dict(S)
+    cheap = dict(S, buyer_shipping=6.5, postage_out=7.0, unknown_ship_in=7.0)
+    assert h.max_price(60, 7, cheap) > h.max_price(60, 7, s)
+
+
+def test_lot_as_one_parcel():
+    s = dict(S)
+    one_parcel = dict(S, lot_buyer_shipping=10.0, lot_postage_out=12.0)
+    # without lot shipping, a lot of 6 pays shipping and the order fee six times
+    assert h.net_total(40, 6, one_parcel) > h.net_total(40, 6, s)
+    # a single pair is unaffected by lot settings
+    assert h.net_total(40, 1, one_parcel) == h.net_total(40, 1, s)
+    cap = h.max_price(40, 7, one_parcel, 6)
+    assert abs(h.profit(40, cap, 7, one_parcel, 6) - one_parcel["target_profit"]) < 0.01
+
+
+def test_item_costs_reach_the_alert_math():
+    it = item("Patagonia Retro-X jacket", {"used": 110})
+    it["s"] = dict(it["s"], target_profit=5)
+    cap_low = h.max_price(110, 8, it["s"])
+    d = h.evaluate(listing("Patagonia Retro X Fleece Jacket Mens L", cap_low - 1), it, "bin", CFG, NOW)
+    assert d and abs(d["max_price"] - cap_low) < 0.01  # uses the item's $5 target, not the global $20
+
+
 if __name__ == "__main__":
     n = 0
     for name, fn in list(globals().items()):

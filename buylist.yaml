@@ -8,6 +8,15 @@
 # Draft prices came from DRAFT_PRICES.md (Actions -> Draft prices refreshes it).
 # Run `python buylist.py` to see each item's Terapeak link and the most you can pay.
 #
+# Groups and costs:
+#   groups:    named sets of costs shared by many items (for example "shorts"). Give an item
+#              group: shorts and it uses that group's costs.
+#   costs:     on a group or a single item. Overrides the settings below for just that item.
+#              Allowed: target_profit, fee_rate, promo_rate, fee_fixed, buyer_shipping,
+#              postage_out, buy_tax_rate, unknown_ship_in, typical_ship_in, lot_piece_factor,
+#              max_lot_size, lot_buyer_shipping, lot_postage_out
+#              (an item's own costs beat its group's, which beat settings)
+#
 # Optional per item:
 #   must:  every inner list needs one of its words in the title
 #   skip:  extra words that rule a listing out
@@ -39,6 +48,21 @@ exclude_words: [women, womens, ladies, girls, kids, youth, boys, toddler, baby, 
 
 # Skip listings that admit damage
 damage_words: [for parts, as is, damaged, stain, stained, stains, holes, ripped, torn, flawed]
+
+# Cost sets shared by groups of items. Anything not listed here uses settings above.
+groups:
+  shorts:
+    costs:
+      typical_ship_in: 7      # what you usually pay to have a pair shipped to you
+      unknown_ship_in: 7      # the guess when a listing shows calculated shipping
+      buyer_shipping: 6.50    # what you charge the buyer (you said $6 to $7)
+      postage_out: 7.00       # your label cost for one pair
+      promo_rate: 0.05        # you promote shorts at about 5%
+      # target_profit: 20     # not set yet, so shorts use the $20 above until you pick a target
+      # Lots ship as one parcel. Add these two once you know the numbers, then lots stop being
+      # charged shipping and the order fee once per pair:
+      # lot_buyer_shipping: 0
+      # lot_postage_out: 0
 
 items:
   # ---------- outerwear (Oct to Feb is peak) ----------
@@ -177,41 +201,49 @@ items:
 
   # ---------- spring and summer (turn back on in March) ----------
   - name: James Perse shorts
+    group: shorts
     query: james perse shorts
     lots: true
     sold: {used: , new: }
 
   - name: Taylor Stitch shorts
+    group: shorts
     query: taylor stitch shorts
     lots: true
     sold: {used: , new: }
 
   - name: Faherty shorts
+    group: shorts
     query: faherty shorts
     sold: {used: , new: }
 
   - name: Outerknown shorts
+    group: shorts
     query: outerknown shorts
     sold: {used: , new: }
 
   - name: Vintage Patagonia Baggies
+    group: shorts
     query: patagonia baggies
     must: [[vintage, vtg, usa, 80s, 90s]]
     skip: [pants]
     sold: {used: , new: }
 
   - name: Vintage Stussy shorts
+    group: shorts
     query: stussy shorts
     must: [[vintage, vtg, usa, 80s, 90s, y2k]]
     sold: {used: , new: }
 
   - name: Vintage Ocean Pacific corduroy shorts
+    group: shorts
     query: ocean pacific shorts
     must: [[corduroy, cord, vintage, vtg, 80s]]
     typos: [op corduroy shorts]
     sold: {used: , new: }
 
   - name: Vintage Quiksilver shorts
+    group: shorts
     query: quiksilver shorts
     must: [[vintage, vtg, usa, 80s, 90s]]
     sold: {used: , new: }
@@ -221,6 +253,15 @@ items:
     sold: {used: , new: 110}  # draft: low-end eBay asking price 11/2026, confirm in Terapeak
 
   - name: Birdwell board shorts
+    group: shorts
     query: birdwell
     must: [[shorts, britches, boardshorts, trunks]]
+    sold: {used: , new: }
+
+  - name: Vilebrequin swim shorts
+    group: shorts
+    query: vilebrequin
+    must: [[shorts, trunks, swim, boardshorts]]
+    typos: [vilebrequim, vilbrequin]
+    lots: true
     sold: {used: , new: }

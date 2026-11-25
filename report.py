@@ -22,7 +22,9 @@ def main():
     if not rows:
         print("No alerts logged yet.")
         return
-    s = h.load_buylist()["settings"]
+    cfg = h.load_buylist()
+    s = cfg["settings"]
+    own = {it["name"]: it["s"] for it in cfg["items"]}  # each item's own costs
     weeks = defaultdict(lambda: {"alerts": 0, "deals": 0, "bought": 0, "wrong": 0, "est": 0.0, "real": 0.0, "sold": 0})
     for r in rows:
         w = weeks[week_of(r["sent_at"])]
@@ -30,12 +32,13 @@ def main():
         est = float(r["profit_est"] or 0)
         n = int(r.get("count") or 1)
         # a lot can count for more than one deal
-        w["deals"] += max(1, int(est // s["target_profit"])) if n > 1 else 1
+        si = own.get(r["item"], s)
+        w["deals"] += max(1, int(est // si["target_profit"])) if n > 1 else 1
         if r.get("outcome") == "bought":
             w["bought"] += 1
             w["est"] += est
             if r.get("resale_actual"):
-                real = h.net_per_piece(float(r["resale_actual"]) / n, s) * n - float(r["landed"])
+                real = h.net_total(float(r["resale_actual"]) / n, n, si) - float(r["landed"])
                 w["real"] += real
                 w["sold"] += 1
         elif r.get("outcome") == "wrong":

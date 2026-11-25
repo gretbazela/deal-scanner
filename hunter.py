@@ -98,8 +98,33 @@ def money(obj):
 
 # ---------- buy list and the money math ----------
 
+# Money settings an item or a group may change for itself (see "costs:" in buylist.yaml).
+COST_KEYS = {"target_profit", "fee_rate", "promo_rate", "fee_fixed", "buyer_shipping", "postage_out",
+             "buy_tax_rate", "unknown_ship_in", "typical_ship_in", "lot_piece_factor", "max_lot_size",
+             "lot_buyer_shipping", "lot_postage_out"}
+
+
+def costs_for(it, groups, base):
+    """The settings one item uses: global settings, then its group's costs, then its own costs."""
+    merged = dict(base)
+    layers = []
+    if it.get("group"):
+        if it["group"] not in groups:
+            raise ValueError(f"{it['name']}: group '{it['group']}' is not defined under groups:")
+        layers.append((f"group {it['group']}", groups[it["group"]].get("costs") or {}))
+    layers.append((it["name"], it.get("costs") or {}))
+    for label, costs in layers:
+        bad = set(costs) - COST_KEYS
+        if bad:
+            raise ValueError(f"{label}: unknown cost setting {sorted(bad)}. Allowed: {sorted(COST_KEYS)}")
+        merged.update({k: float(v) for k, v in costs.items() if v not in (None, "")})
+    return merged
+
+
 def load_buylist(path=BUYLIST_PATH):
     cfg = yaml.safe_load(Path(path).read_text())
+    cfg["groups"] = cfg.get("groups") or {}
+    cfg["settings"].setdefault("typical_ship_in", 8.0)
     cfg["exclude_words"] = [str(w) for w in cfg.get("exclude_words") or []]
     cfg["damage_words"] = [str(w) for w in cfg.get("damage_words") or []]
     items = []
@@ -111,6 +136,7 @@ def load_buylist(path=BUYLIST_PATH):
         it["typos"] = [str(t) for t in (it.get("typos") or [])]
         sold = it.get("sold") or {}
         it["sold"] = {k: float(v) for k, v in sold.items() if k in ("used", "new") and v not in (None, "", 0)}
+        it["s"] = costs_for(it, cfg["groups"], cfg["settings"])
         items.append(it)
     cfg["items"] = items
     return cfg
@@ -123,17 +149,31 @@ def net_per_piece(resale, s):
     return gross - rate * gross - s["fee_fixed"] - s["postage_out"]
 
 
+def net_total(resale, count, s):
+    """What a sale of `count` pieces puts in your pocket before you pay for the items.
+
+    Single pieces, and lots when no lot shipping is set, pay shipping and the
+    per order fee on every piece (the cautious default). If lot_buyer_shipping and
+    lot_postage_out are both set, a lot is treated as one parcel: one shipping
+    charge, one label, one per order fee.
+    """
+    if count > 1 and s.get("lot_buyer_shipping") is not None and s.get("lot_postage_out") is not None:
+        gross = resale * count + s["lot_buyer_shipping"]
+        return gross - (s["fee_rate"] + s["promo_rate"]) * gross - s["fee_fixed"] - s["lot_postage_out"]
+    return net_per_piece(resale, s) * count
+
+
 def landed(price, ship_in, s):
     return (price + ship_in) * (1 + s["buy_tax_rate"])
 
 
 def profit(resale, price, ship_in, s, count=1):
-    return net_per_piece(resale, s) * count - landed(price, ship_in, s)
+    return net_total(resale, count, s) - landed(price, ship_in, s)
 
 
 def max_price(resale, ship_in, s, count=1):
     """Highest item price (before shipping and tax) that still clears the target."""
-    room = net_per_piece(resale, s) * count - s["target_profit"]
+    room = net_total(resale, count, s) - s["target_profit"]
     return room / (1 + s["buy_tax_rate"]) - ship_in
 
 
@@ -189,7 +229,7 @@ def seller_ok(listing, s):
 
 def evaluate(listing, it, kind, cfg, now):
     """Return a deal dict, or None. kind is bin, auction, typo or lot."""
-    s = cfg["settings"]
+    s = it["s"]
     title = listing.get("title") or ""
     tn = norm(title)
     if kind == "typo":
@@ -319,7 +359,7 @@ def build_searches(cfg):
 
 
 def filters_for(it, kind, cfg, now):
-    s = cfg["settings"]
+    s = it["s"]
     top = max(it["sold"].values())
     if kind == "lot":
         cap = max_price(top * s["lot_piece_factor"], 0, s, s["max_lot_size"])
