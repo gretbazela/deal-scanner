@@ -340,6 +340,12 @@ def test_daily_summary_pace_and_actions():
     assert "draft asking prices" in body
     _, body = daily.build_summary(_rows(5, "RRL jeans"), {}, CFG, now, text.replace("11/24/2026", "06/01/2026"))
     assert "checked over 90 days ago" in body
+    # every price is a Terapeak price now, so mark one as a draft to check that drafts are flagged
+    drafted = text.replace("sold: {used: 120, new: 210}  # Terapeak 11/24/2026: lower of average less 10% and median",
+                           "sold: {used: 120, new: 210}  # draft: asking price", 1)
+    assert drafted != text
+    _, body2 = daily.build_summary(_rows(5, "RRL jeans"), {}, CFG, now, drafted)
+    assert "draft asking prices" in body2  # unconfirmed prices are flagged
 
 
 def test_daily_counts_once_and_prunes():

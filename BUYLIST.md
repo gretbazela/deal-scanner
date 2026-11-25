@@ -9,8 +9,6 @@ Max buy = most you can pay for the item (before shipping and tax) and still make
 | Patagonia Better Sweater | yes | $20 | $29 | $-7 | $79 | $31 | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=patagonia+better+sweater) |
 | Patagonia Nano Puff | yes | $20 | $64 | $20 | $129 | $69 | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=patagonia+nano+puff) |
 | Patagonia Down Sweater | yes | $20 | $64 | $20 | $141 | $78 | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=patagonia+down+sweater) |
-| Arc'teryx Atom | yes | $20 | $150 | $84 | $208 | $128 | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=arcteryx+atom) |
-| Arc'teryx Beta | yes | $20 | $224 | $140 | $179 | $106 | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=arcteryx+beta) |
 | North Face Nuptse | yes | $20 | $120 | $62 | $157 | $90 | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=north+face+nuptse) |
 | North Face Denali | yes | $20 | $30 | $-6 | $79 | $31 | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=north+face+denali) |
 | Barbour Bedale | yes | $20 | $166 | $96 | $279 | $182 | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=barbour+bedale) |

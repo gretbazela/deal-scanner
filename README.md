@@ -72,6 +72,8 @@ Pants: James Perse, Taylor Stitch, Faherty and Outerknown pants were added on 11
 
 Outerwear and year round prices: on 11/24/2026 every draft price (from eBay asking prices) was replaced with Terapeak sold numbers from the last 90 days, using the lower of the average less 10% and the median. Arc'teryx Beta used (21 sold) is right at the 20 sold cutoff. Most prices came down, so expect fewer but safer alerts.
 
+Arc'teryx: both Arc'teryx items (Atom, Beta) were removed on 11/24/2026. To bring one back, add it again under `items:` (the git history has the old entries). The note above about Beta used refers to a removed item.
+
 Filson: both Filson items (Mackinaw, Tin Cloth) were removed on 11/24/2026. To bring one back, add it again under `items:` (the git history has the old entries).
 
 Carhartt: all four Carhartt items (Detroit, Active, chore coat, double knee) were removed on 11/24/2026 because it is not a favorite brand. To bring one back, add it again under `items:` in `buylist.yaml` (the git history has the old entries).
