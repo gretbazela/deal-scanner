@@ -46,6 +46,8 @@ ALERT_FIELDS = ["sent_at", "item", "kind", "listing_id", "url", "title", "condit
                 "price", "offer_price", "ship_in", "landed", "resale_est", "profit_est", "max_price",
                 "count", "outcome", "outcome_at", "resale_actual", "notes"]
 CALLS = {"n": 0}
+MIN_DROP = 2.00      # a repeat listing alerts again only if its price fell by at least this much
+KEEP_DAYS = 21       # how long the scanner remembers an alert
 
 
 # ---------- text helpers ----------
@@ -209,19 +211,36 @@ def condition_of(item):
     return "used"
 
 
-def title_ok(title_n, it, cfg):
-    if any_word(title_n, cfg["exclude_words"]) or any_word(title_n, it["skip"]):
-        return False
-    if any_word(title_n, cfg["damage_words"]):
-        return False
+def first_word(title_n, words):
+    return next((w for w in words or [] if has(title_n, w)), None)
+
+
+def title_problem(title_n, it, cfg):
+    """Why a title is ruled out, in plain words, or None if it's fine."""
+    w = first_word(title_n, cfg["exclude_words"])
+    if w:
+        return f'blocked word "{w}"'
+    w = first_word(title_n, it["skip"])
+    if w:
+        return f'skip word "{w}"'
+    w = first_word(title_n, cfg["damage_words"])
+    if w:
+        return f'damage word "{w}"'
     if LOOKALIKE.search(title_n):
-        return False
+        return "lookalike wording (like, vibe, similar)"
     squashed = title_n.replace(" ", "")
     # a mixed brand lot item matches on must: and skip: only; its query words are just search text
     for word in ([] if it.get("mixed") else norm(it["query"]).split()):
         if f" {word} " not in title_n and not (len(word) > 3 and word in squashed):
-            return False
-    return all(any_word(title_n, g) for g in it["must"])
+            return f'title missing "{word}"'
+    for g in it["must"]:
+        if not any_word(title_n, g):
+            return "title missing " + " or ".join(f'"{x}"' for x in g)
+    return None
+
+
+def title_ok(title_n, it, cfg):
+    return title_problem(title_n, it, cfg) is None
 
 
 def fix_typos(title_n, it):
@@ -253,15 +272,24 @@ def seller_ok(listing, s):
         return False
 
 
-def evaluate(listing, it, kind, cfg, now):
-    """Return a deal dict, or None. kind is bin, auction, typo or lot."""
+def evaluate(listing, it, kind, cfg, now, why=None):
+    """Return a deal dict, or None. kind is bin, auction, typo or lot.
+    Pass a list as why to learn the reason a listing was skipped (used for the daily check)."""
+    def no(reason):
+        if why is not None:
+            why.append(reason)
+        return None
+
     s = it["s"]
     title = listing.get("title") or ""
     tn = norm(title)
     if kind == "typo":
         tn = fix_typos(tn, it)
-    if not title_ok(tn, it, cfg) or not seller_ok(listing, s):
-        return None
+    problem = title_problem(tn, it, cfg)
+    if problem:
+        return no(problem)
+    if not seller_ok(listing, s):
+        return no("seller feedback too low")
     cond = condition_of(listing)
     resale = it["sold"].get(cond)
     if it.get("mixed"):
@@ -271,17 +299,19 @@ def evaluate(listing, it, kind, cfg, now):
         prices = [m["sold"].get(cond) for m in named]
         # every brand named must have a price, or the lot can't be valued safely; then use the lowest
         resale = round(min(prices) * s["mixed_lot_factor"], 2) if named and all(prices) else None
+        if not resale:
+            return no("lot names a brand with no price, or no brand")
     if not resale:
-        return None
+        return no(f"{cond} listing, but you only priced {'new' if cond == 'used' else 'used'}")
 
     lot = is_lot(tn)
     if kind == "lot" and not lot:
-        return None
+        return no("not a lot")
     count = 1
     if lot:
         count = lot_count(title, s["max_lot_size"])
         if not count:
-            return None
+            return no("lot with no clear count")
         resale = round(resale * s["lot_piece_factor"], 2)
 
     auction = "AUCTION" in (listing.get("buyingOptions") or []) and "FIXED_PRICE" not in (listing.get("buyingOptions") or [])
@@ -289,19 +319,19 @@ def evaluate(listing, it, kind, cfg, now):
         price = money(listing.get("currentBidPrice")) or money(listing.get("price"))
         end = listing.get("itemEndDate")
         if not end:
-            return None
+            return no("auction with no end time")
         hours_left = (datetime.fromisoformat(end.replace("Z", "+00:00")) - now).total_seconds() / 3600
         if hours_left < 0 or hours_left > s["auction_hours"]:
-            return None
+            return no("auction not ending soon")
     else:
         price = money(listing.get("price"))
         created = listing.get("itemCreationDate")
         if created:
             age = now - datetime.fromisoformat(created.replace("Z", "+00:00"))
             if age > timedelta(hours=s["max_listing_age_hours"]):
-                return None
+                return no("listed too long ago")
     if not price:
-        return None
+        return no("no price shown")
 
     ship_in, ship_guess = ship_in_of(listing, s)
     cap = max_price(resale, ship_in, s, count)
@@ -313,7 +343,7 @@ def evaluate(listing, it, kind, cfg, now):
         if s["best_offer_discount"] > 0 and low <= cap:
             offer = price = low
     if price > cap:
-        return None
+        return no("over your max once shipping and tax are added")
     # For auctions the alert is "bid up to cap": profit is what you make at that bid.
     est = profit(resale, cap if auction else price, ship_in, s, count)
     return {
@@ -328,6 +358,7 @@ def evaluate(listing, it, kind, cfg, now):
         "profit": round(est, 2), "profit_now": round(profit(resale, price, ship_in, s, count), 2),
         "max_price": round(cap, 2), "auction": auction, "ends": listing.get("itemEndDate"),
         "best_offer": "BEST_OFFER" in (listing.get("buyingOptions") or []),
+        "seller": (listing.get("seller") or {}).get("username"),
     }
 
 
@@ -339,6 +370,9 @@ class Ebay:
         self.secret = "".join(client_secret.split())
         self.token = None
         self.got_at = 0.0
+        self.ok = 0        # searches that worked, and that failed, since the last reset
+        self.failed = 0
+        self.last_problem = ""
 
     def _login(self):
         auth = base64.b64encode(f"{self.id}:{self.secret}".encode()).decode()
@@ -379,8 +413,14 @@ class Ebay:
             code = r.status_code if r is not None else "no response"
             body = r.text[:200] if r is not None else ""
             print(f"  search failed ({code}) for '{q}': {body}", flush=True)
+            self.failed += 1
+            self.last_problem = str(code)
             return []
-        return r.json().get("itemSummaries") or []
+        self.ok += 1
+        try:
+            return r.json().get("itemSummaries") or []
+        except ValueError:
+            return []
 
 
 def build_searches(cfg):
@@ -430,9 +470,12 @@ def round_seconds(searches, cfg):
 # ---------- alerts, feedback, log ----------
 
 def message_for(d):
-    head = f"${d['profit']:.0f} profit" + (" if offer accepted" if d.get("offer") else "") + f": {d['item']}"
+    head = ("PRICE DROP: " if d.get("was") else "") + f"${d['profit']:.0f} profit" \
+        + (" if offer accepted" if d.get("offer") else "") + f": {d['item']}"
     what = f"Lot of {d['count']}" if d["count"] > 1 else "Single"
     lines = []
+    if d.get("was"):
+        lines.append(f"Price dropped from ${d['was']:.2f} to ${d['price']:.2f}. You were alerted on this one before.")
     if d["auction"]:
         lines.append(f"{what}, AUCTION, bid now ${d['price']:.2f}, ends {(d['ends'] or '')[11:16]} UTC")
         lines.append(f"Bid up to ${d['max_price']:.2f} to make ${d['profit']:.0f}")
@@ -501,6 +544,51 @@ def notify(topic, d, deliver_at=None):
         print(f"  ntfy error: {e}", flush=True)
 
 
+def relist_key(d):
+    """Seller plus title, so the same item relisted under a new listing number is recognised."""
+    if not d.get("seller"):
+        return None
+    return d["seller"].strip().lower() + "|" + norm(d["title"]).strip()
+
+
+def repeat_check(d, state):
+    """Decide whether a deal that looks like an earlier alert should alert again.
+    Returns (skip, was_price). A listing already alerted on, or the same seller and title relisted
+    under a new number, alerts again only when its price fell by MIN_DROP or more. Auctions never repeat."""
+    alerted = state.setdefault("alerted", {})
+    relist = state.setdefault("relist", {})
+    prev = alerted.get(d["id"])
+    if prev is None:
+        key = relist_key(d)
+        prev = relist.get(key) if key else None
+    if prev is None:
+        return False, None
+    if not d["auction"] and d["price"] <= prev["price"] - MIN_DROP:
+        return False, prev["price"]
+    return True, None
+
+
+def remember_alert(d, state, ts):
+    rec = {"price": d["price"], "t": ts}
+    state.setdefault("alerted", {})[d["id"]] = rec
+    key = relist_key(d)
+    if key:
+        state.setdefault("relist", {})[key] = dict(rec)
+
+
+def send_note(topic, title, body, tags=("clipboard",), priority=3, click=None):
+    """A plain phone message (daily check or a warning), not a deal alert."""
+    payload = {"topic": topic, "title": title, "message": body, "tags": list(tags), "priority": priority}
+    if click:
+        payload["click"] = click
+    try:
+        r = requests.post(NTFY, json=payload, timeout=20)
+        if r.status_code >= 300:
+            print(f"  ntfy failed ({r.status_code}): {r.text[:200]}", flush=True)
+    except requests.RequestException as e:
+        print(f"  ntfy error: {e}", flush=True)
+
+
 def read_alerts():
     if not ALERTS_PATH.exists():
         return []
@@ -521,8 +609,16 @@ def log_alert(d, now):
                  "listing_id": d["id"], "url": d["url"], "title": d["title"], "condition": d["condition"],
                  "price": d["price"], "offer_price": d.get("offer") or "", "ship_in": d["ship_in"], "landed": d["landed"],
                  "resale_est": d["resale"], "profit_est": d["profit"], "max_price": d["max_price"],
-                 "count": d["count"]})
+                 "count": d["count"],
+                "notes": f"price drop from {d['was']:.2f}" if d.get("was") else ""})
     write_alerts(rows)
+
+
+def deal_count(row, s):
+    """How many deals an alert counts toward the weekly goal. A lot can count for more than one."""
+    est = float(row.get("profit_est") or 0)
+    n = int(row.get("count") or 1)
+    return max(1, int(est // s["target_profit"])) if n > 1 else 1
 
 
 def apply_feedback(messages, rows):
@@ -571,8 +667,11 @@ def load_json(path, default):
 
 
 def save(seen, state):
-    cutoff = time.time() - 21 * 86400
+    cutoff = time.time() - KEEP_DAYS * 86400
     seen = {k: v for k, v in seen.items() if v > cutoff}
+    for name in ("alerted", "relist"):
+        if name in state:
+            state[name] = {k: v for k, v in state[name].items() if v["t"] > cutoff}
     SEEN_PATH.write_text(json.dumps(seen, indent=0, sort_keys=True))
     STATE_PATH.write_text(json.dumps(state, indent=1, sort_keys=True))
     return seen
@@ -599,25 +698,46 @@ def main():
     active = len({it["name"] for _, it, *_ in searches})
     print(f"{active} items active, {len(searches)} searches, one round every {gap:.0f}s", flush=True)
 
+    import daily  # the daily phone check and the warnings
     started = time.time()
     rnd = 0
     alerts = 0
+    counted = set()  # (day, item, listing) already counted for the daily check
     while once or time.time() - started < run_seconds:
         t0 = time.time()
         now = datetime.now(timezone.utc)
         found = {}
+        ebay.ok = ebay.failed = 0
         for key, it, kind, q, every in searches:
             if rnd % every:
                 continue
             filters, sort = filters_for(it, kind, cfg, now)
             for listing in ebay.search(q, filters, sort):
                 iid = listing.get("itemId")
-                if not iid or iid in seen:
+                if not iid:
                     continue
-                d = evaluate(listing, it, kind, cfg, now)
+                known = iid in seen
+                if known and iid not in state.get("alerted", {}):
+                    continue  # alerted before prices were remembered, so nothing to compare
+                why = []
+                d = evaluate(listing, it, kind, cfg, now, why)
+                if not known:
+                    daily.count(state, cfg, it["name"], iid, why[0] if why else None, now, counted)
+                if d:
+                    skip, d["was"] = repeat_check(d, state)
+                    if skip:
+                        seen[iid] = now.timestamp()  # a relist or an unchanged price; don't look again
+                        continue
                 if d and (iid not in found or d["profit"] > found[iid]["profit"]):
                     found[iid] = d
+        round_keys = set()
         for d in sorted(found.values(), key=lambda x: x["profit"], reverse=True):
+            key = relist_key(d)
+            if key and key in round_keys and not d.get("was"):
+                seen[d["id"]] = now.timestamp()  # the same seller and title twice in one round
+                continue
+            if key:
+                round_keys.add(key)
             title, body = message_for(d)
             wake = quiet_until(now, cfg)
             over = bool(wake and d["auction"] and d["ends"]
@@ -631,9 +751,13 @@ def main():
                     notify(topic, d, wake)
                 log_alert(d, now)
             seen[d["id"]] = now.timestamp()
+            remember_alert(d, state, now.timestamp())
             alerts += 1
+        if found:
+            seen = save(seen, state)  # written to disk right after alerting, so a cancelled run forgets nothing
         if topic and not dry:
             poll_feedback(topic, state)
+        daily.after_round(state, cfg, ebay, now, topic, dry)
         rnd += 1
         if rnd % 10 == 0:
             seen = save(seen, state)

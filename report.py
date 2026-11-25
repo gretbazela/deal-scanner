@@ -31,9 +31,8 @@ def main():
         w["alerts"] += 1
         est = float(r["profit_est"] or 0)
         n = int(r.get("count") or 1)
-        # a lot can count for more than one deal
         si = own.get(r["item"], s)
-        w["deals"] += max(1, int(est // si["target_profit"])) if n > 1 else 1
+        w["deals"] += h.deal_count(r, si)  # a lot can count for more than one deal
         if r.get("outcome") == "bought":
             w["bought"] += 1
             w["est"] += est

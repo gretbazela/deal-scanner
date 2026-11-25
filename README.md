@@ -15,6 +15,33 @@ Finds eBay listings priced low enough to resell for your **target profit** (defa
    For auctions, the alert tells you the most you can bid.
 5. Every alert is saved in **`alerts.csv`**. After each run, the Actions page shows a weekly scorecard: alerts, deals, bought, and marked wrong.
 
+## Testing the buttons
+
+In GitHub open **Actions, Test alert, Run workflow**. It sends one fake alert titled TEST ALERT to your phone with the real buttons. Tap **Bought** or **Wrong** within 5 minutes. The test reads your tap from the feedback channel the same way the Hunt does, then sends a second phone message saying what it received (or that it got nothing). It does not change alerts.csv, seen.json, prices or items.
+
+## Repeat alerts, price drops and relists
+
+- **Price drop:** if a listing you were already alerted on drops in price by $2 or more, you get a new alert starting with **PRICE DROP**, with the old and new price. Each further drop of $2 or more alerts again. This also covers a "make an offer" alert whose seller later cuts the price. Auctions never repeat, since their price only goes up.
+- **Relists:** an item relisted under a new listing number by the same seller with the same title does not alert again, unless the new price is $2 or more lower than the last alert (then it alerts as a price drop).
+- **Memory:** the scanner remembers alerts for 21 days. It saves that memory right after every alert, so a cancelled run no longer forgets recent alerts. Alerts from before this change are remembered as seen, but price drops on them are not tracked.
+
+## Daily check on your phone
+
+Every day at 8 AM Pacific (never during quiet hours) the Hunt sends one plain message, separate from deal alerts. It has four parts, and a "WHAT TO DO" list at the end so you know your next step:
+
+1. **Pace toward 50.** Deals so far this week, how many more you need, and about how many a day.
+2. **Quiet items.** Items with no alerts in the last 7 days, and why. For each, the scanner counted why listings were skipped (a blocked word, over your max once shipping and tax are added, only one condition priced, and so on) and says whether to change the sold price, the wording, or remove the item. It waits for 3 days of data before judging. An item whose max buy is zero or less is called out as one that can never alert.
+3. **What you skip.** Groups of alerts (an item, condition, kind or price you pay) that you skipped 75% of the time or more with none bought, once at least 8 alerts are in the group. A skipped alert is one you never tapped or marked Pass. These are suggestions only. Nothing about your prices or items changes unless you say so.
+4. **Prices to check in Terapeak.** Items still on draft asking prices, with a price check older than 90 days, or with no date on their price. Date your price comment in `buylist.yaml` (for example `# Terapeak 11/24/2026`) and it counts as checked.
+
+If no daily check arrives by 9 AM, the scanner is down.
+
+Warnings arrive as their own phone messages, each with a WHAT TO DO line:
+- **Deal Scanner stopped:** the Hunt crashed. It tries again on its own within 2 hours. This one can arrive overnight.
+- **eBay searches failing:** eBay refused every search in a round (daily limit used up, keys refused, or eBay is down). Sent at most every 6 hours.
+
+The per item counts are kept for 14 days in `state.json`. The code is in `daily.py`.
+
 ## Adding sold prices from Terapeak
 
 Terapeak is free in eBay Seller Hub (**Seller Hub → Research**). Do this once per item, then about once a month.
@@ -126,6 +153,7 @@ When something you bought sells, open `alerts.csv` on GitHub and enter the sale 
 | `buylist.yaml` | your items and sold prices |
 | `buylist.py` | shows max buy prices per item and rebuilds `BUYLIST.md` (Terapeak links). Options: `--group`, `--targets` |
 | `report.py` | the weekly scorecard |
+| `daily.py` | the daily phone check, the skip reasons behind it, and the eBay warning |
 | `alerts.csv` | every alert, with Bought/Wrong taps and resale prices |
 | `test_hunter.py` | offline checks for the profit math and matching |
 | `scanner.py`, `fast.py`, `config.yaml` | the old version, kept for reference; no longer scheduled |

@@ -49,3 +49,15 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: gh workflow run hunt.yml
+      - name: Tell my phone if the Hunt crashed
+        if: failure() && steps.hunt.outcome == 'failure'
+        env:
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+        run: |
+          MSG=$(printf '%s\n\n%s\n%s' \
+            "The Hunt crashed and is not looking for deals. It will try again on its own within 2 hours." \
+            "WHAT TO DO" \
+            "Tap this message, open the red run, and send Claude the error line. If it keeps failing, nothing to fix on your side.")
+          curl -s -H "Title: Deal Scanner stopped" -H "Priority: 4" -H "Tags: warning" \
+            -H "Click: https://github.com/${{ github.repository }}/actions/workflows/hunt.yml" \
+            -d "$MSG" "https://ntfy.sh/${NTFY_TOPIC}" || true
