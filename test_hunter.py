@@ -299,6 +299,15 @@ def test_quiet_hours_are_set_for_gretchen():
     assert CFG["settings"]["quiet_hours"] == {"start": 23, "end": 6, "timezone": "America/Los_Angeles"}
 
 
+def test_flaw_and_flaws_are_skipped():
+    it = item("Patagonia Retro-X jacket", {"used": 110})
+    assert h.evaluate(listing("Patagonia Retro X Fleece Jacket Mens L", 20), it, "bin", CFG, NOW) is not None
+    for word in ("flaw", "flaws", "flawed"):
+        assert h.evaluate(listing(f"Patagonia Retro X Fleece Jacket Mens L {word}", 20), it, "bin", CFG, NOW) is None
+    # "flawless" is a good sign, so it still alerts
+    assert h.evaluate(listing("Patagonia Retro X Fleece Jacket Mens L flawless", 20), it, "bin", CFG, NOW) is not None
+
+
 if __name__ == "__main__":
     n = 0
     for name, fn in list(globals().items()):

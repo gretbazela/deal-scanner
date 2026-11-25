@@ -49,7 +49,7 @@ exclude_words: [women, womens, ladies, girls, kids, youth, boys, toddler, baby, 
   unbranded, no brand]
 
 # Skip listings that admit damage
-damage_words: [for parts, as is, damaged, stain, stained, stains, holes, ripped, torn, flawed]
+damage_words: [for parts, as is, damaged, stain, stained, stains, holes, ripped, torn, flawed, flaw, flaws]
 
 # Cost sets shared by groups of items. Anything not listed here uses settings above.
 groups:
