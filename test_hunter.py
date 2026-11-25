@@ -101,6 +101,8 @@ def test_feedback():
 
 def test_searches_and_pacing():
     cfg = copy.deepcopy(CFG)
+    for it in cfg["items"]:
+        it["sold"] = {}
     assert h.build_searches(cfg) == []  # nothing on until sold prices are filled in
     for it in cfg["items"]:
         it["sold"] = {"used": 100}
