@@ -23,7 +23,7 @@ In GitHub open **Actions, Test alert, Run workflow**. It sends one fake alert ti
 
 - **Price drop:** if a listing you were already alerted on drops in price by $2 or more, you get a new alert starting with **PRICE DROP**, with the old and new price. Each further drop of $2 or more alerts again. This also covers a "make an offer" alert whose seller later cuts the price. Auctions never repeat, since their price only goes up.
 - **Relists:** an item relisted under a new listing number by the same seller with the same title does not alert again, unless the new price is $2 or more lower than the last alert (then it alerts as a price drop).
-- **Memory:** the scanner remembers alerts for 21 days. It saves that memory right after every alert, so a cancelled run no longer forgets recent alerts. Alerts from before this change are remembered as seen, but price drops on them are not tracked.
+- **Memory:** the scanner remembers alerts for 21 days. Right after every alert, and right after every Bought, Wrong or Pass tap, it saves `alerts.csv`, `seen.json` and `state.json` to GitHub (not just at the end of a run), so a cancelled or restarted run keeps them. It checks for your taps every minute, not once a round. Alerts from before this change are remembered as seen, but price drops on them are not tracked.
 
 ## Daily check on your phone
 
