@@ -105,19 +105,6 @@ items:
     typos: [patagoina down sweater]
     sold: {used: 64, new: 141}  # Terapeak 11/24/2026: lower of average less 10% and median
 
-  - name: Arc'teryx Atom
-    query: arcteryx atom
-    must: [[jacket, hoody, hoodie]]
-    skip: [vest]
-    typos: [arcterx atom, arc teryx atom]
-    sold: {used: 150, new: 208}  # Terapeak 11/24/2026: lower of average less 10% and median
-
-  - name: Arc'teryx Beta
-    query: arcteryx beta
-    must: [[jacket, shell]]
-    typos: [arcterx beta]
-    sold: {used: 224, new: 179}  # Terapeak 11/24/2026: lower of average less 10% and median
-
   - name: North Face Nuptse
     query: north face nuptse
     must: [[jacket, puffer, 700]]

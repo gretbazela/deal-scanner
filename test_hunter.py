@@ -332,9 +332,15 @@ def _rows(n, item, outcome="", landed="50", cond="Pre-owned"):
 def test_daily_summary_pace_and_actions():
     import daily
     now = datetime(2026, 11, 28, 17, 0, tzinfo=timezone.utc)  # Friday 9 AM Pacific
-    title, body = daily.build_summary(_rows(5, "RRL jeans"), {}, CFG, now, h.BUYLIST_PATH.read_text())
+    text = h.BUYLIST_PATH.read_text()
+    title, body = daily.build_summary(_rows(5, "RRL jeans"), {}, CFG, now, text)
     assert "5 of 50" in title and "Need 45 more" in body and "WHAT TO DO" in body
-    assert "draft asking prices" in body  # unconfirmed prices are flagged
+    # every price is a Terapeak price now, so mark one as a draft to check that drafts are flagged
+    drafted = text.replace("sold: {used: 120, new: 210}  # Terapeak 11/24/2026: lower of average less 10% and median",
+                           "sold: {used: 120, new: 210}  # draft: asking price", 1)
+    assert drafted != text
+    _, body2 = daily.build_summary(_rows(5, "RRL jeans"), {}, CFG, now, drafted)
+    assert "draft asking prices" in body2  # unconfirmed prices are flagged
 
 
 def test_daily_counts_once_and_prunes():
