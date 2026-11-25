@@ -63,6 +63,18 @@ An item can also have its own `costs:` block. The order is: the item's own costs
 
 **Lots:** by default a lot is charged shipping and the per order fee for every piece, which is cautious. If you ship lots as one parcel, add `lot_buyer_shipping` (what you charge for the whole lot) and `lot_postage_out` (the one label) to the group. Then a lot is charged once, not once per pair.
 
+### Lots
+
+Every shorts brand has `lots: true`, so lots of that brand are searched too (lots of 2 to 20 pairs, each pair valued at 80% of the single pair price). Titles have to say how many ("Lot of 4", "3 pairs"); a lot with no clear count is skipped.
+
+**Mixed brand lots** (like "lot of 8 men's board shorts Patagonia Birdwell") are handled by the `Mixed brand shorts lots` item. Each brand item in the group has a `brand:` word. For a lot, the scanner:
+
+1. finds every brand named in the title,
+2. skips the lot if any named brand has no price yet (so a half known lot is never valued from the brands that are known),
+3. values each pair at the **lowest** of the named brands' prices, then at 80%.
+
+The mixed item switches itself on whenever any shorts brand has a price. Brands that aren't on your list (Volcom, Gotcha) are not seen, so a lot naming only known brands plus an unknown one is valued as if the unknown brand weren't there.
+
 To see the most you can pay for each item: `python buylist.py` (add `--group shorts` for one group, or `--targets 20,15,10` to compare profit targets).
 
 ## Adding or changing items

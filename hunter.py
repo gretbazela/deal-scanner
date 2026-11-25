@@ -121,6 +121,21 @@ def costs_for(it, groups, base):
     return merged
 
 
+def link_mixed(items):
+    """Set up mixed brand lots. An item with mixed: true values a lot from the brands named in its
+    title, using the lowest price among them, so one cheap brand can't make a lot look better than it is.
+    Each brand item in the same group needs a brand: word. The mixed item is on whenever any of them is."""
+    for it in items:
+        if not it.get("mixed"):
+            continue
+        members = [m for m in items if m is not it and m.get("group") == it.get("group")
+                   and m.get("brand") and m["sold"]]
+        it["members"] = members
+        it["brand_items"] = [m for m in items if m is not it and m.get("group") == it.get("group") and m.get("brand")]
+        it["sold"] = {c: max(m["sold"][c] for m in members if c in m["sold"])  # upper bound, for the search cap
+                      for c in ("used", "new") if any(c in m["sold"] for m in members)}
+
+
 def load_buylist(path=BUYLIST_PATH):
     cfg = yaml.safe_load(Path(path).read_text())
     cfg["groups"] = cfg.get("groups") or {}
@@ -137,7 +152,9 @@ def load_buylist(path=BUYLIST_PATH):
         sold = it.get("sold") or {}
         it["sold"] = {k: float(v) for k, v in sold.items() if k in ("used", "new") and v not in (None, "", 0)}
         it["s"] = costs_for(it, cfg["groups"], cfg["settings"])
+        it["brand"] = str(it["brand"]) if it.get("brand") else None
         items.append(it)
+    link_mixed(items)
     cfg["items"] = items
     return cfg
 
@@ -192,7 +209,8 @@ def title_ok(title_n, it, cfg):
     if LOOKALIKE.search(title_n):
         return False
     squashed = title_n.replace(" ", "")
-    for word in norm(it["query"]).split():
+    # a mixed brand lot item matches on must: and skip: only; its query words are just search text
+    for word in ([] if it.get("mixed") else norm(it["query"]).split()):
         if f" {word} " not in title_n and not (len(word) > 3 and word in squashed):
             return False
     return all(any_word(title_n, g) for g in it["must"])
@@ -238,6 +256,13 @@ def evaluate(listing, it, kind, cfg, now):
         return None
     cond = condition_of(listing)
     resale = it["sold"].get(cond)
+    if it.get("mixed"):
+        if kind != "lot":
+            return None
+        named = [m for m in it["brand_items"] if has(tn, m["brand"])]
+        prices = [m["sold"].get(cond) for m in named]
+        # every brand named must have a price, or the lot can't be valued safely; then use the lowest
+        resale = min(prices) if named and all(prices) else None
     if not resale:
         return None
 
@@ -349,10 +374,11 @@ def build_searches(cfg):
     for it in cfg["items"]:
         if not it["sold"]:
             continue
-        out.append((f"{it['name']}|bin", it, "bin", it["query"], 1))
-        out.append((f"{it['name']}|auction", it, "auction", it["query"], 3))
-        for t in it["typos"]:
-            out.append((f"{it['name']}|typo|{t}", it, "typo", t, 6))
+        if not it.get("mixed"):  # mixed brand lots are only ever searched as lots
+            out.append((f"{it['name']}|bin", it, "bin", it["query"], 1))
+            out.append((f"{it['name']}|auction", it, "auction", it["query"], 3))
+            for t in it["typos"]:
+                out.append((f"{it['name']}|typo|{t}", it, "typo", t, 6))
         if it.get("lots"):
             out.append((f"{it['name']}|lot", it, "lot", it["query"] + " lot", 6))
     return out

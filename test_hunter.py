@@ -179,6 +179,46 @@ def test_eric_emanuel_new_uses_terapeak_price_and_shorts_costs():
     assert h.evaluate(listing("Eric Emanuel EE Basic Shorts Mens L NWT", cap + 1, ship=7, cond="New with tags"), it, "bin", CFG, NOW) is None
 
 
+def mixed_cfg(prices):
+    """A copy of the real buy list where only the named shorts brands have prices."""
+    cfg = copy.deepcopy(CFG)
+    for it in cfg["items"]:
+        it["sold"] = dict(prices.get(it["name"], {})) if it.get("group") == "shorts" else it["sold"]
+    h.link_mixed(cfg["items"])
+    return cfg, next(i for i in cfg["items"] if i.get("mixed"))
+
+
+def test_mixed_lot_uses_the_lowest_named_brand():
+    cfg, mx = mixed_cfg({"Birdwell board shorts": {"used": 35}, "Vintage Patagonia Baggies": {"used": 37}})
+    assert mx["sold"] == {"used": 37.0}
+    d = h.evaluate(listing("Lot of 8 men's board shorts Patagonia Birdwell", 60, ship=15), mx, "lot", cfg, NOW)
+    assert d and d["count"] == 8 and d["per_piece"] == round(35 * mx["s"]["lot_piece_factor"], 2), d  # the lower of the two
+
+
+def test_mixed_lot_needs_every_named_brand_priced():
+    cfg, mx = mixed_cfg({"Birdwell board shorts": {"used": 35}})
+    # Patagonia is named but has no price yet: not valued, so no alert
+    assert h.evaluate(listing("Lot of 8 men's board shorts Patagonia Birdwell", 20, ship=15), mx, "lot", cfg, NOW) is None
+    # no brand named at all: not valued either
+    assert h.evaluate(listing("Lot of 8 men's board shorts surf", 20, ship=15), mx, "lot", cfg, NOW) is None
+    assert h.evaluate(listing("Lot of 8 men's Birdwell board shorts", 20, ship=15), mx, "lot", cfg, NOW)
+    # real titles are messy: "Men" not "Men's", "Short" not "Shorts"
+    assert h.evaluate(listing("Birdwell Short Lot, 3 Pair, Men 36", 20, ship=10), mx, "lot", cfg, NOW)
+    assert h.evaluate(listing("Lot of 3 Mens Birdwell Shorts", 20, ship=10), mx, "lot", cfg, NOW)
+    assert h.evaluate(listing("Birdwell Short Sleeve Shirt Lot of 3", 20, ship=10), mx, "lot", cfg, NOW) is None
+
+
+def test_mixed_lot_only_searched_as_lots():
+    cfg, mx = mixed_cfg({"Birdwell board shorts": {"used": 35}})
+    kinds = {k for key, it, k, *_ in h.build_searches(cfg) if it is mx}
+    assert kinds == {"lot"}
+
+
+def test_every_shorts_brand_watches_lots():
+    shorts = [i for i in CFG["items"] if i.get("group") == "shorts" and not i.get("mixed")]
+    assert shorts and all(i.get("lots") and i.get("brand") for i in shorts)
+
+
 if __name__ == "__main__":
     n = 0
     for name, fn in list(globals().items()):

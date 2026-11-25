@@ -37,3 +37,4 @@ Max buy = most you can pay for the item (before shipping and tax) and still make
 | Eric Emanuel shorts | yes | $10 | $35 | $8 | $68 | $33 | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=eric+emanuel+shorts) |
 | Birdwell board shorts | no | $10 | - | - | - | - | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=birdwell) |
 | Vilebrequin swim shorts | no | $10 | - | - | - | - | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=vilebrequin) |
+| Mixed brand shorts lots | yes | $10 | $35 | $8 | $68 | $33 | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=mens+shorts) |
