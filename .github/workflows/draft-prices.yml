@@ -1,0 +1,27 @@
+name: Draft prices
+on: workflow_dispatch
+permissions:
+  contents: write
+jobs:
+  draft:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - name: Draft prices
+        env:
+          EBAY_CLIENT_ID: ${{ secrets.EBAY_CLIENT_ID }}
+          EBAY_CLIENT_SECRET: ${{ secrets.EBAY_CLIENT_SECRET }}
+        run: python draft_prices.py
+      - name: Save
+        run: |
+          git config user.name "deal-scanner"
+          git config user.email "deal-scanner@users.noreply.github.com"
+          git add DRAFT_PRICES.md
+          git diff --cached --quiet || git commit -m "Draft prices"
+          git pull --rebase --quiet || true
+          git push
