@@ -95,11 +95,13 @@ items:
     query: patagonia nano puff
     must: [[jacket, hoody, hoodie]]
     skip: [vest]
+    typos: [patagoina nano puff, patagonia nanopuff]
     sold: {used: 85, new: 155}  # draft: low-end eBay asking price 11/2026, confirm in Terapeak
 
   - name: Patagonia Down Sweater
     query: patagonia down sweater
     skip: [vest]
+    typos: [patagoina down sweater]
     sold: {used: 70, new: 180}  # draft: low-end eBay asking price 11/2026, confirm in Terapeak
 
   - name: Arc'teryx Atom
@@ -112,12 +114,14 @@ items:
   - name: Arc'teryx Beta
     query: arcteryx beta
     must: [[jacket, shell]]
+    typos: [arcterx beta]
     sold: {used: 260, new: 355}  # draft: low-end eBay asking price 11/2026, confirm in Terapeak
 
   - name: North Face Nuptse
     query: north face nuptse
     must: [[jacket, puffer, 700]]
     skip: [vest]
+    typos: [north face nupste]
     sold: {used: 120, new: 200}  # draft: low-end eBay asking price 11/2026, confirm in Terapeak
 
   - name: North Face Denali
@@ -143,21 +147,25 @@ items:
   - name: Barbour Bedale
     query: barbour bedale
     must: [[jacket, wax, waxed]]
+    typos: [barbor bedale]
     sold: {used: 230, new: 325}  # draft: low-end eBay asking price 11/2026, confirm in Terapeak
 
   - name: Barbour Beaufort
     query: barbour beaufort
     must: [[jacket, wax, waxed]]
+    typos: [barbor beaufort]
     sold: {used: 200, new: 360}  # draft: low-end eBay asking price 11/2026, confirm in Terapeak
 
   - name: Filson Mackinaw
     query: filson mackinaw
     skip: [vest]
+    typos: [filsen mackinaw]
     sold: {used: 185, new: 220}  # draft: low-end eBay asking price 11/2026, confirm in Terapeak
 
   - name: Filson Tin Cloth
     query: filson tin cloth
     skip: [hat, cap]
+    typos: [filson tincloth]
     sold: {used: 205, new: 275}  # draft: low-end eBay asking price 11/2026, confirm in Terapeak
 
   - name: Levi's vintage trucker jacket
@@ -176,6 +184,7 @@ items:
 
   - name: Pendleton Board Shirt
     query: pendleton board shirt
+    typos: [pendelton board shirt]
     sold: {used: 50, new: 95}  # used: Terapeak 11/24/2026 (lower of average less 10% and median); new: draft asking price, confirm in Terapeak
 
   - name: RRL Ralph Lauren
@@ -200,6 +209,7 @@ items:
   - name: Girbaud jeans
     query: girbaud
     must: [[jeans, pants, shorts]]
+    typos: [gerbaud]
     sold: {used: 40, new: 80}  # Terapeak 11/24/2026, last 90 days: lower of average less 10% and median
 
   # ---------- shorts (run all year; brands switch on when you fill in their sold prices) ----------
@@ -261,6 +271,7 @@ items:
     group: shorts
     brand: eric emanuel
     query: eric emanuel shorts
+    typos: [eric emmanuel shorts]
     lots: true
     sold: {used: 35, new: 68}  # Terapeak 11/24/2026: avg $39.73 used, $75.96 new, rounded down about 10%
 
