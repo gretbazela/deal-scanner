@@ -202,7 +202,7 @@ items:
     must: [[jeans, pants, shorts]]
     sold: {used: , new: }
 
-  # ---------- spring and summer (turn back on in March) ----------
+  # ---------- shorts (run all year; brands switch on when you fill in their sold prices) ----------
   - name: James Perse shorts
     group: shorts
     brand: james perse
