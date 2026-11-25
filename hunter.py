@@ -22,6 +22,7 @@ import csv
 import json
 import os
 import re
+import subprocess
 import sys
 import time
 from datetime import datetime, timedelta, timezone
@@ -48,6 +49,7 @@ ALERT_FIELDS = ["sent_at", "item", "kind", "listing_id", "url", "title", "condit
 CALLS = {"n": 0}
 MIN_DROP = 2.00      # a repeat listing alerts again only if its price fell by at least this much
 KEEP_DAYS = 21       # how long the scanner remembers an alert
+FEEDBACK_EVERY = 60  # seconds between checks for your Bought / Wrong taps
 
 
 # ---------- text helpers ----------
@@ -641,20 +643,55 @@ def apply_feedback(messages, rows):
 
 
 def poll_feedback(topic, state):
+    """Read new Bought / Wrong / Pass taps and record them. Returns how many were recorded."""
     since = state.get("fb_since", "24h")
     try:
         r = requests.get(f"{NTFY}{topic}-fb/json", params={"poll": "1", "since": since}, timeout=20)
     except requests.RequestException:
-        return
+        return 0
     if r.status_code != 200:
-        return
+        return 0
     msgs = [json.loads(line) for line in r.text.splitlines() if line.strip()]
     if not msgs:
-        return
+        return 0
     rows = read_alerts()
-    if apply_feedback(msgs, rows):
+    n = apply_feedback(msgs, rows)
+    if n:
         write_alerts(rows)
     state["fb_since"] = msgs[-1].get("id", since)
+    return n
+
+
+def publish(state, why):
+    """On GitHub, save alerts.csv, seen.json and state.json to the repo right now, so nothing is lost if
+    this run is cancelled. Does nothing anywhere else. A failure is printed and the Hunt carries on."""
+    if os.environ.get("GITHUB_ACTIONS") != "true" or os.environ.get("DRY_RUN") == "1":
+        return False
+
+    def git(*args):
+        return subprocess.run(["git", *args], cwd=HERE, capture_output=True, text=True, timeout=90)
+
+    try:
+        git("config", "user.name", "deal-scanner")
+        git("config", "user.email", "deal-scanner@users.noreply.github.com")
+        git("add", "alerts.csv", "seen.json", "state.json")
+        if git("diff", "--cached", "--quiet").returncode == 0:
+            return True
+        git("commit", "-m", f"Update alert log ({why})")
+        for _ in range(3):
+            pulled = git("pull", "--rebase", "--autostash", "--quiet")
+            if pulled.returncode != 0:
+                git("rebase", "--abort")
+                print(f"  could not save to GitHub (pull): {pulled.stderr.strip()[:200]}", flush=True)
+                return False
+            pushed = git("push")
+            if pushed.returncode == 0:
+                return True
+            time.sleep(2)
+        print(f"  could not save to GitHub (push): {pushed.stderr.strip()[:200]}", flush=True)
+    except (OSError, subprocess.SubprocessError) as e:
+        print(f"  could not save to GitHub: {e}", flush=True)
+    return False
 
 
 # ---------- main loop ----------
@@ -755,8 +792,10 @@ def main():
             alerts += 1
         if found:
             seen = save(seen, state)  # written to disk right after alerting, so a cancelled run forgets nothing
-        if topic and not dry:
-            poll_feedback(topic, state)
+            publish(state, "alert")   # and saved to GitHub, so a restart or a cancel keeps it
+        if topic and not dry and poll_feedback(topic, state):
+            seen = save(seen, state)
+            publish(state, "tap")
         daily.after_round(state, cfg, ebay, now, topic, dry)
         rnd += 1
         if rnd % 10 == 0:
@@ -764,7 +803,15 @@ def main():
             print(f"round {rnd}: {alerts} alerts, {CALLS['n']} eBay calls", flush=True)
         if once:
             break
-        time.sleep(max(0.0, gap - (time.time() - t0)))
+        # wait for the next round, checking for your taps every minute
+        while True:
+            left = gap - (time.time() - t0)
+            if left <= 0 or time.time() - started >= run_seconds:
+                break
+            time.sleep(min(FEEDBACK_EVERY, left))
+            if topic and not dry and poll_feedback(topic, state):
+                seen = save(seen, state)
+                publish(state, "tap")
 
     save(seen, state)
     print(f"done: {rnd} rounds, {alerts} alerts, {CALLS['n']} eBay calls", flush=True)

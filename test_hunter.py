@@ -332,9 +332,14 @@ def _rows(n, item, outcome="", landed="50", cond="Pre-owned"):
 def test_daily_summary_pace_and_actions():
     import daily
     now = datetime(2026, 11, 28, 17, 0, tzinfo=timezone.utc)  # Friday 9 AM Pacific
-    title, body = daily.build_summary(_rows(5, "RRL jeans"), {}, CFG, now, h.BUYLIST_PATH.read_text())
+    text = h.BUYLIST_PATH.read_text()
+    title, body = daily.build_summary(_rows(5, "RRL jeans"), {}, CFG, now, text)
     assert "5 of 50" in title and "Need 45 more" in body and "WHAT TO DO" in body
-    assert "draft asking prices" in body  # unconfirmed prices are flagged
+    # a price note that says draft is flagged, and one dated long ago is flagged as old
+    _, body = daily.build_summary(_rows(5, "RRL jeans"), {}, CFG, now, text.replace("Terapeak", "draft"))
+    assert "draft asking prices" in body
+    _, body = daily.build_summary(_rows(5, "RRL jeans"), {}, CFG, now, text.replace("11/24/2026", "06/01/2026"))
+    assert "checked over 90 days ago" in body
 
 
 def test_daily_counts_once_and_prunes():
@@ -434,6 +439,34 @@ def test_memory_expires_and_is_saved(tmp_path=None):
 def time_now():
     import time
     return time.time()
+
+
+def test_feedback_polling_counts_taps_and_publish_is_off_outside_github():
+    import tempfile
+    from pathlib import Path
+    old = h.ALERTS_PATH
+    with tempfile.TemporaryDirectory() as t:
+        h.ALERTS_PATH = Path(t) / "alerts.csv"
+        try:
+            h.write_alerts([{"listing_id": "v1|7|0", "item": "x"}])
+
+            class R:
+                status_code = 200
+                text = '{"event":"message","id":"m1","time":1795000000,"message":"wrong v1|7|0"}\n'
+            real = h.requests.get
+            h.requests.get = lambda *a, **k: R()
+            try:
+                state = {}
+                assert h.poll_feedback("topic", state) == 1
+                assert state["fb_since"] == "m1"
+            finally:
+                h.requests.get = real
+            assert h.read_alerts()[0]["outcome"] == "wrong"
+        finally:
+            h.ALERTS_PATH = old
+    os_env = __import__("os").environ
+    os_env.pop("GITHUB_ACTIONS", None)
+    assert h.publish({}, "test") is False  # does nothing off GitHub
 
 
 if __name__ == "__main__":
