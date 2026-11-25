@@ -308,6 +308,64 @@ def test_flaw_and_flaws_are_skipped():
     assert h.evaluate(listing("Patagonia Retro X Fleece Jacket Mens L flawless", 20), it, "bin", CFG, NOW) is not None
 
 
+def test_skip_reasons_are_reported():
+    it = item("Patagonia Retro-X jacket", {"used": 110})
+    why = []
+    assert h.evaluate(listing("Patagonia Retro X Fleece Vest Mens", 5), it, "bin", CFG, NOW, why) is None
+    assert why == ['skip word "vest"'], why
+    why = []
+    assert h.evaluate(listing("Patagonia Retro X Fleece Jacket Mens L", 500), it, "bin", CFG, NOW, why) is None
+    assert why[0].startswith("over your max"), why
+    why = []
+    assert h.evaluate(listing("Patagonia Retro X Fleece Jacket NWT", 5, cond="New with tags"), it, "bin", CFG, NOW, why) is None
+    assert "you only priced used" in why[0], why
+    why = []
+    assert h.evaluate(listing("Patagonia Retro X Fleece Jacket Mens L", 20), it, "bin", CFG, NOW, why)
+    assert why == []
+
+
+def _rows(n, item, outcome="", landed="50", cond="Pre-owned"):
+    return [{"sent_at": "2026-11-25 10:00", "item": item, "kind": "bin", "condition": cond, "landed": landed,
+             "profit_est": "25", "count": "1", "outcome": outcome} for _ in range(n)]
+
+
+def test_daily_summary_pace_and_actions():
+    import daily
+    now = datetime(2026, 11, 28, 17, 0, tzinfo=timezone.utc)  # Friday 9 AM Pacific
+    title, body = daily.build_summary(_rows(5, "RRL jeans"), {}, CFG, now, h.BUYLIST_PATH.read_text())
+    assert "5 of 50" in title and "Need 45 more" in body and "WHAT TO DO" in body
+    assert "draft asking prices" in body  # unconfirmed prices are flagged
+
+
+def test_daily_counts_once_and_prunes():
+    import daily
+    now = datetime(2026, 11, 28, 17, 0, tzinfo=timezone.utc)
+    state, seen = {}, set()
+    for _ in range(3):
+        daily.count(state, CFG, "RRL jeans", "v1|9|0", 'skip word "polo"', now, seen)
+    day = daily.day_of(now, CFG)
+    assert state["stats"][day]["RRL jeans"]["checked"] == 1
+    state["stats"]["2020-01-01"] = {}
+    daily.prune(state, CFG, now)
+    assert "2020-01-01" not in state["stats"] and day in state["stats"]
+
+
+def test_patterns_are_suggestions_about_skipped_groups():
+    import daily
+    now = datetime(2026, 11, 28, 17, 0, tzinfo=timezone.utc)
+    rows = _rows(10, "Barbour Bedale") + _rows(10, "RRL jeans", outcome="bought") + _rows(2, "RRL jeans")
+    lines = daily.patterns(rows, now=now)
+    assert any("Barbour Bedale" in x and "bought none" in x for x in lines), lines
+    assert not any("RRL jeans" in x for x in lines)
+    assert daily.patterns(_rows(5, "Barbour Bedale"), now=now) == []  # too few alerts to say anything
+
+
+def test_ebay_failure_warning_says_what_to_do():
+    import daily
+    title, body = daily.ebay_warning("429")
+    assert "WHAT TO DO" in body and "limit" in body
+
+
 if __name__ == "__main__":
     n = 0
     for name, fn in list(globals().items()):
