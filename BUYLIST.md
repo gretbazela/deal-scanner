@@ -19,7 +19,9 @@ Max buy = most you can pay for the item (before shipping and tax) and still make
 | Filson Tin Cloth | yes | $20 | $205 | $126 | $275 | $179 | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=filson+tin+cloth) |
 | Levi's vintage trucker jacket | yes | $20 | $45 | $5 | $79 | $31 | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=levis+trucker+jacket) |
 | Pendleton Board Shirt | yes | $20 | $50 | $9 | $95 | $43 | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=pendleton+board+shirt) |
-| RRL Ralph Lauren | no | $20 | - | - | - | - | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=rrl) |
+| RRL jeans | yes | $20 | $120 | $62 | $210 | $130 | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=rrl+jeans) |
+| RRL jackets | yes | $20 | $199 | $121 | $370 | $250 | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=rrl+jacket) |
+| RRL shirts | yes | $20 | $105 | $51 | $192 | $116 | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=rrl+shirt) |
 | Peter Millar quarter zip | yes | $20 | $31 | $-5 | $95 | $43 | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=peter+millar+quarter+zip) |
 | Lululemon ABC pants | yes | $20 | $23 | $-11 | $60 | $17 | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=lululemon+abc+pants) |
 | Girbaud jeans | yes | $20 | $40 | $2 | $80 | $32 | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=girbaud) |

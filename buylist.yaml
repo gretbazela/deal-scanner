@@ -165,12 +165,24 @@ items:
     typos: [pendelton board shirt]
     sold: {used: 50, new: 95}  # used: Terapeak 11/24/2026 (lower of average less 10% and median); new: draft asking price, confirm in Terapeak
 
-  - name: RRL Ralph Lauren
-    query: rrl
-    note: left off; one search mixes $40 tees and $400 jackets. Split into specific RRL items to use.
-    must: [[ralph lauren, double rl]]
-    skip: [polo shirt]
-    sold: {used: , new: }
+  - name: RRL jeans
+    query: rrl jeans
+    skip: [bear, polo, shorts, jacket, shirt]  # no Polo Ralph Lauren or bear items
+    typos: [double rl jeans]
+    sold: {used: 120, new: 210}  # Terapeak 11/24/2026: lower of average less 10% and median
+
+  - name: RRL jackets
+    query: rrl jacket
+    must: [[jacket, coat]]
+    skip: [bear, polo, jeans, shirt]
+    typos: [double rl jacket, rrl coat, double rl coat]
+    sold: {used: 199, new: 370}  # Terapeak 11/24/2026: 25th percentile, because jacket prices range from $200 to over $1,200
+
+  - name: RRL shirts
+    query: rrl shirt
+    skip: [bear, polo, tee, jeans, jacket]
+    typos: [double rl shirt, rrl flannel, rrl workshirt]
+    sold: {used: 105, new: 192}  # Terapeak 11/24/2026: lower of average less 10% and median
 
   - name: Peter Millar quarter zip
     query: peter millar quarter zip

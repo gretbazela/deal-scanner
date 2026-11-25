@@ -39,6 +39,8 @@ Prices written on 11/24/2026 used the lower of "average less 10%" and the median
 
 Damage words: listings with flaw, flaws or flawed in the title are skipped (along with stain, holes, torn and the others in `damage_words:` in `buylist.yaml`). Whole words only, so "flawless" still alerts. A title saying "no flaws" is skipped too.
 
+RRL: the old combined RRL entry was replaced on 11/24/2026 by RRL jeans, RRL jackets and RRL shirts, each with its own Terapeak price. Jackets use the 25th percentile because prices run from about $200 to over $1,200. Titles with bear or polo are skipped, so Polo Ralph Lauren bear items never alert, and "Double RL" listings are found as the same item.
+
 Pants: James Perse, Taylor Stitch, Faherty and Outerknown pants were added on 11/24/2026 with your standard costs ($20 profit target, $10 label), not the shorts costs, using Terapeak averages less 10% (or the median if lower). The used sides are so low that the most you could pay is near zero, so mostly the new side will alert.
 
 Carhartt: all four Carhartt items (Detroit, Active, chore coat, double knee) were removed on 11/24/2026 because it is not a favorite brand. To bring one back, add it again under `items:` in `buylist.yaml` (the git history has the old entries).
