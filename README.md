@@ -15,6 +15,10 @@ Finds eBay listings priced low enough to resell for your **target profit** (defa
    For auctions, the alert tells you the most you can bid.
 5. Every alert is saved in **`alerts.csv`**. After each run, the Actions page shows a weekly scorecard: alerts, deals, bought, and marked wrong.
 
+## Testing the buttons
+
+In GitHub open **Actions, Test alert, Run workflow**. It sends one fake alert titled TEST ALERT to your phone with the real buttons. Tap **Bought** or **Wrong** within 5 minutes. The test reads your tap from the feedback channel the same way the Hunt does, then sends a second phone message saying what it received (or that it got nothing). It does not change alerts.csv, seen.json, prices or items.
+
 ## Repeat alerts, price drops and relists
 
 - **Price drop:** if a listing you were already alerted on drops in price by $2 or more, you get a new alert starting with **PRICE DROP**, with the old and new price. Each further drop of $2 or more alerts again. This also covers a "make an offer" alert whose seller later cuts the price. Auctions never repeat, since their price only goes up.
