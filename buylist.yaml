@@ -58,7 +58,7 @@ groups:
       buyer_shipping: 6.50    # what you charge the buyer (you said $6 to $7)
       postage_out: 7.00       # your label cost for one pair
       promo_rate: 0.05        # you promote shorts at about 5%
-      # target_profit: 20     # not set yet, so shorts use the $20 above until you pick a target
+      target_profit: 10       # shorts clear $10 profit (chosen 11/24/2026); everything else stays at $20
       # Lots ship as one parcel. Add these two once you know the numbers, then lots stop being
       # charged shipping and the order fee once per pair:
       # lot_buyer_shipping: 0
@@ -229,12 +229,6 @@ items:
     skip: [pants]
     sold: {used: , new: }
 
-  - name: Vintage Stussy shorts
-    group: shorts
-    query: stussy shorts
-    must: [[vintage, vtg, usa, 80s, 90s, y2k]]
-    sold: {used: , new: }
-
   - name: Vintage Ocean Pacific corduroy shorts
     group: shorts
     query: ocean pacific shorts
@@ -249,8 +243,9 @@ items:
     sold: {used: , new: }
 
   - name: Eric Emanuel shorts
+    group: shorts
     query: eric emanuel shorts
-    sold: {used: , new: 110}  # draft: low-end eBay asking price 11/2026, confirm in Terapeak
+    sold: {used: 35, new: 68}  # Terapeak 11/24/2026: avg $39.73 used, $75.96 new, rounded down about 10%
 
   - name: Birdwell board shorts
     group: shorts

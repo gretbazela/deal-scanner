@@ -161,6 +161,24 @@ def test_item_costs_reach_the_alert_math():
     assert d and abs(d["max_price"] - cap_low) < 0.01  # uses the item's $5 target, not the global $20
 
 
+def test_real_buylist_costs():
+    shorts = [i for i in CFG["items"] if i.get("group") == "shorts"]
+    assert shorts and all(i["s"]["target_profit"] == 10 and i["s"]["postage_out"] == 7 for i in shorts)
+    others = [i for i in CFG["items"] if i.get("group") != "shorts"]
+    assert others and all(i["s"]["target_profit"] == 20 and i["s"]["postage_out"] == 10 for i in others)
+    assert not any("stussy" in i["name"].lower() for i in CFG["items"])  # cut: only 9 sold in 90 days
+
+
+def test_eric_emanuel_new_uses_terapeak_price_and_shorts_costs():
+    it = next(i for i in CFG["items"] if i["name"] == "Eric Emanuel shorts")
+    assert it["sold"] == {"used": 35.0, "new": 68.0}
+    cap = h.max_price(68, 7, it["s"])
+    assert 32 < cap < 34, cap  # about $33 before shipping and tax at a $10 target
+    d = h.evaluate(listing("Eric Emanuel EE Basic Shorts Mens L NWT", cap - 1, ship=7, cond="New with tags"), it, "bin", CFG, NOW)
+    assert d and d["profit"] >= 10
+    assert h.evaluate(listing("Eric Emanuel EE Basic Shorts Mens L NWT", cap + 1, ship=7, cond="New with tags"), it, "bin", CFG, NOW) is None
+
+
 if __name__ == "__main__":
     n = 0
     for name, fn in list(globals().items()):

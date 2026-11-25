@@ -27,14 +27,13 @@ Max buy = most you can pay for the item (before shipping and tax) and still make
 | Peter Millar quarter zip | yes | $20 | - | - | $95 | $43 | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=peter+millar+quarter+zip) |
 | Lululemon ABC pants | no | $20 | - | - | - | - | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=lululemon+abc+pants) |
 | Girbaud jeans | no | $20 | - | - | - | - | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=girbaud) |
-| James Perse shorts | no | $20 | - | - | - | - | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=james+perse+shorts) |
-| Taylor Stitch shorts | no | $20 | - | - | - | - | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=taylor+stitch+shorts) |
-| Faherty shorts | no | $20 | - | - | - | - | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=faherty+shorts) |
-| Outerknown shorts | no | $20 | - | - | - | - | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=outerknown+shorts) |
-| Vintage Patagonia Baggies | no | $20 | - | - | - | - | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=patagonia+baggies) |
-| Vintage Stussy shorts | no | $20 | - | - | - | - | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=stussy+shorts) |
-| Vintage Ocean Pacific corduroy shorts | no | $20 | - | - | - | - | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=ocean+pacific+shorts) |
-| Vintage Quiksilver shorts | no | $20 | - | - | - | - | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=quiksilver+shorts) |
-| Eric Emanuel shorts | yes | $20 | - | - | $110 | $54 | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=eric+emanuel+shorts) |
-| Birdwell board shorts | no | $20 | - | - | - | - | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=birdwell) |
-| Vilebrequin swim shorts | no | $20 | - | - | - | - | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=vilebrequin) |
+| James Perse shorts | no | $10 | - | - | - | - | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=james+perse+shorts) |
+| Taylor Stitch shorts | no | $10 | - | - | - | - | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=taylor+stitch+shorts) |
+| Faherty shorts | no | $10 | - | - | - | - | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=faherty+shorts) |
+| Outerknown shorts | no | $10 | - | - | - | - | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=outerknown+shorts) |
+| Vintage Patagonia Baggies | no | $10 | - | - | - | - | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=patagonia+baggies) |
+| Vintage Ocean Pacific corduroy shorts | no | $10 | - | - | - | - | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=ocean+pacific+shorts) |
+| Vintage Quiksilver shorts | no | $10 | - | - | - | - | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=quiksilver+shorts) |
+| Eric Emanuel shorts | yes | $10 | $35 | $8 | $68 | $33 | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=eric+emanuel+shorts) |
+| Birdwell board shorts | no | $10 | - | - | - | - | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=birdwell) |
+| Vilebrequin swim shorts | no | $10 | - | - | - | - | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=vilebrequin) |

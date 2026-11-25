@@ -35,7 +35,7 @@ Terapeak is free in eBay Seller Hub (**Seller Hub → Research**). Do this once 
    Leave a side blank to skip it (for example, `sold: {used: 85, new: }`). Then click **Commit changes**.
 6. The change takes effect on the next run, within about 5.5 hours. To start right away: **Actions → Hunt →** cancel the running job, then **Run workflow**.
 
-Items without a sold price are switched off. With the default costs, anything selling under about **$38** can never make $20. Shorts use cheaper shipping, so check their numbers with `python buylist.py --group shorts`.
+Items without a sold price are switched off. With the default costs, anything selling under about **$38** can never make $20. Shorts use cheaper shipping and a **$10 profit target** (set in the `shorts` group), so check their numbers with `python buylist.py --group shorts`.
 
 **Speed vs. coverage:** eBay allows about 5,000 searches a day. With 10 items on, each item is checked about every 5 minutes. With all 25, it's about every 12 minutes. Fewer, better items find deals faster.
 
@@ -52,7 +52,7 @@ groups:
       buyer_shipping: 6.50   # what you charge the buyer
       postage_out: 7.00      # your label cost
       promo_rate: 0.05       # promoted listing rate (0 if you don't promote)
-      target_profit: 15      # minimum profit for this group
+      target_profit: 10      # minimum profit for this group
 
 items:
   - name: Birdwell board shorts
