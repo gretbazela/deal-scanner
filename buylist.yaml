@@ -176,6 +176,46 @@ items:
     sold: {used: , new: }
 
   # ---------- spring and summer (turn back on in March) ----------
+  - name: James Perse shorts
+    query: james perse shorts
+    lots: true
+    sold: {used: , new: }
+
+  - name: Taylor Stitch shorts
+    query: taylor stitch shorts
+    lots: true
+    sold: {used: , new: }
+
+  - name: Faherty shorts
+    query: faherty shorts
+    sold: {used: , new: }
+
+  - name: Outerknown shorts
+    query: outerknown shorts
+    sold: {used: , new: }
+
+  - name: Vintage Patagonia Baggies
+    query: patagonia baggies
+    must: [[vintage, vtg, usa, 80s, 90s]]
+    skip: [pants]
+    sold: {used: , new: }
+
+  - name: Vintage Stussy shorts
+    query: stussy shorts
+    must: [[vintage, vtg, usa, 80s, 90s, y2k]]
+    sold: {used: , new: }
+
+  - name: Vintage Ocean Pacific corduroy shorts
+    query: ocean pacific shorts
+    must: [[corduroy, cord, vintage, vtg, 80s]]
+    typos: [op corduroy shorts]
+    sold: {used: , new: }
+
+  - name: Vintage Quiksilver shorts
+    query: quiksilver shorts
+    must: [[vintage, vtg, usa, 80s, 90s]]
+    sold: {used: , new: }
+
   - name: Eric Emanuel shorts
     query: eric emanuel shorts
     sold: {used: , new: 110}  # draft: low-end eBay asking price 11/2026, confirm in Terapeak
