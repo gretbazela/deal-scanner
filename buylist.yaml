@@ -130,21 +130,6 @@ items:
     must: [[jacket, fleece]]
     sold: {used: 30, new: 100}  # used: Terapeak 11/24/2026 (lower of average less 10% and median); new: draft asking price, confirm in Terapeak
 
-  - name: Carhartt Detroit jacket
-    query: carhartt detroit jacket
-    typos: [carhart detroit jacket]
-    sold: {used: 160, new: 160}  # draft: low-end eBay asking price 11/2026, confirm in Terapeak
-
-  - name: Carhartt Active jacket
-    query: carhartt active jacket
-    typos: [carhart active jacket]
-    sold: {used: 100, new: 110}  # draft: low-end eBay asking price 11/2026, confirm in Terapeak
-
-  - name: Carhartt chore coat
-    query: carhartt chore coat
-    typos: [carhart chore coat]
-    sold: {used: 90, new: 125}  # draft: low-end eBay asking price 11/2026, confirm in Terapeak
-
   - name: Barbour Bedale
     query: barbour bedale
     must: [[jacket, wax, waxed]]
@@ -175,14 +160,6 @@ items:
     sold: {used: 45, new: 79}  # Terapeak 11/24/2026, last 90 days: lower of average less 10% and median
 
   # ---------- year-round ----------
-  - name: Carhartt double knee pants
-    query: carhartt double knee
-    must: [[pants, jeans, b01, b136]]
-    skip: [shorts]
-    typos: [carhart double knee]
-    lots: true
-    sold: {used: 50, new: 43}  # Terapeak 11/24/2026, last 90 days: lower of average less 10% and median
-
   - name: Pendleton Board Shirt
     query: pendleton board shirt
     typos: [pendelton board shirt]
