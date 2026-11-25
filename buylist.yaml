@@ -89,7 +89,7 @@ items:
     skip: [vest]
     typos: [patagoina better sweater]
     lots: true
-    sold: {used: , new: 75}  # draft: low-end eBay asking price 11/2026, confirm in Terapeak
+    sold: {used: 29, new: 75}  # used: Terapeak 11/24/2026 (lower of average less 10% and median); new: draft asking price, confirm in Terapeak
 
   - name: Patagonia Nano Puff
     query: patagonia nano puff
@@ -123,7 +123,7 @@ items:
   - name: North Face Denali
     query: north face denali
     must: [[jacket, fleece]]
-    sold: {used: , new: 100}  # draft: low-end eBay asking price 11/2026, confirm in Terapeak
+    sold: {used: 30, new: 100}  # used: Terapeak 11/24/2026 (lower of average less 10% and median); new: draft asking price, confirm in Terapeak
 
   - name: Carhartt Detroit jacket
     query: carhartt detroit jacket
@@ -163,7 +163,7 @@ items:
   - name: Levi's vintage trucker jacket
     query: levis trucker jacket
     must: [[vintage, vtg, usa, type iii, type 3]]
-    sold: {used: , new: }
+    sold: {used: 45, new: 79}  # Terapeak 11/24/2026, last 90 days: lower of average less 10% and median
 
   # ---------- year-round ----------
   - name: Carhartt double knee pants
@@ -172,11 +172,11 @@ items:
     skip: [shorts]
     typos: [carhart double knee]
     lots: true
-    sold: {used: , new: }
+    sold: {used: 50, new: 43}  # Terapeak 11/24/2026, last 90 days: lower of average less 10% and median
 
   - name: Pendleton Board Shirt
     query: pendleton board shirt
-    sold: {used: , new: 95}  # draft: low-end eBay asking price 11/2026, confirm in Terapeak
+    sold: {used: 50, new: 95}  # used: Terapeak 11/24/2026 (lower of average less 10% and median); new: draft asking price, confirm in Terapeak
 
   - name: RRL Ralph Lauren
     query: rrl
@@ -189,18 +189,18 @@ items:
     query: peter millar quarter zip
     typos: [peter miller quarter zip]
     lots: true
-    sold: {used: , new: 95}  # draft: low-end eBay asking price 11/2026, confirm in Terapeak
+    sold: {used: 31, new: 95}  # used: Terapeak 11/24/2026 (lower of average less 10% and median); new: draft asking price, confirm in Terapeak
 
   - name: Lululemon ABC pants
     query: lululemon abc pants
     typos: [lulu lemon abc pants]
     lots: true
-    sold: {used: , new: }
+    sold: {used: 23, new: 60}  # Terapeak 11/24/2026, last 90 days: lower of average less 10% and median
 
   - name: Girbaud jeans
     query: girbaud
     must: [[jeans, pants, shorts]]
-    sold: {used: , new: }
+    sold: {used: 40, new: 80}  # Terapeak 11/24/2026, last 90 days: lower of average less 10% and median
 
   # ---------- shorts (run all year; brands switch on when you fill in their sold prices) ----------
   - name: James Perse shorts
