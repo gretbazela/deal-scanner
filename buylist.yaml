@@ -76,71 +76,71 @@ items:
     skip: [vest, pullover]
     typos: [patagoina retro x, patagonia retrox]
     lots: false
-    sold: {used: 95, new: 175}  # draft: low-end eBay asking price 11/2026, confirm in Terapeak
+    sold: {used: 89, new: 140}  # Terapeak 11/24/2026: lower of average less 10% and median
 
   - name: Patagonia Synchilla Snap-T
     query: patagonia snap t
     must: [[synchilla, fleece, pullover]]
     skip: [vest]
     typos: [patagoina snap t, patagonia snapt]
-    sold: {used: 60, new: 105}  # draft: low-end eBay asking price 11/2026, confirm in Terapeak
+    sold: {used: 60, new: 84}  # Terapeak 11/24/2026: lower of average less 10% and median
 
   - name: Patagonia Better Sweater
     query: patagonia better sweater
     skip: [vest]
     typos: [patagoina better sweater]
     lots: true
-    sold: {used: 29, new: 75}  # used: Terapeak 11/24/2026 (lower of average less 10% and median); new: draft asking price, confirm in Terapeak
+    sold: {used: 29, new: 79}  # Terapeak 11/24/2026: lower of average less 10% and median
 
   - name: Patagonia Nano Puff
     query: patagonia nano puff
     must: [[jacket, hoody, hoodie]]
     skip: [vest]
     typos: [patagoina nano puff, patagonia nanopuff]
-    sold: {used: 85, new: 155}  # draft: low-end eBay asking price 11/2026, confirm in Terapeak
+    sold: {used: 64, new: 129}  # Terapeak 11/24/2026: lower of average less 10% and median
 
   - name: Patagonia Down Sweater
     query: patagonia down sweater
     skip: [vest]
     typos: [patagoina down sweater]
-    sold: {used: 70, new: 180}  # draft: low-end eBay asking price 11/2026, confirm in Terapeak
+    sold: {used: 64, new: 141}  # Terapeak 11/24/2026: lower of average less 10% and median
 
   - name: Arc'teryx Atom
     query: arcteryx atom
     must: [[jacket, hoody, hoodie]]
     skip: [vest]
     typos: [arcterx atom, arc teryx atom]
-    sold: {used: 170, new: 245}  # draft: low-end eBay asking price 11/2026, confirm in Terapeak
+    sold: {used: 150, new: 208}  # Terapeak 11/24/2026: lower of average less 10% and median
 
   - name: Arc'teryx Beta
     query: arcteryx beta
     must: [[jacket, shell]]
     typos: [arcterx beta]
-    sold: {used: 260, new: 355}  # draft: low-end eBay asking price 11/2026, confirm in Terapeak
+    sold: {used: 224, new: 179}  # Terapeak 11/24/2026: lower of average less 10% and median
 
   - name: North Face Nuptse
     query: north face nuptse
     must: [[jacket, puffer, 700]]
     skip: [vest]
     typos: [north face nupste]
-    sold: {used: 120, new: 200}  # draft: low-end eBay asking price 11/2026, confirm in Terapeak
+    sold: {used: 120, new: 157}  # Terapeak 11/24/2026: lower of average less 10% and median
 
   - name: North Face Denali
     query: north face denali
     must: [[jacket, fleece]]
-    sold: {used: 30, new: 100}  # used: Terapeak 11/24/2026 (lower of average less 10% and median); new: draft asking price, confirm in Terapeak
+    sold: {used: 30, new: 79}  # Terapeak 11/24/2026: lower of average less 10% and median
 
   - name: Barbour Bedale
     query: barbour bedale
     must: [[jacket, wax, waxed]]
     typos: [barbor bedale]
-    sold: {used: 230, new: 325}  # draft: low-end eBay asking price 11/2026, confirm in Terapeak
+    sold: {used: 166, new: 279}  # Terapeak 11/24/2026: lower of average less 10% and median
 
   - name: Barbour Beaufort
     query: barbour beaufort
     must: [[jacket, wax, waxed]]
     typos: [barbor beaufort]
-    sold: {used: 200, new: 360}  # draft: low-end eBay asking price 11/2026, confirm in Terapeak
+    sold: {used: 161, new: 293}  # Terapeak 11/24/2026: lower of average less 10% and median
 
   - name: Levi's vintage trucker jacket
     query: levis trucker jacket
@@ -151,7 +151,7 @@ items:
   - name: Pendleton Board Shirt
     query: pendleton board shirt
     typos: [pendelton board shirt]
-    sold: {used: 50, new: 95}  # used: Terapeak 11/24/2026 (lower of average less 10% and median); new: draft asking price, confirm in Terapeak
+    sold: {used: 50, new: 107}  # Terapeak 11/24/2026: lower of average less 10% and median
 
   - name: RRL jeans
     query: rrl jeans
@@ -176,7 +176,7 @@ items:
     query: peter millar quarter zip
     typos: [peter miller quarter zip]
     lots: true
-    sold: {used: 31, new: 95}  # used: Terapeak 11/24/2026 (lower of average less 10% and median); new: draft asking price, confirm in Terapeak
+    sold: {used: 31, new: 79}  # Terapeak 11/24/2026: lower of average less 10% and median
 
   - name: Lululemon ABC pants
     query: lululemon abc pants

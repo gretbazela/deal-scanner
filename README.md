@@ -43,6 +43,8 @@ RRL: the old combined RRL entry was replaced on 11/24/2026 by RRL jeans, RRL jac
 
 Pants: James Perse, Taylor Stitch, Faherty and Outerknown pants were added on 11/24/2026 with your standard costs ($20 profit target, $10 label), not the shorts costs, using Terapeak averages less 10% (or the median if lower). The used sides are so low that the most you could pay is near zero, so mostly the new side will alert.
 
+Outerwear and year round prices: on 11/24/2026 every draft price (from eBay asking prices) was replaced with Terapeak sold numbers from the last 90 days, using the lower of the average less 10% and the median. Arc'teryx Beta used (21 sold) is right at the 20 sold cutoff. Most prices came down, so expect fewer but safer alerts.
+
 Filson: both Filson items (Mackinaw, Tin Cloth) were removed on 11/24/2026. To bring one back, add it again under `items:` (the git history has the old entries).
 
 Carhartt: all four Carhartt items (Detroit, Active, chore coat, double knee) were removed on 11/24/2026 because it is not a favorite brand. To bring one back, add it again under `items:` in `buylist.yaml` (the git history has the old entries).
