@@ -366,6 +366,76 @@ def test_ebay_failure_warning_says_what_to_do():
     assert "WHAT TO DO" in body and "limit" in body
 
 
+def _deal(price, iid="v1|1|0", seller="shopper", title="Patagonia Retro X Fleece Jacket Mens L", cond="Pre-owned"):
+    it = item("Patagonia Retro-X jacket", {"used": 110})
+    l = listing(title, price)
+    l["itemId"] = iid
+    l["seller"]["username"] = seller
+    return h.evaluate(l, it, "bin", CFG, NOW)
+
+
+def test_price_drop_alerts_again_but_same_price_does_not():
+    state = {}
+    d1 = _deal(40)
+    assert h.repeat_check(d1, state) == (False, None)  # first time
+    h.remember_alert(d1, state, NOW.timestamp())
+    assert h.repeat_check(_deal(40), state) == (True, None)      # same listing, same price
+    assert h.repeat_check(_deal(39), state) == (True, None)      # dropped by less than $2
+    skip, was = h.repeat_check(_deal(35), state)                 # dropped by $5
+    assert (skip, was) == (False, 40.0)
+    d2 = _deal(35)
+    d2["was"] = was
+    head, body = h.message_for(d2)
+    assert head.startswith("PRICE DROP:") and "dropped from $40.00 to $35.00" in body
+    h.remember_alert(d2, state, NOW.timestamp())
+    assert h.repeat_check(_deal(35), state) == (True, None)      # the new price is now the one to beat
+    assert h.repeat_check(_deal(30), state)[0] is False          # and a further drop alerts again
+
+
+def test_relist_with_same_seller_and_title_is_skipped_unless_cheaper():
+    state = {}
+    first = _deal(40, iid="v1|1|0")
+    h.remember_alert(first, state, NOW.timestamp())
+    assert h.repeat_check(_deal(40, iid="v1|2|0"), state) == (True, None)          # relisted, same price
+    assert h.repeat_check(_deal(40, iid="v1|2|0", seller="someone else"), state) == (False, None)
+    assert h.repeat_check(_deal(40, iid="v1|2|0", title="Patagonia Retro X Fleece Jacket Mens XL"), state) == (False, None)
+    skip, was = h.repeat_check(_deal(30, iid="v1|2|0"), state)                   # relisted for $10 less
+    assert (skip, was) == (False, 40.0)
+
+
+def test_auctions_do_not_repeat():
+    it = item("Patagonia Retro-X jacket", {"used": 110})
+    l = listing("Patagonia Retro X Fleece Jacket Mens L", 5, opts=("AUCTION",), bid=5, ends_h=1)
+    d = h.evaluate(l, it, "auction", CFG, NOW)
+    assert d and d["auction"]
+    state = {}
+    h.remember_alert(d, state, NOW.timestamp())
+    assert h.repeat_check(d, state) == (True, None)
+
+
+def test_memory_expires_and_is_saved(tmp_path=None):
+    import tempfile
+    from pathlib import Path
+    state = {}
+    d = _deal(40)
+    h.remember_alert(d, state, NOW.timestamp() - 30 * 86400)  # older than 3 weeks
+    h.remember_alert(_deal(40, iid="v1|9|0", seller="other"), state, time_now())
+    old_seen, old_state = h.SEEN_PATH, h.STATE_PATH
+    with tempfile.TemporaryDirectory() as t:
+        h.SEEN_PATH, h.STATE_PATH = Path(t) / "seen.json", Path(t) / "state.json"
+        try:
+            h.save({"v1|9|0": time_now()}, state)
+            saved = __import__("json").loads(h.STATE_PATH.read_text())
+        finally:
+            h.SEEN_PATH, h.STATE_PATH = old_seen, old_state
+    assert list(saved["alerted"]) == ["v1|9|0"] and len(saved["relist"]) == 1
+
+
+def time_now():
+    import time
+    return time.time()
+
+
 if __name__ == "__main__":
     n = 0
     for name, fn in list(globals().items()):

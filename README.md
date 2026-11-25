@@ -15,6 +15,12 @@ Finds eBay listings priced low enough to resell for your **target profit** (defa
    For auctions, the alert tells you the most you can bid.
 5. Every alert is saved in **`alerts.csv`**. After each run, the Actions page shows a weekly scorecard: alerts, deals, bought, and marked wrong.
 
+## Repeat alerts, price drops and relists
+
+- **Price drop:** if a listing you were already alerted on drops in price by $2 or more, you get a new alert starting with **PRICE DROP**, with the old and new price. Each further drop of $2 or more alerts again. This also covers a "make an offer" alert whose seller later cuts the price. Auctions never repeat, since their price only goes up.
+- **Relists:** an item relisted under a new listing number by the same seller with the same title does not alert again, unless the new price is $2 or more lower than the last alert (then it alerts as a price drop).
+- **Memory:** the scanner remembers alerts for 21 days. It saves that memory right after every alert, so a cancelled run no longer forgets recent alerts. Alerts from before this change are remembered as seen, but price drops on them are not tracked.
+
 ## Daily check on your phone
 
 Every day at 8 AM Pacific (never during quiet hours) the Hunt sends one plain message, separate from deal alerts. It has four parts, and a "WHAT TO DO" list at the end so you know your next step:

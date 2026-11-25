@@ -46,6 +46,8 @@ ALERT_FIELDS = ["sent_at", "item", "kind", "listing_id", "url", "title", "condit
                 "price", "offer_price", "ship_in", "landed", "resale_est", "profit_est", "max_price",
                 "count", "outcome", "outcome_at", "resale_actual", "notes"]
 CALLS = {"n": 0}
+MIN_DROP = 2.00      # a repeat listing alerts again only if its price fell by at least this much
+KEEP_DAYS = 21       # how long the scanner remembers an alert
 
 
 # ---------- text helpers ----------
@@ -356,6 +358,7 @@ def evaluate(listing, it, kind, cfg, now, why=None):
         "profit": round(est, 2), "profit_now": round(profit(resale, price, ship_in, s, count), 2),
         "max_price": round(cap, 2), "auction": auction, "ends": listing.get("itemEndDate"),
         "best_offer": "BEST_OFFER" in (listing.get("buyingOptions") or []),
+        "seller": (listing.get("seller") or {}).get("username"),
     }
 
 
@@ -467,9 +470,12 @@ def round_seconds(searches, cfg):
 # ---------- alerts, feedback, log ----------
 
 def message_for(d):
-    head = f"${d['profit']:.0f} profit" + (" if offer accepted" if d.get("offer") else "") + f": {d['item']}"
+    head = ("PRICE DROP: " if d.get("was") else "") + f"${d['profit']:.0f} profit" \
+        + (" if offer accepted" if d.get("offer") else "") + f": {d['item']}"
     what = f"Lot of {d['count']}" if d["count"] > 1 else "Single"
     lines = []
+    if d.get("was"):
+        lines.append(f"Price dropped from ${d['was']:.2f} to ${d['price']:.2f}. You were alerted on this one before.")
     if d["auction"]:
         lines.append(f"{what}, AUCTION, bid now ${d['price']:.2f}, ends {(d['ends'] or '')[11:16]} UTC")
         lines.append(f"Bid up to ${d['max_price']:.2f} to make ${d['profit']:.0f}")
@@ -538,6 +544,38 @@ def notify(topic, d, deliver_at=None):
         print(f"  ntfy error: {e}", flush=True)
 
 
+def relist_key(d):
+    """Seller plus title, so the same item relisted under a new listing number is recognised."""
+    if not d.get("seller"):
+        return None
+    return d["seller"].strip().lower() + "|" + norm(d["title"]).strip()
+
+
+def repeat_check(d, state):
+    """Decide whether a deal that looks like an earlier alert should alert again.
+    Returns (skip, was_price). A listing already alerted on, or the same seller and title relisted
+    under a new number, alerts again only when its price fell by MIN_DROP or more. Auctions never repeat."""
+    alerted = state.setdefault("alerted", {})
+    relist = state.setdefault("relist", {})
+    prev = alerted.get(d["id"])
+    if prev is None:
+        key = relist_key(d)
+        prev = relist.get(key) if key else None
+    if prev is None:
+        return False, None
+    if not d["auction"] and d["price"] <= prev["price"] - MIN_DROP:
+        return False, prev["price"]
+    return True, None
+
+
+def remember_alert(d, state, ts):
+    rec = {"price": d["price"], "t": ts}
+    state.setdefault("alerted", {})[d["id"]] = rec
+    key = relist_key(d)
+    if key:
+        state.setdefault("relist", {})[key] = dict(rec)
+
+
 def send_note(topic, title, body, tags=("clipboard",), priority=3, click=None):
     """A plain phone message (daily check or a warning), not a deal alert."""
     payload = {"topic": topic, "title": title, "message": body, "tags": list(tags), "priority": priority}
@@ -571,7 +609,8 @@ def log_alert(d, now):
                  "listing_id": d["id"], "url": d["url"], "title": d["title"], "condition": d["condition"],
                  "price": d["price"], "offer_price": d.get("offer") or "", "ship_in": d["ship_in"], "landed": d["landed"],
                  "resale_est": d["resale"], "profit_est": d["profit"], "max_price": d["max_price"],
-                 "count": d["count"]})
+                 "count": d["count"],
+                "notes": f"price drop from {d['was']:.2f}" if d.get("was") else ""})
     write_alerts(rows)
 
 
@@ -628,8 +667,11 @@ def load_json(path, default):
 
 
 def save(seen, state):
-    cutoff = time.time() - 21 * 86400
+    cutoff = time.time() - KEEP_DAYS * 86400
     seen = {k: v for k, v in seen.items() if v > cutoff}
+    for name in ("alerted", "relist"):
+        if name in state:
+            state[name] = {k: v for k, v in state[name].items() if v["t"] > cutoff}
     SEEN_PATH.write_text(json.dumps(seen, indent=0, sort_keys=True))
     STATE_PATH.write_text(json.dumps(state, indent=1, sort_keys=True))
     return seen
@@ -672,14 +714,30 @@ def main():
             filters, sort = filters_for(it, kind, cfg, now)
             for listing in ebay.search(q, filters, sort):
                 iid = listing.get("itemId")
-                if not iid or iid in seen:
+                if not iid:
                     continue
+                known = iid in seen
+                if known and iid not in state.get("alerted", {}):
+                    continue  # alerted before prices were remembered, so nothing to compare
                 why = []
                 d = evaluate(listing, it, kind, cfg, now, why)
-                daily.count(state, cfg, it["name"], iid, why[0] if why else None, now, counted)
+                if not known:
+                    daily.count(state, cfg, it["name"], iid, why[0] if why else None, now, counted)
+                if d:
+                    skip, d["was"] = repeat_check(d, state)
+                    if skip:
+                        seen[iid] = now.timestamp()  # a relist or an unchanged price; don't look again
+                        continue
                 if d and (iid not in found or d["profit"] > found[iid]["profit"]):
                     found[iid] = d
+        round_keys = set()
         for d in sorted(found.values(), key=lambda x: x["profit"], reverse=True):
+            key = relist_key(d)
+            if key and key in round_keys and not d.get("was"):
+                seen[d["id"]] = now.timestamp()  # the same seller and title twice in one round
+                continue
+            if key:
+                round_keys.add(key)
             title, body = message_for(d)
             wake = quiet_until(now, cfg)
             over = bool(wake and d["auction"] and d["ends"]
@@ -693,7 +751,10 @@ def main():
                     notify(topic, d, wake)
                 log_alert(d, now)
             seen[d["id"]] = now.timestamp()
+            remember_alert(d, state, now.timestamp())
             alerts += 1
+        if found:
+            seen = save(seen, state)  # written to disk right after alerting, so a cancelled run forgets nothing
         if topic and not dry:
             poll_feedback(topic, state)
         daily.after_round(state, cfg, ebay, now, topic, dry)
