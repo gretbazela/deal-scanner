@@ -76,6 +76,8 @@ Arc'teryx: both Arc'teryx items (Atom, Beta) were removed on 11/24/2026. To brin
 
 Filson: both Filson items (Mackinaw, Tin Cloth) were removed on 11/24/2026. To bring one back, add it again under `items:` (the git history has the old entries).
 
+New items from your sales: on 11/25/2026 I compared your Seller Hub sales to the list and added Flint & Tinder waxed jackets (used $141), Diesel Zatiny jeans (used $65) and the Lululemon Navigation down vest (used $65), each priced at the Terapeak average less 10%. Most you could pay for $20 profit: about $78, $20 and $20. Checked and left off for now: Kiln (no sales but yours), Jams World (one off prices), Wilson Rush Pro (too thin), Logitech Harmony (only the new 650 sells well) and Helly Hansen (needs specific ski models).
+
 Carhartt: all four Carhartt items (Detroit, Active, chore coat, double knee) were removed on 11/24/2026 because it is not a favorite brand. To bring one back, add it again under `items:` in `buylist.yaml` (the git history has the old entries).
 
 Shorts brands: on 11/24/2026 all shorts brands were switched on at their Terapeak average from DRAFT_PRICES.md less 10%, leaving out any side under 20 sold. Several used prices are so low that the most you could pay is near zero or below (James Perse, Taylor Stitch, Outerknown, Quiksilver, Faherty used), so those mostly will not alert until a listing is nearly free. Check `python buylist.py --group shorts` for the exact max buys.

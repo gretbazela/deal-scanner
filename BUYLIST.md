@@ -21,6 +21,9 @@ Max buy = most you can pay for the item (before shipping and tax) and still make
 | Peter Millar quarter zip | yes | $20 | $31 | $-5 | $79 | $31 | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=peter+millar+quarter+zip) |
 | Lululemon ABC pants | yes | $20 | $23 | $-11 | $60 | $17 | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=lululemon+abc+pants) |
 | Girbaud jeans | yes | $20 | $40 | $2 | $80 | $32 | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=girbaud) |
+| Flint & Tinder waxed jacket | yes | $20 | $141 | $78 | - | - | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=flint+and+tinder+jacket) |
+| Diesel Zatiny jeans | yes | $20 | $65 | $20 | - | - | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=diesel+zatiny) |
+| Lululemon Navigation down vest | yes | $20 | $65 | $20 | - | - | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=lululemon+down+vest) |
 | James Perse shorts | yes | $10 | $28 | $3 | - | - | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=james+perse+shorts) |
 | Taylor Stitch shorts | yes | $10 | $27 | $2 | $36 | $9 | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=taylor+stitch+shorts) |
 | Faherty shorts | yes | $10 | $19 | $-4 | $34 | $7 | [sold 90 days](https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD&dayRange=90&keywords=faherty+shorts) |

@@ -177,6 +177,26 @@ items:
     typos: [gerbaud]
     sold: {used: 40, new: 80}  # Terapeak 11/24/2026, last 90 days: lower of average less 10% and median
 
+  - name: Flint & Tinder waxed jacket
+    query: flint and tinder jacket
+    must: [[waxed, wax, trucker, harrington, barn]]
+    skip: [vest]
+    typos: [flint tinder waxed jacket, huckberry waxed jacket]
+    sold: {used: 141, new: }  # Terapeak 11/25/2026: average $157 less 10% (mens jackets, last 90 days)
+
+  - name: Diesel Zatiny jeans
+    query: diesel zatiny
+    must: [[jeans, denim]]
+    typos: [diesel zatinny, diesel zattiny]
+    sold: {used: 65, new: }  # Terapeak 11/25/2026: average $72 less 10%; your own 4 sales were $33 to $50 so this starts cautious
+
+  - name: Lululemon Navigation down vest
+    query: lululemon down vest
+    must: [[navigation, down for it all]]
+    skip: [women, womens]
+    typos: [lulu lemon navigation vest]
+    sold: {used: 65, new: }  # Terapeak 11/25/2026: average $63 less 10%; Navigation and Down For It All models sell $74 to $111
+
   # ---------- shorts (run all year) ----------
   - name: James Perse shorts
     group: shorts
