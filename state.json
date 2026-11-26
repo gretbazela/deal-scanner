@@ -1419,7 +1419,7 @@
     }
    },
    "Faherty shorts": {
-    "checked": 156,
+    "checked": 157,
     "why": {
      "auction not ending soon": 1,
      "blocked word \"womens\"": 2,
@@ -1428,7 +1428,7 @@
      "listed too long ago": 130,
      "lot with no clear count": 3,
      "not a lot": 3,
-     "over your max once shipping and tax are added": 5,
+     "over your max once shipping and tax are added": 6,
      "title missing \"faherty\"": 1,
      "title missing \"shorts\"": 9
     }
@@ -1589,14 +1589,14 @@
     }
    },
    "Patagonia Better Sweater": {
-    "checked": 143,
+    "checked": 145,
     "why": {
      "auction not ending soon": 1,
      "blocked word \"boys\"": 4,
      "blocked word \"girls\"": 2,
      "blocked word \"kids\"": 2,
      "blocked word \"women\"": 3,
-     "blocked word \"womens\"": 61,
+     "blocked word \"womens\"": 63,
      "blocked word \"youth\"": 1,
      "listed too long ago": 4,
      "lot with no clear count": 4,
@@ -1645,7 +1645,7 @@
     }
    },
    "Patagonia Retro-X jacket": {
-    "checked": 111,
+    "checked": 112,
     "why": {
      "blocked word \"baby\"": 4,
      "blocked word \"boys\"": 1,
@@ -1656,21 +1656,21 @@
      "listed too long ago": 11,
      "over your max once shipping and tax are added": 5,
      "skip word \"pullover\"": 2,
-     "skip word \"vest\"": 17,
+     "skip word \"vest\"": 18,
      "title missing \"jacket\" or \"fleece\"": 1,
      "title missing \"retro\"": 2,
      "title missing \"x\"": 5
     }
    },
    "Patagonia Synchilla Snap-T": {
-    "checked": 154,
+    "checked": 155,
     "why": {
      "blocked word \"baby\"": 1,
      "blocked word \"boys\"": 1,
      "blocked word \"girls\"": 6,
      "blocked word \"kids\"": 9,
      "blocked word \"women\"": 11,
-     "blocked word \"womens\"": 95,
+     "blocked word \"womens\"": 96,
      "blocked word \"youth\"": 2,
      "over your max once shipping and tax are added": 13,
      "title missing \"snap\"": 3,
@@ -1679,7 +1679,7 @@
     }
    },
    "Pendleton Board Shirt": {
-    "checked": 119,
+    "checked": 120,
     "why": {
      "blocked word \"women\"": 1,
      "blocked word \"womens\"": 1,
@@ -1687,12 +1687,12 @@
      "damage word \"holes\"": 1,
      "listed too long ago": 5,
      "over your max once shipping and tax are added": 44,
-     "title missing \"board\"": 46,
+     "title missing \"board\"": 47,
      "title missing \"pendleton\"": 20
     }
    },
    "Peter Millar quarter zip": {
-    "checked": 150,
+    "checked": 151,
     "why": {
      "blocked word \"womens\"": 2,
      "damage word \"flaw\"": 1,
@@ -1702,7 +1702,7 @@
      "over your max once shipping and tax are added": 44,
      "title missing \"millar\"": 11,
      "title missing \"peter\"": 2,
-     "title missing \"quarter\"": 76,
+     "title missing \"quarter\"": 77,
      "title missing \"zip\"": 2
     }
    },
@@ -1724,10 +1724,10 @@
     }
    },
    "RRL jeans": {
-    "checked": 101,
+    "checked": 102,
     "why": {
      "blocked word \"women\"": 2,
-     "blocked word \"womens\"": 11,
+     "blocked word \"womens\"": 12,
      "blocked word \"youth\"": 1,
      "damage word \"ripped\"": 1,
      "listed too long ago": 24,
@@ -1795,9 +1795,9 @@
     }
    },
    "Vintage Ocean Pacific corduroy shorts": {
-    "checked": 243,
+    "checked": 245,
     "why": {
-     "blocked word \"boys\"": 7,
+     "blocked word \"boys\"": 9,
      "blocked word \"girls\"": 1,
      "blocked word \"kids\"": 1,
      "blocked word \"toddler\"": 1,
