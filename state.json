@@ -48,6 +48,10 @@
    "price": 75.0,
    "t": 1795586823.246952
   },
+  "v1|307292209892|0": {
+   "price": 49.99,
+   "t": 1795783387.394694
+  },
   "v1|307298070550|0": {
    "price": 105.0,
    "t": 1795586823.246952
@@ -246,6 +250,10 @@
   "kiwim5868|vintage rrl double rl yellow striped long sleeve shirt henley small": {
    "price": 20.0,
    "t": 1795652126.018432
+  },
+  "kmkjjj|the north face womans black nuptse ii bootie 700 dryvent winter boots sz 8": {
+   "price": 49.99,
+   "t": 1795783387.394694
   },
   "laurenantonia|vtg 70s pendleton board shirt red plaid wool flannel mens m usa loop collar": {
    "price": 31.35,
@@ -1956,7 +1964,7 @@
   },
   "2026-11-27": {
    "Barbour Beaufort": {
-    "checked": 150,
+    "checked": 151,
     "why": {
      "blocked word \"kids\"": 6,
      "blocked word \"womens\"": 6,
@@ -1964,7 +1972,7 @@
      "over your max once shipping and tax are added": 2,
      "seller feedback too low": 4,
      "title missing \"barbour\"": 34,
-     "title missing \"beaufort\"": 8,
+     "title missing \"beaufort\"": 9,
      "title missing \"jacket\" or \"wax\" or \"waxed\"": 8
     }
    },
@@ -1984,13 +1992,13 @@
     }
    },
    "Birdwell board shorts": {
-    "checked": 269,
+    "checked": 270,
     "why": {
      "blocked word \"baby\"": 4,
      "blocked word \"kids\"": 2,
      "blocked word \"women\"": 4,
      "blocked word \"womens\"": 4,
-     "listed too long ago": 16,
+     "listed too long ago": 17,
      "not a lot": 8,
      "title missing \"birdwell\"": 120,
      "title missing \"shorts\" or \"britches\" or \"boardshorts\" or \"trunks\"": 111
@@ -2007,14 +2015,14 @@
     }
    },
    "Eric Emanuel shorts": {
-    "checked": 275,
+    "checked": 276,
     "why": {
      "blocked word \"boys\"": 2,
      "blocked word \"replica\"": 2,
      "listed too long ago": 118,
      "lookalike wording (like, vibe, similar)": 2,
      "lot with no clear count": 2,
-     "over your max once shipping and tax are added": 18,
+     "over your max once shipping and tax are added": 19,
      "seller feedback too low": 52,
      "title missing \"emanuel\"": 53,
      "title missing \"eric\"": 8,
@@ -2022,24 +2030,24 @@
     }
    },
    "Faherty pants": {
-    "checked": 200,
+    "checked": 202,
     "why": {
      "blocked word \"girls\"": 2,
      "blocked word \"women\"": 6,
      "blocked word \"womens\"": 56,
-     "listed too long ago": 88,
-     "over your max once shipping and tax are added": 40,
+     "listed too long ago": 89,
+     "over your max once shipping and tax are added": 41,
      "title missing \"pants\"": 8
     }
    },
    "Faherty shorts": {
-    "checked": 309,
+    "checked": 310,
     "why": {
      "auction not ending soon": 2,
      "blocked word \"womens\"": 4,
      "damage word \"flawed\"": 2,
      "damage word \"flaws\"": 2,
-     "listed too long ago": 256,
+     "listed too long ago": 257,
      "lot with no clear count": 6,
      "not a lot": 6,
      "over your max once shipping and tax are added": 11,
@@ -2061,22 +2069,22 @@
     }
    },
    "Girbaud jeans": {
-    "checked": 229,
+    "checked": 232,
     "why": {
      "blocked word \"women\"": 6,
-     "blocked word \"womens\"": 34,
+     "blocked word \"womens\"": 35,
      "damage word \"flawed\"": 2,
      "damage word \"stained\"": 2,
      "listed too long ago": 36,
-     "over your max once shipping and tax are added": 62,
+     "over your max once shipping and tax are added": 63,
      "seller feedback too low": 8,
-     "title missing \"jeans\" or \"pants\" or \"shorts\"": 79
+     "title missing \"jeans\" or \"pants\" or \"shorts\"": 80
     }
    },
    "James Perse pants": {
-    "checked": 202,
+    "checked": 204,
     "why": {
-     "blocked word \"women\"": 40,
+     "blocked word \"women\"": 42,
      "blocked word \"womens\"": 88,
      "listed too long ago": 48,
      "over your max once shipping and tax are added": 14,
@@ -2098,39 +2106,40 @@
     }
    },
    "Levi's vintage trucker jacket": {
-    "checked": 205,
+    "checked": 213,
     "why": {
      "blocked word \"custom\"": 4,
      "blocked word \"women\"": 2,
      "blocked word \"womens\"": 2,
-     "damage word \"flaw\"": 2,
-     "over your max once shipping and tax are added": 35,
+     "damage word \"flaw\"": 3,
+     "damage word \"stains\"": 1,
+     "over your max once shipping and tax are added": 36,
      "title missing \"jacket\"": 4,
      "title missing \"levis\"": 4,
-     "title missing \"trucker\"": 46,
-     "title missing \"vintage\" or \"vtg\" or \"usa\" or \"type iii\" or \"type 3\"": 106
+     "title missing \"trucker\"": 48,
+     "title missing \"vintage\" or \"vtg\" or \"usa\" or \"type iii\" or \"type 3\"": 109
     }
    },
    "Lululemon ABC pants": {
-    "checked": 430,
+    "checked": 442,
     "why": {
      "auction not ending soon": 6,
      "damage word \"damaged\"": 2,
      "damage word \"flaw\"": 1,
-     "damage word \"flawed\"": 4,
+     "damage word \"flawed\"": 5,
      "damage word \"flaws\"": 1,
-     "listed too long ago": 108,
+     "listed too long ago": 109,
      "lot with no clear count": 10,
      "not a lot": 22,
-     "over your max once shipping and tax are added": 109,
+     "over your max once shipping and tax are added": 115,
      "seller feedback too low": 4,
-     "title missing \"abc\"": 85,
+     "title missing \"abc\"": 89,
      "title missing \"lululemon\"": 3,
      "title missing \"pants\"": 75
     }
    },
    "Lululemon Navigation down vest": {
-    "checked": 200,
+    "checked": 201,
     "why": {
      "blocked word \"women\"": 14,
      "blocked word \"womens\"": 108,
@@ -2138,15 +2147,15 @@
      "lookalike wording (like, vibe, similar)": 2,
      "title missing \"down\"": 42,
      "title missing \"lululemon\"": 2,
-     "title missing \"navigation\" or \"down for it all\"": 28
+     "title missing \"navigation\" or \"down for it all\"": 29
     }
    },
    "Mixed brand shorts lots": {
-    "checked": 202,
+    "checked": 203,
     "why": {
      "blocked word \"womens\"": 2,
      "blocked word \"youth\"": 2,
-     "lot names a brand with no price, or no brand": 174,
+     "lot names a brand with no price, or no brand": 175,
      "over your max once shipping and tax are added": 2,
      "seller feedback too low": 4,
      "skip word \"polo\"": 4,
@@ -2157,13 +2166,13 @@
     }
    },
    "North Face Denali": {
-    "checked": 205,
+    "checked": 210,
     "why": {
-     "blocked word \"boys\"": 4,
+     "blocked word \"boys\"": 5,
      "blocked word \"girls\"": 8,
      "blocked word \"infant\"": 4,
      "blocked word \"women\"": 4,
-     "blocked word \"womens\"": 69,
+     "blocked word \"womens\"": 73,
      "blocked word \"youth\"": 2,
      "damage word \"flaw\"": 1,
      "listed too long ago": 2,
@@ -2173,7 +2182,7 @@
     }
    },
    "North Face Nuptse": {
-    "checked": 275,
+    "checked": 276,
     "why": {
      "blocked word \"baby\"": 20,
      "blocked word \"boys\"": 4,
@@ -2184,6 +2193,7 @@
      "blocked word \"youth\"": 6,
      "listed too long ago": 18,
      "over your max once shipping and tax are added": 12,
+     "passed every check": 1,
      "seller feedback too low": 8,
      "skip word \"vest\"": 92,
      "title missing \"jacket\" or \"puffer\" or \"700\"": 8,
@@ -2208,7 +2218,7 @@
     }
    },
    "Patagonia Better Sweater": {
-    "checked": 279,
+    "checked": 290,
     "why": {
      "auction not ending soon": 2,
      "blocked word \"baby\"": 2,
@@ -2216,26 +2226,26 @@
      "blocked word \"custom\"": 2,
      "blocked word \"girls\"": 6,
      "blocked word \"kids\"": 4,
-     "blocked word \"women\"": 10,
-     "blocked word \"womens\"": 109,
+     "blocked word \"women\"": 11,
+     "blocked word \"womens\"": 114,
      "blocked word \"youth\"": 2,
      "listed too long ago": 10,
      "lot with no clear count": 8,
      "not a lot": 12,
-     "over your max once shipping and tax are added": 75,
+     "over your max once shipping and tax are added": 80,
      "skip word \"vest\"": 20,
      "title missing \"better\"": 5,
      "title missing \"patagonia\"": 10
     }
    },
    "Patagonia Down Sweater": {
-    "checked": 202,
+    "checked": 204,
     "why": {
      "blocked word \"baby\"": 8,
      "blocked word \"boys\"": 6,
-     "blocked word \"girls\"": 20,
+     "blocked word \"girls\"": 21,
      "blocked word \"infant\"": 2,
-     "blocked word \"kids\"": 24,
+     "blocked word \"kids\"": 25,
      "blocked word \"toddler\"": 6,
      "blocked word \"women\"": 4,
      "blocked word \"womens\"": 70,
@@ -2245,14 +2255,14 @@
     }
    },
    "Patagonia Nano Puff": {
-    "checked": 219,
+    "checked": 221,
     "why": {
      "blocked word \"baby\"": 2,
      "blocked word \"boys\"": 2,
      "blocked word \"girls\"": 4,
-     "blocked word \"kids\"": 14,
+     "blocked word \"kids\"": 15,
      "blocked word \"women\"": 4,
-     "blocked word \"womens\"": 113,
+     "blocked word \"womens\"": 114,
      "over your max once shipping and tax are added": 32,
      "skip word \"vest\"": 38,
      "title missing \"jacket\" or \"hoody\" or \"hoodie\"": 8,
@@ -2279,14 +2289,15 @@
     }
    },
    "Patagonia Synchilla Snap-T": {
-    "checked": 304,
+    "checked": 314,
     "why": {
      "blocked word \"baby\"": 2,
-     "blocked word \"girls\"": 22,
+     "blocked word \"girls\"": 23,
      "blocked word \"kids\"": 15,
-     "blocked word \"women\"": 26,
-     "blocked word \"womens\"": 168,
-     "over your max once shipping and tax are added": 35,
+     "blocked word \"women\"": 27,
+     "blocked word \"womens\"": 173,
+     "over your max once shipping and tax are added": 37,
+     "seller feedback too low": 1,
      "skip word \"vest\"": 2,
      "title missing \"patagonia\"": 2,
      "title missing \"snap\"": 4,
@@ -2294,7 +2305,7 @@
     }
    },
    "Pendleton Board Shirt": {
-    "checked": 238,
+    "checked": 239,
     "why": {
      "blocked word \"women\"": 2,
      "blocked word \"womens\"": 4,
@@ -2303,13 +2314,13 @@
      "listed too long ago": 29,
      "over your max once shipping and tax are added": 58,
      "seller feedback too low": 2,
-     "title missing \"board\"": 101,
+     "title missing \"board\"": 102,
      "title missing \"pendleton\"": 34,
      "title missing \"shirt\"": 2
     }
    },
    "Peter Millar quarter zip": {
-    "checked": 295,
+    "checked": 298,
     "why": {
      "blocked word \"womens\"": 4,
      "damage word \"damaged\"": 2,
@@ -2317,10 +2328,10 @@
      "damage word \"flawed\"": 2,
      "listed too long ago": 16,
      "not a lot": 6,
-     "over your max once shipping and tax are added": 91,
+     "over your max once shipping and tax are added": 93,
      "title missing \"millar\"": 22,
      "title missing \"peter\"": 4,
-     "title missing \"quarter\"": 144,
+     "title missing \"quarter\"": 145,
      "title missing \"zip\"": 2
     }
    },
@@ -2342,13 +2353,13 @@
     }
    },
    "RRL jeans": {
-    "checked": 202,
+    "checked": 203,
     "why": {
      "blocked word \"women\"": 4,
      "blocked word \"womens\"": 24,
      "blocked word \"youth\"": 2,
      "damage word \"ripped\"": 2,
-     "listed too long ago": 48,
+     "listed too long ago": 49,
      "over your max once shipping and tax are added": 8,
      "skip word \"polo\"": 74,
      "skip word \"shirt\"": 4,
@@ -2357,7 +2368,7 @@
     }
    },
    "RRL shirts": {
-    "checked": 459,
+    "checked": 460,
     "why": {
      "blocked word \"boys\"": 2,
      "blocked word \"custom\"": 4,
@@ -2368,7 +2379,7 @@
      "skip word \"bear\"": 2,
      "skip word \"jacket\"": 2,
      "skip word \"jeans\"": 2,
-     "skip word \"polo\"": 88,
+     "skip word \"polo\"": 89,
      "skip word \"tee\"": 14,
      "title missing \"rrl\"": 36,
      "title missing \"shirt\"": 23
@@ -2399,7 +2410,7 @@
     }
    },
    "Vilebrequin swim shorts": {
-    "checked": 261,
+    "checked": 262,
     "why": {
      "blocked word \"boys\"": 20,
      "blocked word \"kids\"": 8,
@@ -2407,14 +2418,14 @@
      "listed too long ago": 80,
      "lookalike wording (like, vibe, similar)": 2,
      "not a lot": 4,
-     "over your max once shipping and tax are added": 36,
+     "over your max once shipping and tax are added": 37,
      "seller feedback too low": 2,
      "title missing \"shorts\" or \"trunks\" or \"swim\" or \"boardshorts\"": 103,
      "title missing \"vilebrequin\"": 4
     }
    },
    "Vintage Ocean Pacific corduroy shorts": {
-    "checked": 479,
+    "checked": 481,
     "why": {
      "blocked word \"boys\"": 20,
      "blocked word \"girls\"": 3,
@@ -2423,13 +2434,13 @@
      "blocked word \"unbranded\"": 2,
      "blocked word \"women\"": 10,
      "blocked word \"womens\"": 24,
-     "blocked word \"youth\"": 10,
+     "blocked word \"youth\"": 11,
      "damage word \"flawed\"": 2,
      "listed too long ago": 90,
      "lookalike wording (like, vibe, similar)": 2,
      "over your max once shipping and tax are added": 11,
      "passed every check": 1,
-     "title missing \"corduroy\" or \"cord\" or \"vintage\" or \"vtg\" or \"80s\"": 167,
+     "title missing \"corduroy\" or \"cord\" or \"vintage\" or \"vtg\" or \"80s\"": 168,
      "title missing \"ocean\"": 93,
      "title missing \"pacific\"": 2,
      "title missing \"shorts\"": 36
@@ -2453,7 +2464,7 @@
     }
    },
    "Vintage Quiksilver shorts": {
-    "checked": 400,
+    "checked": 401,
     "why": {
      "blocked word \"boys\"": 72,
      "blocked word \"girls\"": 2,
@@ -2464,7 +2475,7 @@
      "listed too long ago": 2,
      "title missing \"quiksilver\"": 60,
      "title missing \"shorts\"": 10,
-     "title missing \"vintage\" or \"vtg\" or \"usa\" or \"80s\" or \"90s\"": 234
+     "title missing \"vintage\" or \"vtg\" or \"usa\" or \"80s\" or \"90s\"": 235
     }
    }
   }
